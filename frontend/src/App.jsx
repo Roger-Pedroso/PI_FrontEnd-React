@@ -1,6 +1,6 @@
 import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
-// import AdminRoutes from './pages/admin/admin.routes';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   const items = [
@@ -122,12 +122,15 @@ function App() {
   ];
 
   return (
-    <div className="flex justify-content-between" style={{ height: '97vh' }}>
+    <div className="flex justify-content-between gap-3" style={{ height: '98vh', width: '99vw' }}>
       <div style={{
-        width: '20vw', backgroundColor: 'purple', padding: '15px',
+        width: '20%', backgroundColor: 'purple', padding: '15px',
       }}
       >
         <PanelMenu model={items} />
+      </div>
+      <div style={{ width: '80%', backgroundColor: 'black' }}>
+        <Outlet />
       </div>
     </div>
   );
