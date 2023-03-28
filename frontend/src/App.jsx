@@ -1,7 +1,8 @@
 import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
+// import AdminRoutes from './pages/admin/admin.routes';
 
-export default function App() {
+function App() {
   const items = [
     {
       label: 'File',
@@ -118,9 +119,17 @@ export default function App() {
       ],
     },
   ];
+
   return (
-    <div className="App">
-      <PanelMenu model={items} className="w-full md:w-25rem" />
+    <div className="flex justify-content-between" style={{ height: '97vh' }}>
+      <div style={{
+        width: '20vw', backgroundColor: 'purple', padding: '15px',
+      }}
+      >
+        <PanelMenu model={items} />
+      </div>
     </div>
   );
 }
+
+export default App;
