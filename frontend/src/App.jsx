@@ -11,14 +11,14 @@ function App() {
         backgroundColor: 'rgba(89,31,107,255)',
         padding: '15px',
         borderRadius: '5px',
-        boxShadow: '2px 2px 7px 2px #471956',
+        boxShadow: '0 1px 5px 5px #471956',
         border: '2px',
         borderColor: 'black',
       }}
       >
         <SideBar />
       </div>
-      <div style={{ width: '80%', backgroundColor: '#DEDEDE' }}>
+      <div style={{ width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px' }}>
         <Outlet />
       </div>
     </div>

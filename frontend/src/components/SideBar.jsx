@@ -12,7 +12,7 @@ export default function SideBar() {
         {
           label: 'Criar',
           icon: 'pi pi-fw pi-plus',
-          url: '/adm/cad',
+          url: '/admin/cad',
         },
         {
           label: 'Listar',

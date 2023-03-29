@@ -5,11 +5,27 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import './Cadastro.css';
 import { InputMask } from 'primereact/inputmask';
+import api from '../../utils/Api';
 
 export default function Cadastro() {
-  const [value, setValue] = useState('');
+  const [admin, setAdmin] = useState({
+    nome: '',
+    nascimento: '',
+    email: '',
+    ramal: '',
+    cracha: '',
+    senha: '',
+  });
+  const onChange = (e) => {
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
+  };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await api.post('/admin/cad', { admin });
+  };
   return (
+
     <>
 
       <div id="cad_title">
@@ -17,20 +33,20 @@ export default function Cadastro() {
       </div>
 
       <div id="cad_form_box">
-        <form action="">
+        <form onSubmit={(e) => { onSubmit(e); }}>
           <div id="cad_input">
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-user" />
               </span>
-              <InputText id="name" placeholder="Nome completo" />
+              <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
             </div>
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-inbox" />
               </span>
-              <InputText id="email" placeholder="Email" />
+              <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
             </div>
 
             <div className="p-inputgroup">
@@ -40,6 +56,8 @@ export default function Cadastro() {
               <InputNumber
                 placeholder="Crachá"
                 useGrouping={false}
+                name="cracha"
+                onChange={(e) => { onChange(e); }}
               />
             </div>
 
@@ -47,14 +65,14 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-calendar" />
               </span>
-              <InputMask id="date" mask="99/99/9999" placeholder="Data de Nascimento" useGrouping={false} />
+              <InputMask name="nascimento" onChange={(e) => { onChange(e); }} id="date" mask="99/99/9999" placeholder="Data de Nascimento" useGrouping={false} />
             </div>
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-phone" />
               </span>
-              <InputMask mask="(99) 9 9999-9999" placeholder="Número de Telefone" useGrouping={false} />
+              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="" placeholder="Ramal" useGrouping={false} />
             </div>
 
             <div className="p-inputgroup">
@@ -62,10 +80,10 @@ export default function Cadastro() {
                 <i className="pi pi-key" />
               </span>
               <Password
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
                 toggleMask
                 placeholder="Senha"
+                name="senha"
+                onChange={(e) => { onChange(e); }}
               />
             </div>
 
@@ -84,7 +102,7 @@ export default function Cadastro() {
 
           <div id="cad_button">
             <Button label="Cancelar" />
-            <Button label="Enviar" />
+            <Button label="Enviar" type="submit" />
           </div>
         </form>
       </div>

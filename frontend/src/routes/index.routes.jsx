@@ -10,7 +10,7 @@ function AllRoutes() {
   return (
     <Routes>
       <Route path="login" element={<LoginUser />} />
-      <Route path="login/adm" element={<LoginAdmin />} />
+      <Route path="login/admin" element={<LoginAdmin />} />
       <Route path="login/rec" element={<LoginRecovery />} />
       <Route path="/" element={<App />}>
         <Route path="admin/cad" element={<CadastroAdmin />} />
