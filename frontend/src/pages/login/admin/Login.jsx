@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Login.css';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -32,14 +31,25 @@ export default function Login() {
   };
 
   return (
-    <body id="background">
+    <div style={{
+      display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '95vh',
+    }}
+    >
 
-      <div className="logo_div">
-        <img id="logo" src={logo} alt="" />
+      <div>
+        <img style={{ height: '200px' }} id="logo" src={logo} alt="" />
       </div>
 
-      <form onSubmit={(e) => { isValid(e); }}>
-        <div id="input_div">
+      <form
+        onSubmit={(e) => { isValid(e); }}
+        style={{
+          display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end',
+        }}
+      >
+        <div style={{
+          display: 'flex', gap: '10px', flexDirection: 'column',
+        }}
+        >
 
           <div className="p-inputgroup">
             <InputText id="email" placeholder="Email" onChange={(e) => { onChange(e); }} name="email" type="email" />
@@ -51,7 +61,7 @@ export default function Login() {
 
         </div>
 
-        <div className="button_div">
+        <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
           <a href="/login">
             {' '}
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" />
@@ -60,11 +70,11 @@ export default function Login() {
           <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" />
         </div>
 
-        <div id="recovery_div">
-          <a id="recovery" href="/login/rec">Esqueceu sua senha?</a>
+        <div style={{ marginTop: '20px' }}>
+          <a style={{ color: 'white' }} href="/login/rec">Esqueceu sua senha?</a>
         </div>
       </form>
       <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{warning}</p></div>
-    </body>
+    </div>
   );
 }

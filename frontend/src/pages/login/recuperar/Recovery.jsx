@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 export default function Recovery() {
   return (
 
-    <div className="flex justify-content-center align-items-center">
+    <div className="flex justify-content-center align-items-center" style={{ width: '95vw', height: '95vh' }}>
       <div>
         <div>
           <h1 style={{ color: 'white' }}>Recuperação de senha</h1>
@@ -22,7 +22,7 @@ export default function Recovery() {
                 <i className="pi pi-inbox" />
               </span>
               <InputText id="email" placeholder="Email" />
-              <Button label="Enviar" />
+              <Button label="Enviar" style={{ backgroundColor: '#75298c' }} />
             </div>
           </div>
 
