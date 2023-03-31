@@ -5,7 +5,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../utils/Api';
+import api from '../../utils/Api';
 
 export default function CreateArea() {
   const navigate = useNavigate();
