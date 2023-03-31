@@ -1,6 +1,5 @@
 import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
-// import { Button } from 'primereact/button';
 import logo from '../img/logo.jpg';
 
 export default function SideBar() {
@@ -12,7 +11,7 @@ export default function SideBar() {
         {
           label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/admin/add',
+          url: '/admin/cadastrar',
         },
         {
           label: 'Listar',
@@ -27,12 +26,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar Superior',
           icon: 'pi pi-fw pi-plus',
-          url: '/superior/add',
+          url: '/supervisor/cadastrar',
         },
         {
           label: 'Listar Superior',
           icon: 'pi pi-fw pi-list',
-          url: '/superior/list',
+          url: '/supervisor',
         },
       ],
     },
@@ -55,6 +54,22 @@ export default function SideBar() {
         {
           label: 'Listar Modelo de Questionário',
           icon: 'pi pi-fw pi-list',
+        },
+      ],
+    },
+    {
+      label: 'Areas',
+      icon: 'pi pi-fw pi-th-large',
+      items: [
+        {
+          label: 'Cadastrar',
+          icon: 'pi pi-fw pi-plus',
+          url: '/area/cadastrar',
+        },
+        {
+          label: 'Listar',
+          icon: 'pi pi-fw pi-list',
+          url: '/area',
         },
       ],
     },
