@@ -5,6 +5,7 @@ import CadastroAdmin from '../pages/admin/Cadastro';
 import LoginUser from '../pages/login/usuario/Login';
 import LoginRecovery from '../pages/login/recuperar/Recovery';
 import LoginAdmin from '../pages/login/admin/Login';
+import ListaAdministrador from '../pages/admin/ListaAdministrador';
 
 function AllRoutes() {
   return (
@@ -14,6 +15,7 @@ function AllRoutes() {
       <Route path="login/rec" element={<LoginRecovery />} />
       <Route path="/" element={<App />}>
         <Route path="admin/cad" element={<CadastroAdmin />} />
+        <Route path="lista/administrador" element={<ListaAdministrador />} />
       </Route>
     </Routes>
   );
