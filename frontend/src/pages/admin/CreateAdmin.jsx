@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import './Cadastro.css';
 import { InputMask } from 'primereact/inputmask';
 import api from '../../utils/Api';
 
@@ -22,19 +20,19 @@ export default function Cadastro() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await api.post('/admin/cad', { admin });
+    await api.post('/user', { admin });
   };
   return (
 
     <>
 
-      <div id="cad_title">
+      <div style={{ textAlign: 'center' }}>
         <h1>Cadastro de Administradores</h1>
       </div>
 
-      <div id="cad_form_box">
-        <form onSubmit={(e) => { onSubmit(e); }}>
-          <div id="cad_input">
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
+        <form onSubmit={(e) => { onSubmit(e); }} style={{ width: '60%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-user" />
@@ -53,9 +51,10 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-tag" />
               </span>
-              <InputNumber
+
+              <InputText
                 placeholder="Crachá"
-                useGrouping={false}
+                type="number"
                 name="cracha"
                 onChange={(e) => { onChange(e); }}
               />
@@ -72,7 +71,7 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-phone" />
               </span>
-              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="" placeholder="Ramal" useGrouping={false} />
+              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="9999" placeholder="Ramal" useGrouping={false} />
             </div>
 
             <div className="p-inputgroup">
@@ -100,9 +99,12 @@ export default function Cadastro() {
 
           </div>
 
-          <div id="cad_button">
+          <div style={{
+            marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px',
+          }}
+          >
             <Button label="Cancelar" />
-            <Button label="Enviar" type="submit" />
+            <Button label="Confirmar" type="submit" />
           </div>
         </form>
       </div>
