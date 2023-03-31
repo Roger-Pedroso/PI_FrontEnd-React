@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { InputMask } from 'primereact/inputmask';
@@ -21,7 +20,7 @@ export default function Cadastro() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await api.post('/admin/cad', { admin });
+    await api.post('/user', { admin });
   };
   return (
 
@@ -52,9 +51,10 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-tag" />
               </span>
-              <InputNumber
+
+              <InputText
                 placeholder="Crachá"
-                useGrouping={false}
+                type="number"
                 name="cracha"
                 onChange={(e) => { onChange(e); }}
               />
@@ -71,7 +71,7 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-phone" />
               </span>
-              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="" placeholder="Ramal" useGrouping={false} />
+              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="9999" placeholder="Ramal" useGrouping={false} />
             </div>
 
             <div className="p-inputgroup">
@@ -104,7 +104,7 @@ export default function Cadastro() {
           }}
           >
             <Button label="Cancelar" />
-            <Button label="Enviar" type="submit" />
+            <Button label="Confirmar" type="submit" />
           </div>
         </form>
       </div>

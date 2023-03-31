@@ -12,7 +12,7 @@ export default function SideBar() {
         {
           label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/admin/cad',
+          url: '/admin/add',
         },
         {
           label: 'Listar',
@@ -27,19 +27,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar Superior',
           icon: 'pi pi-fw pi-plus',
+          url: '/superior/add',
         },
         {
           label: 'Listar Superior',
           icon: 'pi pi-fw pi-list',
-        },
-        {
-          label: 'Cadastrar Setor',
-          icon: 'pi pi-fw pi-plus',
-          url: '/setor/cad',
-        },
-        {
-          label: 'Listar Setor',
-          icon: 'pi pi-fw pi-list',
+          url: '/superior/list',
         },
       ],
     },
