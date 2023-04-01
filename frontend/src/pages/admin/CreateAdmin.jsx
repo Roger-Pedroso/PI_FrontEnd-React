@@ -4,6 +4,7 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { InputMask } from 'primereact/inputmask';
 import api from '../../utils/Api';
+import Spans from '../../components/Spans';
 
 export default function Cadastro() {
   const [admin, setAdmin] = useState({
@@ -34,22 +35,20 @@ export default function Cadastro() {
         <form onSubmit={(e) => { onSubmit(e); }} style={{ width: '60%' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-user" />
-              </span>
+              <Spans icon="pi pi-inbox" />
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-inbox" />
+              <span className="p-inputgroup-addon" id="span">
+                <i className="pi pi-inbox" id="i" />
               </span>
               <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
+              <span className="p-inputgroup-addon" id="span">
+                <i className="pi pi-tag" id="i" />
               </span>
 
               <InputText
@@ -75,9 +74,7 @@ export default function Cadastro() {
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-key" />
-              </span>
+              <Spans icon="pi pi-key" />
               <Password
                 toggleMask
                 placeholder="Senha"
