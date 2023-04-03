@@ -24,3 +24,11 @@ a{
     border-radius: 10px;
     margin-bottom: 1rem;
 }
+
+#span {
+    background-color: rgba(89,31,107,255);
+}
+
+#i {
+    color: white;
+}

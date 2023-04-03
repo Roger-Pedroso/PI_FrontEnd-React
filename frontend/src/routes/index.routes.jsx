@@ -9,6 +9,7 @@ import CreateSuperior from '../pages/superior/CreateSuperior';
 import ListSuperior from '../pages/superior/ListSuperior';
 import ListArea from '../pages/area/ListArea';
 import CreateArea from '../pages/area/CreateArea';
+import CreateQuestions from '../pages/quizes/CreateQuestions';
 
 function AllRoutes() {
   return (
@@ -22,6 +23,7 @@ function AllRoutes() {
         <Route path="supervisor" element={<ListSuperior />} />
         <Route path="area" element={<ListArea />} />
         <Route path="area/cadastrar" element={<CreateArea />} />
+        <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
       </Route>
     </Routes>
   );
