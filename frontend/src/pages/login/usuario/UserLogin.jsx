@@ -45,9 +45,7 @@ export default function Login() {
 
         <div style={{ marginTop: '20px' }}>
           <a href="/login/admin">
-            {' '}
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
-            {' '}
           </a>
           <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" />
         </div>
