@@ -32,7 +32,7 @@ export default function CreateSuperior() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await api.post('/superior', { superior });
+    await api.post('/superior', { superior, selectedArea });
   };
 
   return (
@@ -90,7 +90,7 @@ export default function CreateSuperior() {
                 onChange={(e) => setSelectedArea(e.value)}
                 options={areas}
                 optionLabel="name"
-                placeholder="Select a City"
+                placeholder="Selecione uma área"
                 className="w-full md:w-14rem"
               />
             </div>
