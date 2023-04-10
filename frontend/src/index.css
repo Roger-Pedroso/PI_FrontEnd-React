@@ -32,3 +32,8 @@ a{
 #i {
     color: white;
 }
+
+#botoes {
+    background-color: white;
+    color: rgba(89,31,107,255);
+}
