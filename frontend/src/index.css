@@ -37,3 +37,8 @@ a{
     background-color: white;
     color: rgba(89,31,107,255);
 }
+
+#botoes:focus {
+    background-color: rgba(89,31,107,255);
+    color: white;
+  }
