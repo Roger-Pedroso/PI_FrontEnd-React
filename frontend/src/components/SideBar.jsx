@@ -11,7 +11,7 @@ export default function SideBar() {
         {
           label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/admin/cadastrar',
+          url: '/admin/add',
         },
         {
           label: 'Listar',
@@ -26,12 +26,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar Superior',
           icon: 'pi pi-fw pi-plus',
-          url: '/supervisor/cadastrar',
+          url: '/superior/add',
         },
         {
           label: 'Listar Superior',
           icon: 'pi pi-fw pi-list',
-          url: '/supervisor',
+          url: '/superior',
         },
       ],
     },

@@ -17,7 +17,7 @@ function AllRoutes() {
       <Route path="/" element={<App />}>
         <Route path="admin/add" element={<AdminCad />} />
         <Route path="superior/add" element={<CreateSuperior />} />
-        <Route path="superior/list" element={<ListSuperior />} />
+        <Route path="superior" element={<ListSuperior />} />
       </Route>
     </Routes>
   );
