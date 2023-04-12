@@ -42,3 +42,13 @@ a{
     background-color: rgba(89,31,107,255);
     color: white;
   }
+
+#adicao {
+    background-color: white;
+    color: rgba(89,31,107,255);
+}
+
+#adicao:active {
+    background-color: rgba(89,31,107,255);
+    color: white;
+  }
