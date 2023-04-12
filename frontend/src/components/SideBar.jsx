@@ -42,6 +42,7 @@ export default function SideBar() {
         {
           label: 'Cadastrar Questões',
           icon: 'pi pi-fw pi-plus',
+          url: '/quizes/CreateQuestions',
         },
         {
           label: 'Listar Questões',

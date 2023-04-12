@@ -3,7 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../utils/Api';
+import api from '../../utils/Api';
 
 export default function ListArea() {
   const navigate = useNavigate();

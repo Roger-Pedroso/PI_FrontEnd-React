@@ -5,9 +5,12 @@ import { Button } from 'primereact/button';
 import { InputMask } from 'primereact/inputmask';
 import { Calendar } from 'primereact/calendar';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
+import Spans from '../../components/Spans';
 
 export default function Cadastro() {
+  const { navigate } = useNavigate();
   const [admin, setAdmin] = useState({
     nome: '',
     email: '',
@@ -28,10 +31,16 @@ export default function Cadastro() {
     setAdmin({ ...admin, nascimento: format(new Date(nascimento), 'yyyy-MM-dd') });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    putDate();
-    await api.post('/user', { admin });
+  const onSubmit = async () => {
+    try {
+      const adminParsed = { ...admin, nascimento: new Date(admin.nascimento) };
+
+      await api.post('/user', { ...adminParsed });
+      navigate('/user');
+    } catch (error) {
+      console.log(error);
+    }
+
   };
   return (
 
@@ -50,26 +59,25 @@ export default function Cadastro() {
               </span>
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
             </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon" id="span">
+              <i className="pi pi-inbox" id="i" />
+            </span>
+            <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
+          </div>
 
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-inbox" />
-              </span>
-              <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
-            </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon" id="span">
+              <i className="pi pi-tag" id="i" />
+            </span>
 
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
-              </span>
-
-              <InputText
-                placeholder="Crachá"
-                type="number"
-                name="cracha"
-                onChange={(e) => { onChange(e); }}
-              />
-            </div>
+            <InputText
+              placeholder="Crachá"
+              type="number"
+              name="cracha"
+              onChange={(e) => { onChange(e); }}
+            />
+          </div>
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
@@ -78,44 +86,51 @@ export default function Cadastro() {
               <Calendar name="nascimento" onChange={(e) => { onChange(e); }} id="date" placeholder="Data de Nascimento" useGrouping={false} />
             </div>
 
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-phone" />
-              </span>
-              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="9999" placeholder="Ramal" useGrouping={false} />
-            </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-phone" />
+            </span>
+            <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="9999" placeholder="Ramal" useGrouping={false} />
+          </div>
 
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-key" />
-              </span>
-              <Password
-                toggleMask
-                placeholder="Senha"
-                name="senha"
-                onChange={(e) => { onChange(e); }}
-              />
-            </div>
+          <div className="p-inputgroup">
+            <Spans icon="pi pi-key" />
+            <Password
+              toggleMask
+              placeholder="Senha"
+              name="senha"
+              onChange={(e) => { onChange(e); }}
+            />
+          </div>
 
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-key" />
-              </span>
-              <Password
-                feedback={false}
-                toggleMask
-                placeholder="Confirmação de senha"
-              />
-            </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-key" />
+            </span>
+            <Password
+              feedback={false}
+              toggleMask
+              placeholder="Confirmação de senha"
+            />
+          </div>
 
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-key" />
+            </span>
+            <Password
+              feedback={false}
+              toggleMask
+              placeholder="Confirmação de senha"
+            />
           </div>
 
           <div style={{
-            marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px',
+            marginTop: '20px', gap: '10px',
           }}
           >
             <Button label="Cancelar" />
-            <Button label="Confirmar" onClick={onSubmit} />
+            <Button label="Confirmar" type="button" onClick={onSubmit} />
           </div>
         </div>
       </div>
