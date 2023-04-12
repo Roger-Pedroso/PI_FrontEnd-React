@@ -3,23 +3,34 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { InputMask } from 'primereact/inputmask';
+import { Calendar } from 'primereact/calendar';
+import { format } from 'date-fns';
 import api from '../../utils/Api';
 
 export default function Cadastro() {
   const [admin, setAdmin] = useState({
     nome: '',
-    nascimento: '',
     email: '',
     ramal: '',
     cracha: '',
     senha: '',
   });
+  const [nascimento, setNascimento] = useState('');
   const onChange = (e) => {
-    setAdmin({ ...admin, [e.target.name]: e.target.value });
+    if (e.target.name === 'nascimento') {
+      setNascimento(e.target.value);
+    } else {
+      setAdmin({ ...admin, [e.target.name]: e.target.value });
+    }
+  };
+
+  const putDate = () => {
+    setAdmin({ ...admin, nascimento: format(new Date(nascimento), 'yyyy-MM-dd') });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    putDate();
     await api.post('/user', { admin });
   };
   return (
@@ -31,7 +42,7 @@ export default function Cadastro() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <form onSubmit={(e) => { onSubmit(e); }} style={{ width: '60%' }}>
+        <div style={{ width: '60% ' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
@@ -64,7 +75,7 @@ export default function Cadastro() {
               <span className="p-inputgroup-addon">
                 <i className="pi pi-calendar" />
               </span>
-              <InputMask name="nascimento" onChange={(e) => { onChange(e); }} id="date" mask="99/99/9999" placeholder="Data de Nascimento" useGrouping={false} />
+              <Calendar name="nascimento" onChange={(e) => { onChange(e); }} id="date" placeholder="Data de Nascimento" useGrouping={false} />
             </div>
 
             <div className="p-inputgroup">
@@ -104,9 +115,9 @@ export default function Cadastro() {
           }}
           >
             <Button label="Cancelar" />
-            <Button label="Confirmar" type="submit" />
+            <Button label="Confirmar" onClick={onSubmit} />
           </div>
-        </form>
+        </div>
       </div>
     </>
   );
