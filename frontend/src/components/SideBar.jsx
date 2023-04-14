@@ -16,6 +16,7 @@ export default function SideBar() {
         {
           label: 'Listar',
           icon: 'pi pi-fw pi-list',
+          url: '/admin',
         },
       ],
     },

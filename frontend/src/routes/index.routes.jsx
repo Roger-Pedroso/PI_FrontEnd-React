@@ -10,6 +10,7 @@ import ListSuperior from '../pages/superior/ListSuperior';
 import ListArea from '../pages/area/ListArea';
 import CreateArea from '../pages/area/CreateArea';
 import CreateQuestions from '../pages/quizes/CreateQuestions';
+import ListAdmin from '../pages/admin/ListaAdministrador';
 
 function AllRoutes() {
   return (
@@ -19,11 +20,13 @@ function AllRoutes() {
       <Route path="recuperar" element={<LoginRecovery />} />
       <Route path="/" element={<App />}>
         <Route path="admin/cadastrar" element={<CreateAdmin />} />
+        <Route path="admin" element={<ListAdmin />} />
         <Route path="supervisor/cadastrar" element={<CreateSuperior />} />
         <Route path="supervisor" element={<ListSuperior />} />
         <Route path="area" element={<ListArea />} />
         <Route path="area/cadastrar" element={<CreateArea />} />
         <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
+
       </Route>
     </Routes>
   );
