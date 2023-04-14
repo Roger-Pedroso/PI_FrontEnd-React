@@ -1,21 +1,29 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import App from '../App';
-import CadastroAdmin from '../pages/admin/Cadastro';
-import LoginUser from '../pages/login/usuario/Login';
+import CreateAdmin from '../pages/admin/CreateAdmin';
+import LoginUser from '../pages/login/usuario/UserLogin';
 import LoginRecovery from '../pages/login/recuperar/Recovery';
-import LoginAdmin from '../pages/login/admin/Login';
-import ListaAdministrador from '../pages/admin/ListaAdministrador';
+import LoginAdmin from '../pages/login/admin/AdminLogin';
+import CreateSuperior from '../pages/superior/CreateSuperior';
+import ListSuperior from '../pages/superior/ListSuperior';
+import ListArea from '../pages/area/ListArea';
+import CreateArea from '../pages/area/CreateArea';
+import CreateQuestions from '../pages/quizes/CreateQuestions';
 
 function AllRoutes() {
   return (
     <Routes>
       <Route path="login" element={<LoginUser />} />
       <Route path="login/admin" element={<LoginAdmin />} />
-      <Route path="login/rec" element={<LoginRecovery />} />
+      <Route path="recuperar" element={<LoginRecovery />} />
       <Route path="/" element={<App />}>
-        <Route path="admin/cad" element={<CadastroAdmin />} />
-        <Route path="lista/administrador" element={<ListaAdministrador />} />
+        <Route path="admin/cadastrar" element={<CreateAdmin />} />
+        <Route path="supervisor/cadastrar" element={<CreateSuperior />} />
+        <Route path="supervisor" element={<ListSuperior />} />
+        <Route path="area" element={<ListArea />} />
+        <Route path="area/cadastrar" element={<CreateArea />} />
+        <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
       </Route>
     </Routes>
   );

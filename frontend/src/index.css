@@ -2,6 +2,8 @@
 body {
     background-color: rgba(89,31,107,255);
     font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .pi{
@@ -14,4 +16,19 @@ h1{
 
 a{
     text-decoration: none;
+}
+
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+#span {
+    background-color: rgba(89,31,107,255);
+}
+
+#i {
+    color: white;
 }

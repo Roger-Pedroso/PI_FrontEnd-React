@@ -1,6 +1,5 @@
 import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
-// import { Button } from 'primereact/button';
 import logo from '../img/logo.jpg';
 
 export default function SideBar() {
@@ -10,9 +9,9 @@ export default function SideBar() {
       icon: 'pi pi-user',
       items: [
         {
-          label: 'Criar',
+          label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/admin/cad',
+          url: '/admin/cadastrar',
         },
         {
           label: 'Listar',
@@ -21,16 +20,18 @@ export default function SideBar() {
       ],
     },
     {
-      label: 'Usuários',
+      label: 'Superiores Imediatos',
       icon: 'pi pi-users',
       items: [
         {
-          label: 'Criar',
+          label: 'Cadastrar Superior',
           icon: 'pi pi-fw pi-plus',
+          url: '/supervisor/cadastrar',
         },
         {
-          label: 'Listar',
+          label: 'Listar Superior',
           icon: 'pi pi-fw pi-list',
+          url: '/supervisor',
         },
       ],
     },
@@ -39,12 +40,37 @@ export default function SideBar() {
       icon: 'pi pi-fw pi-question',
       items: [
         {
-          label: 'Listar',
+          label: 'Cadastrar Questões',
+          icon: 'pi pi-fw pi-plus',
+          url: '/quizes/CreateQuestions',
+        },
+        {
+          label: 'Listar Questões',
           icon: 'pi pi-fw pi-list',
         },
         {
-          label: 'Enviados',
-          icon: 'pi pi-fw pi-send',
+          label: 'Criar Modelo de Questionário',
+          icon: 'pi pi-fw pi-plus',
+        },
+        {
+          label: 'Listar Modelo de Questionário',
+          icon: 'pi pi-fw pi-list',
+        },
+      ],
+    },
+    {
+      label: 'Areas',
+      icon: 'pi pi-fw pi-th-large',
+      items: [
+        {
+          label: 'Cadastrar',
+          icon: 'pi pi-fw pi-plus',
+          url: '/area/cadastrar',
+        },
+        {
+          label: 'Listar',
+          icon: 'pi pi-fw pi-list',
+          url: '/area',
         },
       ],
     },
@@ -53,16 +79,8 @@ export default function SideBar() {
       icon: 'pi pi-fw pi-file',
       items: [
         {
-          label: 'Criar',
+          label: 'Abrir Relatório',
           icon: 'pi pi-fw pi-plus',
-        },
-        {
-          label: 'Listar',
-          icon: 'pi pi-fw pi-list',
-        },
-        {
-          label: 'Exportar',
-          icon: 'pi pi-fw pi-file-export',
         },
       ],
     },
