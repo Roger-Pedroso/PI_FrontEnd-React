@@ -32,6 +32,14 @@ export default function CreateSuperior() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const sp = ({ ...superior, idSector: selectedArea.id });
+      console.log(sp);
+      setSuperior({ ...sp });
+    } catch (err) {
+      console.log(err);
+    }
+
     await api.post('/superior', { superior });
   };
 
@@ -87,10 +95,10 @@ export default function CreateSuperior() {
               </span>
               <Dropdown
                 value={selectedArea}
-                onChange={(e) => setSelectedArea(e.value)}
+                onChange={(e) => setSelectedArea(e.target.value)}
                 options={areas}
-                optionLabel="name"
-                placeholder="Select a City"
+                optionLabel="nome"
+                placeholder="Selecione uma área"
                 className="w-full md:w-14rem"
               />
             </div>
