@@ -1,25 +1,28 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable linebreak-style */
+/* eslint-disable no-return-assign *//* eslint-disable linebreak-style */
 import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { RadioButton } from 'primereact/radiobutton';
 import Spans from '../../components/Spans';
 
 export default function CreateQuestions() {
   const [alt, setAlt] = useState(false);
   const [mult, setMult] = useState(false);
+  const [type, setType] = useState(null);
+  const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
+  const [isTitleEmpty, setIsTitleEmpty] = useState(true);
+
+  const isTypeUndefined = type === null;
+  const vazio = alternativas.length <= 1;
+
   const [question, setQuestion] = useState({
     nome: '',
     descricao: '',
   });
-  // eslint-disable-next-line no-unused-vars
-  const [type, setType] = useState(null);
   const onChange = (e) => {
     setQuestion({ ...question, [e.target.name]: e.target.value });
   };
-  const [save, setSave] = useState(true);
-  const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
   const addAlternativa = () => {
     const novaAlternativa = { id: Date.now(), value: '' };
     setAlternativas([...alternativas, novaAlternativa]);
@@ -35,14 +38,17 @@ export default function CreateQuestions() {
     novasAlternativas.splice(index, 1);
     setAlternativas(novasAlternativas);
   };
-
-  // eslint-disable-next-line no-unused-vars
-  const [isTitleEmpty, setIsTitleEmpty] = useState(false);
   function handleTitleChange(e) {
     setIsTitleEmpty(e.target.value === '');
   }
-
-  const vazio = alternativas.length === 0;
+  const handleSubmit = () => {
+    if (isTitleEmpty || isTypeUndefined) {
+      // eslint-disable-next-line no-alert
+      alert('Por favor, preencha todos os campos obrigatórios!');
+    } else {
+      // logica para comitar
+    }
+  };
 
   return (
     <div>
@@ -67,30 +73,53 @@ export default function CreateQuestions() {
             <InputText name="descricao" placeholder="Descrição (OPCIONAL)" onChange={(e) => onChange(e)} />
           </div>
 
-          <div className=" flex justify-content-center">
-            <Button id="botoes" label="0 a 10" onClick={() => { setType('0_a_10'); setSave(false); }} />
-            <Button id="botoes" label="Alternativa" onClick={() => { setType('alternativa'); setAlt(true); setSave(false); }} />
-            <Dialog id="alt" header="Alternativas" headerStyle={{ textAlign: 'center' }} justifyContent="center" visible={alt} maximizable style={{ width: '50vw' }} onHide={() => setAlt(false)}>
-              {alternativas.map((alternativa, index) => (
-                <div className=" flex justify-content-center" key={alternativa.id}>
-                  <Spans icon="pi pi-pencil" />
-                  <InputText placeholder="Opcão" style={{ width: '500px' }} value={alternativa.value} onChange={(event) => handleAlternativaChange(event, alternativa.id)} />
-                  <Button icon="pi pi-delete-left" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={() => handleDeleteAlternativa(index)} />
+          <div className="flex justify-content-center">
+            <div className="flex flex-wrap gap-3">
+              <div className="flex align-items-center">
+                <RadioButton onChange={() => { setType('0_a_10'); setAlternativas([]); }} checked={type === '0_a_10'} />
+                <p style={{ marginLeft: '5px' }}>0 a 10</p>
+              </div>
+              <div className="flex align-items-center">
+                <RadioButton onChange={() => { setType('alternativa'); setAlt(true); setAlternativas([]); }} checked={type === 'alternativa'} />
+                <p style={{ marginLeft: '5px' }}>Alternativa</p>
+              </div>
+              <Dialog id="alt" header="Alternativas" headerStyle={{ textAlign: 'center' }} justifyContent="center" visible={alt} maximizable style={{ width: '50vw' }} onHide={() => setAlt(false)}>
+                {alternativas.map((alternativa, index) => (
+                  <div className=" flex justify-content-center" key={alternativa.id}>
+                    <Spans icon="pi pi-pencil" />
+                    <InputText placeholder="Opcão" style={{ width: '500px' }} value={alternativa.value} onChange={(event) => handleAlternativaChange(event, alternativa.id)} />
+                    <Button icon="pi pi-delete-left" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={() => handleDeleteAlternativa(index)} disabled={vazio} />
+                  </div>
+                ))}
+                <div className="flex justify-content-center gap-3" style={{ margin: '10px' }}>
+                  <Button label="Cancelar" onClick={() => { setAlt(false); setAlternativas([]); setType(null); }} />
+                  <Button icon="pi pi-plus" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={addAlternativa} label="Adicionar Opção" />
+                  <Button label="Salvar" disabled={vazio} onClick={() => setAlt(false)} />
                 </div>
-              ))}
-              <div className="flex justify-content-center gap-3" style={{ margin: '10px' }}>
-                <Button label="Cancelar" onClick={() => { setSave(true); setAlt(false); setAlternativas([]); }} />
-                <Button icon="pi pi-plus" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={addAlternativa} label="Adicionar Opção" />
-                <Button label="Salvar" disabled={vazio} onClick={() => setAlt(false)} />
+              </Dialog>
+              <div className="flex align-items-center">
+                <RadioButton onChange={() => { setType('multipla_escolha'); setMult(true); setAlternativas([]); }} checked={type === 'multipla_escolha'} />
+                <p style={{ marginLeft: '5px' }}>Múltipla Escolha</p>
               </div>
-            </Dialog>
-            <Button className="type-button" id="botoes" label="Múltipla Escolha" onClick={() => { setType('multipla_escolha'); setMult(true); setSave(false); }} />
-            <Dialog id="mult" header="Múltipla Escolha" headerStyle={{ position: 'relative', textAlign: 'center' }} justifyContent="center" visible={mult} maximizable style={{ width: '50vw' }} onHide={() => setMult(false)}>
-              <div>
-                <InputText placeholder="teste2" />
+              <Dialog id="mult" header="Múltipla Escolha" headerStyle={{ position: 'relative', textAlign: 'center' }} justifyContent="center" visible={mult} maximizable style={{ width: '50vw' }} onHide={() => setMult(false)}>
+                {alternativas.map((alternativa, index) => (
+                  <div className=" flex justify-content-center" key={alternativa.id}>
+                    <Spans icon="pi pi-pencil" />
+                    <InputText placeholder="Opcão" style={{ width: '500px' }} value={alternativa.value} onChange={(event) => handleAlternativaChange(event, alternativa.id)} />
+                    <Button icon="pi pi-delete-left" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={() => handleDeleteAlternativa(index)} disabled={vazio} />
+                  </div>
+                ))}
+                <div className="flex justify-content-center gap-3" style={{ margin: '10px' }}>
+                  <Button label="Cancelar" onClick={() => { setMult(false); setAlternativas([]); setType(null); }} />
+                  <Button icon="pi pi-plus" type="button" rounded outlined aria-label="Filter" style={{ marginLeft: '10px' }} onClick={addAlternativa} label="Adicionar Opção" />
+                  <Button label="Salvar" disabled={vazio} onClick={() => setMult(false)} />
+                </div>
+              </Dialog>
+              <div className="flex align-items-center">
+                <RadioButton onChange={() => { setType('aberta'); setAlternativas([]); }} checked={type === 'aberta'} />
+                <p style={{ marginLeft: '5px' }}>Aberta</p>
               </div>
-            </Dialog>
-            <Button className="type-button" id="botoes" label="Aberta" onClick={() => { setType('aberta'); setSave(false); }} />
+            </div>
           </div>
         </div>
       </div>
@@ -102,10 +131,8 @@ export default function CreateQuestions() {
           justifyContent: 'end',
         }}
       >
-
-        <Button label="Limpar" />
         <Button label="Listar" />
-        <Button label="Salvar" disabled={save || isTitleEmpty} />
+        <Button label="Salvar" onClick={() => handleSubmit()} />
       </div>
     </div>
   );
