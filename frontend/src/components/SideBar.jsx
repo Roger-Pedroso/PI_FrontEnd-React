@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import logo from '../img/logo.jpg';
@@ -17,6 +16,7 @@ export default function SideBar() {
         {
           label: 'Listar',
           icon: 'pi pi-fw pi-list',
+          url: '/admin',
         },
       ],
     },
@@ -52,7 +52,6 @@ export default function SideBar() {
         {
           label: 'Criar Modelo de Questionário',
           icon: 'pi pi-fw pi-plus',
-          url: '/quizes/CreateQuiz',
         },
         {
           label: 'Listar Modelo de Questionário',
