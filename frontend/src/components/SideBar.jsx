@@ -52,6 +52,7 @@ export default function SideBar() {
         {
           label: 'Criar Modelo de Questionário',
           icon: 'pi pi-fw pi-plus',
+          url: '/quizes/CreateQuiz',
         },
         {
           label: 'Listar Modelo de Questionário',
