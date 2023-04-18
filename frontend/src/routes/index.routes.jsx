@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import App from '../App';
@@ -10,6 +11,7 @@ import ListSuperior from '../pages/superior/ListSuperior';
 import ListArea from '../pages/area/ListArea';
 import CreateArea from '../pages/area/CreateArea';
 import CreateQuestions from '../pages/quizes/CreateQuestions';
+import CreateQuiz from '../pages/quizes/CreateQuiz';
 import ListAdmin from '../pages/admin/ListaAdministrador';
 
 function AllRoutes() {
@@ -26,6 +28,7 @@ function AllRoutes() {
         <Route path="area" element={<ListArea />} />
         <Route path="area/cadastrar" element={<CreateArea />} />
         <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
+        <Route path="quizes/CreateQuiz" element={<CreateQuiz />} />
 
       </Route>
     </Routes>

@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
 // import { PanelMenu } from 'primereact/panelmenu';
 import { Outlet } from 'react-router-dom';
