@@ -33,9 +33,7 @@ export default function CreateSuperior() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const sp = ({ ...superior, idSector: selectedArea.id });
-      console.log(sp);
-      setSuperior({ ...sp });
+      setSuperior({ ...superior, idSector: selectedArea.id });
     } catch (err) {
       console.log(err);
     }
