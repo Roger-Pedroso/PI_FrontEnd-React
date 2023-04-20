@@ -40,7 +40,7 @@ export default function CreateSuperior() {
       console.log(err);
     }
 
-    await api.post('/superior', { superior });
+    await api.post('/superior', { ...superior });
   };
 
   return (
