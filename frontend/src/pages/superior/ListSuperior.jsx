@@ -39,8 +39,10 @@ export default function ListSuperior() {
         </div>
         <DataTable value={superiores} tableStyle={{ minWidth: '50rem' }}>
           <Column field="nome" header="Nome" />
-          <Column field="status" header="Status" sortable />
-          <Column field="tipo" header="Tipo" />
+          <Column field="cracha" header="Crachá" sortable />
+          <Column field="cargo" header="Cargo" />
+          <Column field="email" header="Email" />
+          <Column field="sector.nome" header="Área" />
         </DataTable>
       </div>
     </div>
