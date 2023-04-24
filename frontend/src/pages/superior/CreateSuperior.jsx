@@ -2,6 +2,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
 
 export default function CreateSuperior() {
@@ -11,7 +12,7 @@ export default function CreateSuperior() {
     cargo: '',
     email: '',
   });
-
+  const navigate = useNavigate();
   const [selectedArea, setSelectedArea] = useState(null);
   const [areas, setAreas] = useState([]);
 
@@ -39,6 +40,7 @@ export default function CreateSuperior() {
     }
 
     await api.post('/superior', { ...superior });
+    navigate('/supervisor');
   };
 
   return (
@@ -69,14 +71,14 @@ export default function CreateSuperior() {
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-inbox" />
+                <i className="pi pi-briefcase" />
               </span>
               <InputText name="cargo" onChange={(e) => { onChange(e); }} placeholder="Cargo" />
             </div>
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
+                <i className="pi pi-inbox" />
               </span>
               <InputText
                 type="email"
@@ -89,7 +91,7 @@ export default function CreateSuperior() {
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
+                <i className="pi pi-table" />
               </span>
               <Dropdown
                 value={selectedArea}
