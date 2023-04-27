@@ -2,7 +2,9 @@
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 
 export default function CreateSuperior() {
@@ -12,9 +14,16 @@ export default function CreateSuperior() {
     cargo: '',
     email: '',
   });
-
+  const navigate = useNavigate();
   const [selectedArea, setSelectedArea] = useState(null);
   const [areas, setAreas] = useState([]);
+  const toast = useRef(null);
+
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios.', life: 3000,
+    });
+  };
 
   const findAreas = async () => {
     const data = await api.get('/sector');
@@ -31,11 +40,31 @@ export default function CreateSuperior() {
     setSuperior({ ...superior, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    await api.post('/superior', { superior });
+  const checkInput = () => {
+    if (superior.nome === '' || superior.cargo === '' || superior.cracha === '' || superior.email === '') {
+      return false;
+    }
+    return true;
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSuperior({ ...superior, idSector: selectedArea.id });
+    } catch (err) {
+      console.log(err);
+    }
+    if (checkInput === true) {
+      await api.post('/superior', { ...superior });
+      navigate('/supervisor');
+    } else {
+      showWarn();
+    }
+  };
+
+  const superiorRoute = () => {
+    navigate('/supervisor');
+  };
   return (
     <div>
       <div style={{ textAlign: 'center' }}><h1>Cadastrar Superior Imediato</h1></div>
@@ -64,14 +93,14 @@ export default function CreateSuperior() {
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-inbox" />
+                <i className="pi pi-briefcase" />
               </span>
               <InputText name="cargo" onChange={(e) => { onChange(e); }} placeholder="Cargo" />
             </div>
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
+                <i className="pi pi-inbox" />
               </span>
               <InputText
                 type="email"
@@ -84,14 +113,14 @@ export default function CreateSuperior() {
 
             <div className="p-inputgroup">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
+                <i className="pi pi-table" />
               </span>
               <Dropdown
                 value={selectedArea}
-                onChange={(e) => setSelectedArea(e.value)}
+                onChange={(e) => setSelectedArea(e.target.value)}
                 options={areas}
-                optionLabel="name"
-                placeholder="Select a City"
+                optionLabel="nome"
+                placeholder="Selecione uma área"
                 className="w-full md:w-14rem"
               />
             </div>
@@ -102,10 +131,13 @@ export default function CreateSuperior() {
             marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px',
           }}
           >
-            <Button label="Cancelar" />
+            <Button label="Cancelar" onClick={superiorRoute} />
             <Button label="Confirmar" type="submit" />
           </div>
         </form>
+      </div>
+      <div>
+        <Toast ref={toast} />
       </div>
     </div>
   );
