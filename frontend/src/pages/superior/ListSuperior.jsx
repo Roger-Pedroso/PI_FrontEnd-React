@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 
 export default function ListSuperior() {
   const navigate = useNavigate();
   const createSuperior = () => {
-    navigate('/superior/add');
+    navigate('/supervisor/cadastrar');
   };
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [superiores, setSuperiores] = useState([]);
@@ -22,7 +23,30 @@ export default function ListSuperior() {
     cargo: '',
     email: '',
   });
+  const toast = useRef(null);
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: 'Editado com sucesso!', life: 3000,
+    });
+  };
+  const showError = (msg) => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: msg, life: 3000,
+    });
+  };
 
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios', life: 3000,
+    });
+  };
+
+  const checkInput = (object) => {
+    if (object.nome === '' || object.cargo === '' || object.cracha === '' || object.email === '') {
+      return false;
+    }
+    return true;
+  };
   const findSuperior = async () => {
     const data = await api.get('/superior');
     setSuperiores(data.data);
@@ -54,9 +78,10 @@ export default function ListSuperior() {
 
   const deleteSuperior = async () => {
     try {
-      await api.delete(`superior/${selectedSuperior.id}`);
+      await api.delete(`superior/${selectedSuperior.id}`, { ...editedSuperior });
       window.location.reload();
     } catch (err) {
+      showError('ocorreu um erro ao realizar uma tentativa de deletar.');
       console.log(err);
     }
   };
@@ -66,14 +91,19 @@ export default function ListSuperior() {
   };
 
   const editSuperior = async () => {
-    try {
-      await api.put(`superior/${selectedSuperior.id}`, { ...editedSuperior });
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
+    if (checkInput(editedSuperior) === true) {
+      try {
+        await api.put(`superior/${editedSuperior.id}`, { ...editedSuperior });
+        window.location.reload();
+        showSuccess();
+      } catch (err) {
+        console.log(err);
+        showError('Ocorreu um erro ao realizar uma tentativa de envio da edição.');
+      }
+    } else {
+      showWarn();
     }
   };
-
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
@@ -112,7 +142,7 @@ export default function ListSuperior() {
         </Dialog>
       </div>
       <div>
-        <Dialog header={`Editar ${selectedSuperior.nome}`} visible={editMessage} style={{ width: '50vw' }} onHide={() => setEditMessage(false)}>
+        <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={{ width: '50vw' }} onHide={() => setEditMessage(false)}>
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{
@@ -167,6 +197,9 @@ export default function ListSuperior() {
             <Button label="Não" onClick={() => setEditMessage(false)} />
           </div>
         </Dialog>
+      </div>
+      <div>
+        <Toast ref={toast} />
       </div>
     </div>
   );
