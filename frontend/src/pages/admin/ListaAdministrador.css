@@ -1,0 +1,16 @@
+#titulo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+    font-size: 1em;
+    text-align: center;
+}
+
+#button{
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}

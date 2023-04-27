@@ -1,126 +1,29 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
-import { PanelMenu } from 'primereact/panelmenu';
+// import { PanelMenu } from 'primereact/panelmenu';
+import { Outlet } from 'react-router-dom';
+import SideBar from './components/SideBar';
 
-export default function App() {
-  const items = [
-    {
-      label: 'File',
-      icon: 'pi pi-fw pi-file',
-      items: [
-        {
-          label: 'New',
-          icon: 'pi pi-fw pi-plus',
-          items: [
-            {
-              label: 'Bookmark',
-              icon: 'pi pi-fw pi-bookmark',
-            },
-            {
-              label: 'Video',
-              icon: 'pi pi-fw pi-video',
-            },
-          ],
-        },
-        {
-          label: 'Delete',
-          icon: 'pi pi-fw pi-trash',
-        },
-        {
-          label: 'Export',
-          icon: 'pi pi-fw pi-external-link',
-        },
-      ],
-    },
-    {
-      label: 'Edit',
-      icon: 'pi pi-fw pi-pencil',
-      items: [
-        {
-          label: 'Left',
-          icon: 'pi pi-fw pi-align-left',
-        },
-        {
-          label: 'Right',
-          icon: 'pi pi-fw pi-align-right',
-        },
-        {
-          label: 'Center',
-          icon: 'pi pi-fw pi-align-center',
-        },
-        {
-          label: 'Justify',
-          icon: 'pi pi-fw pi-align-justify',
-        },
-      ],
-    },
-    {
-      label: 'Users',
-      icon: 'pi pi-fw pi-user',
-      items: [
-        {
-          label: 'New',
-          icon: 'pi pi-fw pi-user-plus',
-        },
-        {
-          label: 'Delete',
-          icon: 'pi pi-fw pi-user-minus',
-        },
-        {
-          label: 'Search',
-          icon: 'pi pi-fw pi-users',
-          items: [
-            {
-              label: 'Filter',
-              icon: 'pi pi-fw pi-filter',
-              items: [
-                {
-                  label: 'Print',
-                  icon: 'pi pi-fw pi-print',
-                },
-              ],
-            },
-            {
-              icon: 'pi pi-fw pi-bars',
-              label: 'List',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: 'Events',
-      icon: 'pi pi-fw pi-calendar',
-      items: [
-        {
-          label: 'Edit',
-          icon: 'pi pi-fw pi-pencil',
-          items: [
-            {
-              label: 'Save',
-              icon: 'pi pi-fw pi-calendar-plus',
-            },
-            {
-              label: 'Delete',
-              icon: 'pi pi-fw pi-calendar-minus',
-            },
-          ],
-        },
-        {
-          label: 'Archive',
-          icon: 'pi pi-fw pi-calendar-times',
-          items: [
-            {
-              label: 'Remove',
-              icon: 'pi pi-fw pi-calendar-minus',
-            },
-          ],
-        },
-      ],
-    },
-  ];
+function App() {
   return (
-    <div className="App">
-      <PanelMenu model={items} className="w-full md:w-25rem" />
+    <div className="flex justify-content-between gap-3" style={{ height: '97vh', width: '98vw' }}>
+      <div style={{
+        width: '20%',
+        backgroundColor: 'rgba(89,31,107,255)',
+        padding: '15px',
+        borderRadius: '5px',
+        boxShadow: '0 1px 5px 5px #471956',
+        border: '2px',
+        borderColor: 'black',
+      }}
+      >
+        <SideBar />
+      </div>
+      <div style={{ width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px' }}>
+        <Outlet />
+      </div>
     </div>
   );
 }
+
+export default App;
