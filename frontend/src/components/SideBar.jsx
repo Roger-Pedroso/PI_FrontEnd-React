@@ -48,10 +48,12 @@ export default function SideBar() {
         {
           label: 'Listar Questões',
           icon: 'pi pi-fw pi-list',
+          url: 'quizes/ListQuestions',
         },
         {
           label: 'Criar Modelo de Questionário',
           icon: 'pi pi-fw pi-plus',
+          url: '/quizes/CreateQuiz',
         },
         {
           label: 'Listar Modelo de Questionário',

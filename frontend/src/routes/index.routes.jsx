@@ -13,6 +13,7 @@ import CreateArea from '../pages/area/CreateArea';
 import CreateQuestions from '../pages/quizes/CreateQuestions';
 import CreateQuiz from '../pages/quizes/CreateQuiz';
 import ListAdmin from '../pages/admin/ListaAdministrador';
+import ListQuestions from '../pages/quizes/ListQuestions';
 
 function AllRoutes() {
   return (
@@ -29,6 +30,7 @@ function AllRoutes() {
         <Route path="area/cadastrar" element={<CreateArea />} />
         <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
         <Route path="quizes/CreateQuiz" element={<CreateQuiz />} />
+        <Route path="quizes/ListQuestions" element={<ListQuestions />} />
 
       </Route>
     </Routes>
