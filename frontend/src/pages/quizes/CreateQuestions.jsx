@@ -1,9 +1,10 @@
 /* eslint-disable no-return-assign */
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
+import { Toast } from 'primereact/toast';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
@@ -14,6 +15,7 @@ export default function CreateQuestions() {
   const [obrigatorio, setObrigatorio] = useState(false);
   const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
+  const toast = useRef();
 
   const isTypeUndefined = type === null;
   const vazio = alternativas.length <= 1;
@@ -44,6 +46,24 @@ export default function CreateQuestions() {
     setIsTitleEmpty(e.target.value === '');
   }
 
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Successo!', detail: 'Questão salva com sucesso!', life: 3000,
+    });
+  };
+
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso!', detail: 'Questão com apenas uma alternativa são invalidas!', life: 3000,
+    });
+  };
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Preencha todos os campos obrigatórios!', life: 3000,
+    });
+  };
+
   const submit = async () => {
     if (type !== 'alternativa' && type !== 'multipla_escolha') {
       // eslint-disable-next-line object-shorthand
@@ -59,21 +79,23 @@ export default function CreateQuestions() {
       await api.post('/question', { ...newQuestion });
     }
   };
+
   const handleSubmit = () => {
     if (isTitleEmpty || isTypeUndefined) {
-      // eslint-disable-next-line no-alert
-      alert('Por favor, preencha todos os campos obrigatórios!');
+      showError();
     } else if (type === 'alternativa' || type === 'multipla_escolha') {
       if (alternativas.length <= 1) {
-        alert(
-          'Não pode questões de alternativas/multipla escolha com apenas uma opção!',
-        );
+        showWarn();
         setType(null);
       } else {
         submit();
+        window.location.reload();
+        showSuccess();
       }
     } else {
       submit();
+      window.location.reload();
+      showSuccess();
     }
   };
 
@@ -347,6 +369,7 @@ export default function CreateQuestions() {
       >
         <Button label="Listar" />
         <Button label="Salvar" onClick={() => handleSubmit()} />
+        <Toast ref={toast} />
       </div>
     </div>
   );
