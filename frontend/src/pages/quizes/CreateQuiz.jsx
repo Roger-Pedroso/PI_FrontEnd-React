@@ -15,7 +15,7 @@ export default function CreateQuiz() {
   const [sourceQuestions, setSourceQuestions] = useState([]);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
   const toast = useRef();
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   const showWarn = () => {
     toast.current.show({

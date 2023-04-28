@@ -40,8 +40,8 @@ export default function CreateSuperior() {
     setSuperior({ ...superior, [e.target.name]: e.target.value });
   };
 
-  const checkInput = () => {
-    if (superior.nome === '' || superior.cargo === '' || superior.cracha === '' || superior.email === '') {
+  const checkInput = (object) => {
+    if (object.nome === '' || object.cargo === '' || object.cracha === '' || object.email === '') {
       return false;
     }
     return true;
@@ -54,7 +54,7 @@ export default function CreateSuperior() {
     } catch (err) {
       console.log(err);
     }
-    if (checkInput === true) {
+    if (checkInput(superior) === true) {
       await api.post('/superior', { ...superior });
       navigate('/supervisor');
     } else {
