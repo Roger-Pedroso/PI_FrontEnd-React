@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -12,6 +12,7 @@ import Spans from '../../components/Spans';
 
 export default function Cadastro() {
   const { navigate } = useNavigate();
+  const toast = useRef(null);
   const [admin, setAdmin] = useState({
     nome: '',
     email: '',
@@ -19,13 +20,28 @@ export default function Cadastro() {
     cracha: '',
     senha: '',
   });
+
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios.', life: 3000,
+    });
+  };
+
   const [date, setDate] = useState('');
+
   const onChange = (e) => {
     if (e.target.name === 'nascimento') {
       setDate(e.target.value);
     } else {
       setAdmin({ ...admin, [e.target.name]: e.target.value });
     }
+  };
+
+  const checkInput = (object) => {
+    if (object.nome === '' || object.email === '' || object.ramal === '' || object.cracha === '' || object.senha === '') {
+      return false;
+    }
+    return true;
   };
 
   const onSubmit = async () => {
@@ -36,6 +52,12 @@ export default function Cadastro() {
       navigate('/user');
     } catch (error) {
       console.log(error);
+    }
+    if (checkInput(admin) === true) {
+      await api.post('/superior', { ...admin });
+      navigate('/supervisor');
+    } else {
+      showWarn();
     }
   };
   return (

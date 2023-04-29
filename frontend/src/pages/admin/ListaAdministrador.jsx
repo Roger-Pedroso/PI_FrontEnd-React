@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
 import './ListaAdministrador.css';
 import api from '../../utils/Api';
 
@@ -37,11 +36,6 @@ export default function ListaAdministrador() {
             <Column field="ramal" header="Ramal" />
             <Column field="email" header="Email" />
           </DataTable>
-
-          <div id="button">
-            <Button label="Excluir" />
-            <Button label="Editar" type="submit" />
-          </div>
         </div>
       </div>
     </>
