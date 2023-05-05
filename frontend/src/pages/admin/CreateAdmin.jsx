@@ -7,11 +7,13 @@ import { Calendar } from 'primereact/calendar';
 import { InputMask } from 'primereact/inputmask';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 import Spans from '../../components/Spans';
 
 export default function Cadastro() {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
+  const [password, setPassword] = useState('');
   const toast = useRef(null);
   const [admin, setAdmin] = useState({
     nome: '',
@@ -21,9 +23,15 @@ export default function Cadastro() {
     senha: '',
   });
 
-  const showWarn = () => {
+  const showWarn = (msg) => {
     toast.current.show({
-      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios.', life: 3000,
+      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
+    });
+  };
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar administrador.', life: 3000,
     });
   };
 
@@ -44,20 +52,27 @@ export default function Cadastro() {
     return true;
   };
 
+  const checkPass = (object) => {
+    if (object.senha !== password) {
+      return false;
+    } return true;
+  };
+
   const onSubmit = async () => {
-    try {
-      const adminParsed = { ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') };
-      console.log(adminParsed.nascimento);
-      await api.post('/user', { ...adminParsed });
-      navigate('/user');
-    } catch (error) {
-      console.log(error);
-    }
-    if (checkInput(admin) === true) {
-      await api.post('/superior', { ...admin });
-      navigate('/supervisor');
+    const adminParsed = { ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') };
+    if (checkInput(adminParsed)) {
+      if (checkPass(adminParsed)) {
+        try {
+          await api.post('/user', { ...adminParsed });
+          navigate('/admin');
+        } catch (error) {
+          showError();
+        }
+      } else {
+        showWarn('Senhas não conferem!');
+      }
     } else {
-      showWarn();
+      showWarn('Um ou mais campos estão vazios.');
     }
   };
   return (
@@ -77,16 +92,12 @@ export default function Cadastro() {
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon" id="span">
-                <i className="pi pi-inbox" id="i" />
-              </span>
+              <Spans icon="pi pi-inbox" />
               <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon" id="span">
-                <i className="pi pi-tag" id="i" />
-              </span>
+              <Spans icon="pi pi-tag" />
 
               <InputText
                 placeholder="Crachá"
@@ -119,6 +130,7 @@ export default function Cadastro() {
             <div className="p-inputgroup">
               <Spans icon="pi pi-key" />
               <Password
+                onChange={(e) => setPassword(e.target.value)}
                 feedback={false}
                 toggleMask
                 placeholder="Confirmação de senha"
@@ -134,6 +146,9 @@ export default function Cadastro() {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Toast ref={toast} />
       </div>
     </>
   );
