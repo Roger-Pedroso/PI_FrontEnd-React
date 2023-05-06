@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
+import Spans from '../../components/Spans';
 
 export default function CreateSuperior() {
   const [superior, setSuperior] = useState({
@@ -73,16 +74,12 @@ export default function CreateSuperior() {
         <form onSubmit={(e) => { onSubmit(e); }} style={{ width: '60%' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-user" />
-              </span>
+              <Spans icon="pi pi-user" />
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-tag" />
-              </span>
+              <Spans icon="pi pi-tag" />
               <InputText
                 type="number"
                 placeholder="Crachá"
@@ -92,16 +89,12 @@ export default function CreateSuperior() {
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-briefcase" />
-              </span>
+              <Spans icon="pi pi-briefcase" />
               <InputText name="cargo" onChange={(e) => { onChange(e); }} placeholder="Cargo" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-inbox" />
-              </span>
+              <Spans icon="pi pi-inbox" />
               <InputText
                 type="email"
                 placeholder="Email"
@@ -112,9 +105,7 @@ export default function CreateSuperior() {
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-table" />
-              </span>
+              <Spans icon="pi pi-table" />
               <Dropdown
                 value={selectedArea}
                 onChange={(e) => setSelectedArea(e.target.value)}

@@ -3,8 +3,8 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
 import { InputSwitch } from 'primereact/inputswitch';
-
-import React, { useState } from 'react';
+import { Toast } from 'primereact/toast';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
 
@@ -12,18 +12,50 @@ export default function CreateArea() {
   const navigate = useNavigate();
   const [area, setArea] = useState({ nome: '', tipo: '' });
   const [status, setStatus] = useState(true);
-
+  const toast = useRef(null);
   const onChange = (e) => {
     setArea({ ...area, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = async (e) => {
-    const areaParsed = { ...area, status: status ? 'Ativo' : 'Inativo' };
+  const checkInput = (object) => {
+    if (object.nome === '' || object.tipo === '') {
+      return false;
+    }
+    return true;
+  };
 
-    e.preventDefault();
-    await api.post('/sector', { ...areaParsed });
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios', life: 3000,
+    });
+  };
 
-    navigate('/area');
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: 'Erro ao salvar área.', life: 3000,
+    });
+  };
+
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: 'Criado com sucesso!', life: 3000,
+    });
+  };
+
+  const onSubmit = async () => {
+    if (checkInput(area)) {
+      try {
+        const areaParsed = { ...area, status: status ? 'Ativo' : 'Inativo' };
+        await api.post('/sector', { ...areaParsed });
+        showSuccess();
+        navigate('/area');
+      } catch (error) {
+        console.log(error);
+        showError();
+      }
+    } else {
+      showWarn();
+    }
   };
 
   const backToList = () => {
@@ -66,6 +98,9 @@ export default function CreateArea() {
         </div>
         {/* </form> */}
 
+      </div>
+      <div>
+        <Toast ref={toast} />
       </div>
     </div>
   );
