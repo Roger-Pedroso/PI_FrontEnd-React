@@ -6,6 +6,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
 export default function CreateArea() {
@@ -72,15 +73,11 @@ export default function CreateArea() {
         <div className="flex flex-column gap-3" style={{ width: '50%' }}>
 
           <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-user" />
-            </span>
+            <Spans icon="pi pi-user" />
             <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome da Área" />
           </div>
           <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-user" />
-            </span>
+            <Spans icon="pi pi-user" />
             <InputText name="tipo" onChange={(e) => { onChange(e); }} id="tipo" placeholder="Tipo" />
           </div>
           <div className="p-inputgroup flex align-items-center">
@@ -90,7 +87,7 @@ export default function CreateArea() {
             <InputSwitch checked={status} onChange={(e) => setStatus(e.value)} />
           </div>
 
-          <div id="cad_button">
+          <div className="flex gap-3 justify-content-end">
             <Button label="Cancelar" onClick={backToList} />
             <Button label="Enviar" type="button" onClick={onSubmit} />
           </div>

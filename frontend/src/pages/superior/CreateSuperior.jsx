@@ -118,9 +118,11 @@ export default function CreateSuperior() {
 
           </div>
 
-          <div style={{
-            marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px',
-          }}
+          <div
+            className="flex justify-content-end gap-3"
+            style={{
+              marginTop: '20px',
+            }}
           >
             <Button label="Cancelar" onClick={superiorRoute} />
             <Button label="Confirmar" type="submit" />

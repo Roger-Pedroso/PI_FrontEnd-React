@@ -8,6 +8,7 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from 'primereact/inputswitch';
+import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
 export default function ListArea() {
@@ -168,16 +169,12 @@ export default function ListArea() {
                 }}
                 >
                   <div className="p-inputgroup">
-                    <span className="p-inputgroup-addon">
-                      <i className="pi pi-user" />
-                    </span>
+                    <Spans icon="pi pi-user" />
                     <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" value={editedArea.nome} />
                   </div>
 
                   <div className="p-inputgroup">
-                    <span className="p-inputgroup-addon">
-                      <i className="pi pi-user" />
-                    </span>
+                    <Spans icon="pi pi-user" />
                     <InputText name="tipo" onChange={(e) => { onChange(e); }} id="tipo" placeholder="Tipo" />
                   </div>
 

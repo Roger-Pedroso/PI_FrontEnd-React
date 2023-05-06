@@ -137,9 +137,11 @@ export default function Cadastro() {
               />
             </div>
 
-            <div style={{
-              display: 'flex', marginTop: '20px', gap: '10px', justifyContent: 'flex-end',
-            }}
+            <div
+              className="flex justify-content-end gap-3"
+              style={{
+                marginTop: '20px',
+              }}
             >
               <Button label="Cancelar" />
               <Button label="Confirmar" type="button" onClick={onSubmit} />
