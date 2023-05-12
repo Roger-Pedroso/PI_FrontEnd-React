@@ -8,13 +8,13 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from 'primereact/inputswitch';
+import { FilterMatchMode } from 'primereact/api';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
 export default function ListArea() {
   const navigate = useNavigate();
   const [areas, setAreas] = useState([]);
-
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [selectedArea, setSelectedArea] = useState([]);
   const [editMessage, setEditMessage] = useState(false);
@@ -24,7 +24,30 @@ export default function ListArea() {
     tipo: '',
     status: '',
   });
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
 
+  const onGlobalFilterChange = (e) => {
+    const { value } = e.target;
+    const afilters = { ...filters };
+
+    afilters.global.value = value;
+
+    setFilters(afilters);
+    setGlobalFilterValue(value);
+  };
+
+  const renderHeader = () => (
+    <div className="flex justify-content-end">
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Buscar" />
+      </span>
+    </div>
+  );
+  const header = renderHeader();
   const findAreas = async () => {
     const data = await api.get('/sector');
 
@@ -124,7 +147,7 @@ export default function ListArea() {
   };
 
   return (
-    <div className="card" style={{ margin: '20px', overflow: 'scroll' }}>
+    <div className="card" style={{ margin: '20px' }}>
       <div className="flex justify-content-between align-items-center">
 
         <h1>Listagem de Áreas</h1>
@@ -141,6 +164,9 @@ export default function ListArea() {
           tableStyle={{ minWidth: '50rem' }}
           paginator
           rows={5}
+          filters={filters}
+          globalFilterFields={['nome', 'status', 'tipo']}
+          header={header}
         >
           <Column field="nome" header="Nome" />
           <Column field="status" header="Status" sortable />

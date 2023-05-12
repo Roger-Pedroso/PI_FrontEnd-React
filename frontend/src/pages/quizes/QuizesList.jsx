@@ -3,6 +3,8 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode } from 'primereact/api';
 import api from '../../utils/Api';
 
 export default function QuizesList() {
@@ -11,6 +13,31 @@ export default function QuizesList() {
     navigate('/quizes/CreateQuiz');
   };
   const [quizes, setQuizes] = useState([]);
+
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
+
+  const onGlobalFilterChange = (e) => {
+    const { value } = e.target;
+    const afilters = { ...filters };
+
+    afilters.global.value = value;
+
+    setFilters(afilters);
+    setGlobalFilterValue(value);
+  };
+
+  const renderHeader = () => (
+    <div className="flex justify-content-end">
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Buscar" />
+      </span>
+    </div>
+  );
+  const header = renderHeader();
 
   const findQuizes = async () => {
     const data = await api.get('/quiz');
@@ -49,6 +76,9 @@ export default function QuizesList() {
           rows={9}
           scrollHeight="550px"
           tableStyle={{ maxHeight: '100px' }}
+          filters={filters}
+          globalFilterFields={['nome', 'descricao']}
+          header={header}
         >
           <Column field="nome" header="Nome" />
           <Column field="descricao" header="Descrição" />
