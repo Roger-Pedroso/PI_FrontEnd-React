@@ -1,11 +1,13 @@
 /* eslint-disable linebreak-style */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 // import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
 import api from '../../../utils/Api';
+import { AuthContext } from '../../../context/Login/AuthContext';
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -13,12 +15,16 @@ export default function Login() {
     senha: '',
   });
 
+  const navigate = useNavigate();
+
   //   const [warning, setWarning] = useState('');
   //   const navigate = useNavigate();
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+
+  const { isLogged, setIsLogged } = useContext(AuthContext);
 
   //   const onSubmit = async () => api.post('/login/adm', { credentials });
   //   const isValid = (e) => {
@@ -32,6 +38,8 @@ export default function Login() {
   //   };
 
   const handleLogin = async () => {
+    setIsLogged(true);
+    navigate('/');
     try {
       console.log(credentials);
       const response = await api.post('/login/adm', { ...credentials });
@@ -70,15 +78,10 @@ export default function Login() {
         <div className="p-inputgroup">
           <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => { onChange(e); }} name="senha" />
         </div>
-
       </div>
 
       <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-        <a href="/login">
-          {' '}
-          <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" />
-          {' '}
-        </a>
+        <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" onClick={handleLogin} />
         <Button style={{ backgroundColor: '#75298c' }} label="Entrar" onClick={handleLogin} />
       </div>
 
@@ -86,7 +89,13 @@ export default function Login() {
         <a style={{ color: 'white' }} href="/login/rec">Esqueceu sua senha?</a>
       </div>
       {/* </form> */}
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>a</p></div>
+      <div style={{ textAlign: 'end', fontSize: '1.2em' }}>
+        <p style={{ color: 'red' }}>
+          a:
+          {' '}
+          {isLogged.toString()}
+        </p>
+      </div>
     </div>
   );
 }
