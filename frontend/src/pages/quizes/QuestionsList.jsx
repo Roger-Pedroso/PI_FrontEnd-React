@@ -40,7 +40,14 @@ export default function QuestionsList() {
           />
 
         </div>
-        <DataTable value={questions} scrollable scrollHeight="550px" tableStyle={{ maxHeight: '100px' }}>
+        <DataTable
+          value={questions}
+          scrollable
+          paginator
+          rows={9}
+          scrollHeight="550px"
+          tableStyle={{ maxHeight: '100px' }}
+        >
           <Column field="nome_campo" header="Nome" />
           <Column field="descricao" header="Descrição" />
           <Column field="tipo" header="Tipo" />

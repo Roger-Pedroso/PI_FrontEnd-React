@@ -42,7 +42,14 @@ export default function QuizesList() {
           />
 
         </div>
-        <DataTable value={quizes} scrollable scrollHeight="550px" tableStyle={{ maxHeight: '100px' }}>
+        <DataTable
+          value={quizes}
+          scrollable
+          paginator
+          rows={9}
+          scrollHeight="550px"
+          tableStyle={{ maxHeight: '100px' }}
+        >
           <Column field="nome" header="Nome" />
           <Column field="descricao" header="Descrição" />
           <Column body={editTemplate} />

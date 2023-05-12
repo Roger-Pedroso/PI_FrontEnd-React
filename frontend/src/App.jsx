@@ -19,7 +19,10 @@ function App() {
       >
         <SideBar />
       </div>
-      <div style={{ width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px' }}>
+      <div style={{
+        width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px', overflow: 'scroll',
+      }}
+      >
         <Outlet />
       </div>
     </div>

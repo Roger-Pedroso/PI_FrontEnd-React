@@ -124,7 +124,7 @@ export default function ListArea() {
   };
 
   return (
-    <div className="card" style={{ margin: '20px' }}>
+    <div className="card" style={{ margin: '20px', overflow: 'scroll' }}>
       <div className="flex justify-content-between align-items-center">
 
         <h1>Listagem de Áreas</h1>
@@ -136,7 +136,12 @@ export default function ListArea() {
 
       </div>
       <div>
-        <DataTable value={areas} tableStyle={{ minWidth: '50rem' }}>
+        <DataTable
+          value={areas}
+          tableStyle={{ minWidth: '50rem' }}
+          paginator
+          rows={5}
+        >
           <Column field="nome" header="Nome" />
           <Column field="status" header="Status" sortable />
           <Column field="tipo" header="Tipo" />

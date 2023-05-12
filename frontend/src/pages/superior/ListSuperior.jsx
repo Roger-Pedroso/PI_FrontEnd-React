@@ -117,7 +117,12 @@ export default function ListSuperior() {
           />
 
         </div>
-        <DataTable value={superiores} tableStyle={{ minWidth: '50rem' }}>
+        <DataTable
+          value={superiores}
+          tableStyle={{ minWidth: '50rem' }}
+          paginator
+          rows={9}
+        >
           <Column field="nome" header="Nome" />
           <Column field="cracha" header="Crachá" sortable />
           <Column field="cargo" header="Cargo" />

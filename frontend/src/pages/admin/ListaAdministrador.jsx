@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import './ListaAdministrador.css';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
 
 export default function ListaAdministrador() {
@@ -12,32 +13,40 @@ export default function ListaAdministrador() {
 
     setAdmin(data.data);
   };
+  const navigate = useNavigate();
+  const createAdmin = () => {
+    navigate('/admin/cadastrar');
+  };
 
   useEffect(() => {
     findAdmin();
   }, [admin]);
 
   return (
-    <>
-      <div id="titulo">
-        <h1>Cadastro de Administradores</h1>
+    <div className="card" style={{ margin: '20px' }}>
+      <div className="flex justify-content-between align-items-center">
+
+        <h1>Listagem de Administradores</h1>
+        <Button
+          label="Cadastrar"
+          onClick={createAdmin}
+          style={{ height: '2rem' }}
+        />
+
       </div>
-      <div className="block font-bold text-center p-4 border-round mb-3">
-        <div className="card_table ">
-          <DataTable
-            value={admin}
-            paginator
-            rows={5}
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            tableStyle={{ minWidth: '50rem' }}
-          >
-            <Column field="cracha" header="Número do Cracha" />
-            <Column field="nome" header="Nome" />
-            <Column field="ramal" header="Ramal" />
-            <Column field="email" header="Email" />
-          </DataTable>
-        </div>
+      <div className="flex justify-content-between align-items-center">
+        <DataTable
+          value={admin}
+          paginator
+          rows={9}
+          tableStyle={{ minWidth: '50rem' }}
+        >
+          <Column field="cracha" header="Número do Cracha" />
+          <Column field="nome" header="Nome" />
+          <Column field="ramal" header="Ramal" />
+          <Column field="email" header="Email" />
+        </DataTable>
       </div>
-    </>
+    </div>
   );
 }
