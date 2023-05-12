@@ -48,7 +48,7 @@ export default function SideBar() {
         {
           label: 'Listar Questões',
           icon: 'pi pi-fw pi-list',
-          url: 'quizes/ListQuestions',
+          url: '/quizes/QuestionsList',
         },
         {
           label: 'Criar Modelo de Questionário',
@@ -58,6 +58,7 @@ export default function SideBar() {
         {
           label: 'Listar Modelo de Questionário',
           icon: 'pi pi-fw pi-list',
+          url: '/quizes/QuizesList',
         },
       ],
     },
