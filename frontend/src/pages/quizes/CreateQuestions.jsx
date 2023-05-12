@@ -1,10 +1,11 @@
 /* eslint-disable no-return-assign */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
@@ -15,15 +16,44 @@ export default function CreateQuestions() {
   const [obrigatorio, setObrigatorio] = useState(false);
   const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
-  const toast = useRef();
-
-  const isTypeUndefined = type === null;
-  const vazio = alternativas.length <= 1;
-
   const [question, setQuestion] = useState({
     nome_campo: '',
     descricao: '',
   });
+  const toast = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isTypeDouble = (type === 'alternativa' || type === 'multipla_escolha');
+  const [idEditedQuestion, setIdEditedQuestion] = useState('');
+
+  const findQuestionById = async (id) => {
+    const qst = await api.get(`/question/${id}`);
+    const questionParsed = qst.data;
+    setIdEditedQuestion(questionParsed.id);
+    setQuestion({ nome_campo: questionParsed.nome_campo, descricao: questionParsed.descricao });
+    setType(questionParsed.tipo);
+    setObrigatorio(questionParsed.obrigatorio);
+    setAlternativas([]);
+    const AlternativasParsed = JSON.parse(questionParsed.alternativas);
+    const alte = AlternativasParsed.map((alter, index) => ({
+      value: alter,
+      id: index + 1,
+    }));
+    console.log(alte);
+    setAlternativas(alte);
+  };
+
+  useEffect(() => {
+    if (location.pathname !== '/quizes/CreateQuestions') {
+      const questionId = location.pathname.substring(24, location.pathname.length);
+
+      findQuestionById(questionId);
+    }
+  }, [location.pathname]);
+
+  const isTypeUndefined = type === null;
+  const vazio = alternativas.length <= 1;
+
   const onChange = (e) => {
     setQuestion({ ...question, [e.target.name]: e.target.value });
   };
@@ -65,10 +95,27 @@ export default function CreateQuestions() {
   };
 
   const submit = async () => {
-    if (type !== 'alternativa' && type !== 'multipla_escolha') {
+    if (location.pathname === '/quizes/CreateQuestions') {
+      if (type !== 'alternativa' && type !== 'multipla_escolha') {
+      // eslint-disable-next-line object-shorthand
+        const newQuestion = { ...question, tipo: type, obrigatorio };
+        await api.post('/question', { ...newQuestion });
+        window.location.reload();
+      } else {
+        const newQuestion = {
+          ...question,
+          tipo: type,
+          obrigatorio,
+          alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
+        };
+        await api.post('/question', { ...newQuestion });
+        window.location.reload();
+      }
+    } else if (type !== 'alternativa' && type !== 'multipla_escolha') {
       // eslint-disable-next-line object-shorthand
       const newQuestion = { ...question, tipo: type, obrigatorio };
-      await api.post('/question', { ...newQuestion });
+      await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+      navigate('/quizes/QuestionsList');
     } else {
       const newQuestion = {
         ...question,
@@ -76,28 +123,46 @@ export default function CreateQuestions() {
         obrigatorio,
         alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
       };
-      await api.post('/question', { ...newQuestion });
+      await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+      navigate('/quizes/QuestionsList');
     }
   };
 
   const handleSubmit = () => {
-    if (isTitleEmpty || isTypeUndefined) {
-      showError();
+    if (location.pathname === '/quizes/CreateQuestions') {
+      if (isTitleEmpty || isTypeUndefined) {
+        showError();
+      } else if (type === 'alternativa' || type === 'multipla_escolha') {
+        if (alternativas.length <= 1) {
+          showWarn();
+        } else {
+          submit();
+          showSuccess();
+        }
+      } else {
+        submit();
+        showSuccess();
+      }
     } else if (type === 'alternativa' || type === 'multipla_escolha') {
       if (alternativas.length <= 1) {
         showWarn();
-        setType(null);
       } else {
         submit();
-        window.location.reload();
         showSuccess();
       }
     } else {
       submit();
-      window.location.reload();
       showSuccess();
     }
   };
+
+  function editarAlternativas() {
+    if (type === 'alternativa') {
+      setAlt(true);
+    } else if (type === 'multipla_escolha') {
+      setMult(true);
+    }
+  }
 
   return (
     <div>
@@ -105,7 +170,7 @@ export default function CreateQuestions() {
         className="flex justify-content-center"
         style={{ margin: '15px' }}
       >
-        <h1>Criar Questões</h1>
+        <h1>{location.pathname === '/quizes/CreateQuestions' ? 'Criar Questões' : 'Editar Questão'}</h1>
       </div>
 
       <div
@@ -133,7 +198,7 @@ export default function CreateQuestions() {
                 onChange(e);
                 handleTitleChange(e);
               }}
-              required
+              value={question.nome_campo}
             />
           </div>
           <div className="p-inputgroup" style={{ height: '100px' }}>
@@ -142,6 +207,7 @@ export default function CreateQuestions() {
               name="descricao"
               placeholder="Descrição (OPCIONAL)"
               onChange={(e) => onChange(e)}
+              value={question.descricao}
             />
           </div>
 
@@ -326,6 +392,9 @@ export default function CreateQuestions() {
                 />
                 <p style={{ marginLeft: '5px' }}>Aberta</p>
               </div>
+              <div className="flex align-items-center">
+                <Button label="Editar Alternativas" onClick={() => editarAlternativas()} disabled={!isTypeDouble} />
+              </div>
             </div>
           </div>
           <div
@@ -367,7 +436,7 @@ export default function CreateQuestions() {
           justifyContent: 'end',
         }}
       >
-        <Button label="Listar" />
+        <Button label="Listar" onClick={() => navigate('/quizes/QuestionsList')} />
         <Button label="Salvar" onClick={() => handleSubmit()} />
         <Toast ref={toast} />
       </div>

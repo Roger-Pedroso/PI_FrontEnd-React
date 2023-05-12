@@ -6,17 +6,20 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { PickList } from 'primereact/picklist';
 import { Toast } from 'primereact/toast';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
 export default function CreateQuiz() {
   const [targetQuestions, setTargetQuestions] = useState([]);
   const [sourceQuestions, setSourceQuestions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [list, setList] = useState(false);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
+  const [idEditedQuiz, setIdEditedQuiz] = useState('');
   const toast = useRef();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const showWarn = () => {
     toast.current.show({
       severity: 'warn', summary: 'Aviso!', detail: 'Por favor, selecione pelo menos uma questão!', life: 3000,
@@ -45,8 +48,24 @@ export default function CreateQuiz() {
     const data = await api.get('/question');
     setSourceQuestions(data.data);
   };
+  const findQuizById = async (id) => {
+    const qst = await api.get(`/quiz/${id}`);
+    const quizParsed = qst.data;
+    setIdEditedQuiz(quizParsed.id);
+    setQuiz({ nome: quizParsed.nome, descricao: quizParsed.descricao });
+    setTargetQuestions(quizParsed.questions);
+    const data = await api.get('/question');
+    const data2 = data.data;
+    // eslint-disable-next-line max-len
+    setSourceQuestions(data2.filter((item1) => !quizParsed.questions.some((item2) => item1.id === item2.id)));
+  };
   useEffect(() => {
-    findQuestion();
+    if (location.pathname !== '/quizes/CreateQuiz') {
+      const quizId = location.pathname.substring(19, location.pathname.length);
+      findQuizById(quizId);
+    } else {
+      findQuestion();
+    }
   }, []);
 
   function onChange(e) {
@@ -58,23 +77,36 @@ export default function CreateQuiz() {
   }
 
   const submit = async () => {
-    await api.post('/questionario', { ...quiz });
+    if (location.pathname === '/quizes/CreateQuiz') {
+      await api.post('/quiz', { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
+    } else {
+      console.log(targetQuestions);
+      await api.put(`/quiz/${idEditedQuiz}`, { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
+    }
   };
   const handleSubmit = () => {
-    if (isTitleEmpty) {
-      showError();
+    if (location.pathname === '/quizes/CreateQuiz') {
+      if (isTitleEmpty) {
+        showError();
+      } else if (targetQuestions.length === 0) {
+        showWarn();
+      } else {
+        submit();
+        showSuccess();
+        navigate('/quizes/QuizesList');
+      }
     } else if (targetQuestions.length === 0) {
       showWarn();
     } else {
       submit();
       showSuccess();
-      navigate('/quizes/ListQuestions');
+      navigate('/quizes/QuizesList');
     }
   };
   return (
     <div>
       <div className="flex justify-content-center">
-        <h1>Criar Modelo de Questionário</h1>
+        <h1>{location.pathname === '/quizes/CreateQuiz' ? 'Criar Modelo de Questionário' : 'Editar Modelo de Questionário'}</h1>
       </div>
 
       <div style={{
@@ -84,11 +116,11 @@ export default function CreateQuiz() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div className="p-inputgroup">
             <Spans icon="pi pi-question" />
-            <InputText name="nome" placeholder="Nome do Questionário (OBRIGATÓRIO)" onChange={(e) => { onChangeQuiz(e); handleTitleChange(e); }} required />
+            <InputText name="nome" placeholder="Nome do Questionário (OBRIGATÓRIO)" onChange={(e) => { onChangeQuiz(e); handleTitleChange(e); }} value={quiz.nome} />
           </div>
           <div className="p-inputgroup">
             <Spans icon="pi pi-align-justify" />
-            <InputText name="descricao" placeholder="Descrição (OPCIONAL)" onChange={(e) => onChangeQuiz(e)} />
+            <InputText name="descricao" placeholder="Descrição (OPCIONAL)" onChange={(e) => onChangeQuiz(e)} value={quiz.descricao} />
           </div>
           <div className="flex justify-content-center">
             <h2 style={{ color: 'rgba(89,31,107,255)' }}>Questões</h2>
@@ -130,8 +162,8 @@ export default function CreateQuiz() {
           />
         </div>
         <div className="flex justify-content-center gap-3">
-          <Button label="Listar" />
-          <Button label="Salvar" onClick={() => handleSubmit()} />
+          <Button label="Listar" onClick={() => navigate('/quizes/QuizesList')} />
+          <Button label="Salvar e Listar" onClick={() => { setList(true); handleSubmit(); }} />
           <Toast ref={toast} />
         </div>
       </div>

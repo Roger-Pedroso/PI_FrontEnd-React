@@ -13,7 +13,9 @@ import CreateArea from '../pages/area/CreateArea';
 import CreateQuestions from '../pages/quizes/CreateQuestions';
 import CreateQuiz from '../pages/quizes/CreateQuiz';
 import ListAdmin from '../pages/admin/ListaAdministrador';
-import ListQuestions from '../pages/quizes/ListQuestions';
+import QuestionsList from '../pages/quizes/QuestionsList';
+import QuizesList from '../pages/quizes/QuizesList';
+import SendQuiz from '../pages/quizes/SendQuiz';
 
 function AllRoutes() {
   return (
@@ -29,8 +31,12 @@ function AllRoutes() {
         <Route path="area" element={<ListArea />} />
         <Route path="area/cadastrar" element={<CreateArea />} />
         <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
+        <Route path="quizes/CreateQuestions/:id" element={<CreateQuestions />} />
         <Route path="quizes/CreateQuiz" element={<CreateQuiz />} />
-        <Route path="quizes/ListQuestions" element={<ListQuestions />} />
+        <Route path="quizes/QuestionsList" element={<QuestionsList />} />
+        <Route path="quizes/QuizesList" element={<QuizesList />} />
+        <Route path="quizes/CreateQuiz/:id" element={<CreateQuiz />} />
+        <Route path="quizes/SendQuiz/:id" element={<SendQuiz />} />
 
       </Route>
     </Routes>
