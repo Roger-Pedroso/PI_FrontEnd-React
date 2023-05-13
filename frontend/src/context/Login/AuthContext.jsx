@@ -6,22 +6,12 @@ import api from '../../utils/Api';
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState();
-
-  const isLogged = false;
-
-  const [value, setIsLogged] = useState(() => {
-    const storedValue = localStorage.getItem(isLogged);
-    return storedValue;
-  });
-
-  useEffect(() => {
-    localStorage.setItem(isLogged, value);
-  }, [value]);
+  const [userID, setUserID] = useState('');
+  const [isLogged, setIsLogged] = useState('logado');
 
   const authUser = (credentials) => {
     try {
-      setUser(api.post('/user', credentials));
+      setUserID(api.post('/login/adm', credentials));
       setIsLogged(true);
     } catch (error) {
       console.log(error);
@@ -29,12 +19,28 @@ export default function AuthProvider({ children }) {
     }
   };
   const memo = useMemo(() => ({
-    user,
-    setUser,
+    userID,
     isLogged,
     setIsLogged,
     authUser,
-  }), [user, isLogged, authUser]);
+  }), [isLogged, authUser]);
+
+  // useEffect(() => {
+  //   const storedVariable = (sessionStorage.getItem('isLoggedKey'));
+  //   sessionStorage.setItem('isLoggedKey', storedVariable);
+  //   console.log('login');
+  //   console.log(sessionStorage);
+  // }, [isLogged]);
+
+  useEffect(() => {
+    const storedVariable = (sessionStorage.getItem('isLoggedKey'));
+    console.log(storedVariable);
+    if (storedVariable) {
+      setIsLogged(storedVariable);
+    }
+    console.log(sessionStorage);
+  }, []);
+
   return (
     <AuthContext.Provider value={memo}>
       {children}

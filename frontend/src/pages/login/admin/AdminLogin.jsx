@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 // import { useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
-import api from '../../../utils/Api';
+// import api from '../../../utils/Api';
 import { AuthContext } from '../../../context/Login/AuthContext';
 
 export default function Login() {
@@ -40,14 +40,14 @@ export default function Login() {
   const handleLogin = async () => {
     setIsLogged(true);
     navigate('/');
-    try {
-      console.log(credentials);
-      const response = await api.post('/login/adm', { ...credentials });
-      console.log(response);
-      // navigate('/');
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   console.log(credentials);
+    //   const response = await api.post('/login/adm', { ...credentials });
+    //   console.log(response);
+    //   // navigate('/');
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (

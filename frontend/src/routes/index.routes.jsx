@@ -6,7 +6,8 @@ import PrivateRoutes from './private.routes';
 
 function AllRoutes() {
   const { isLogged } = useContext(AuthContext);
-  return isLogged ? <PrivateRoutes /> : <PublicRoutes />;
+  const teste = isLogged === !!'logado';
+  return teste ? <PrivateRoutes /> : <PublicRoutes />;
 }
 
 export default AllRoutes;
