@@ -6,8 +6,8 @@ import { Button } from 'primereact/button';
 // import { useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
-// import api from '../../../utils/Api';
 import { AuthContext } from '../../../context/Login/AuthContext';
+// import api from '../../../utils/Api';
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -16,6 +16,7 @@ export default function Login() {
   });
 
   const navigate = useNavigate();
+  const { authUser } = useContext(AuthContext);
 
   //   const [warning, setWarning] = useState('');
   //   const navigate = useNavigate();
@@ -23,8 +24,6 @@ export default function Login() {
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
-
-  const { isLogged, setIsLogged } = useContext(AuthContext);
 
   //   const onSubmit = async () => api.post('/login/adm', { credentials });
   //   const isValid = (e) => {
@@ -38,8 +37,9 @@ export default function Login() {
   //   };
 
   const handleLogin = async () => {
-    setIsLogged(true);
-    navigate('/');
+    authUser(credentials);
+    sessionStorage.setItem('isLoggedKey', 'logado');
+    navigate('/admin');
     // try {
     //   console.log(credentials);
     //   const response = await api.post('/login/adm', { ...credentials });
@@ -93,7 +93,6 @@ export default function Login() {
         <p style={{ color: 'red' }}>
           a:
           {' '}
-          {isLogged.toString()}
         </p>
       </div>
     </div>
