@@ -22,6 +22,7 @@ export default function ListaAdministrador() {
       <div id="titulo">
         <h1>Cadastro de Administradores</h1>
       </div>
+<<<<<<< Updated upstream
       <div className="block font-bold text-center p-4 border-round mb-3">
         <div className="card_table ">
           <DataTable
@@ -37,6 +38,24 @@ export default function ListaAdministrador() {
             <Column field="email" header="Email" />
           </DataTable>
         </div>
+=======
+      <div>
+        <DataTable
+          value={admin}
+          paginator
+          rows={4}
+          tableStyle={{ minWidth: '50rem', maxHeight: '23rem' }}
+          dataKey="id"
+          filters={filters}
+          globalFilterFields={['nome', 'cracha', 'ramal', 'email']}
+          header={header}
+        >
+          <Column field="cracha" header="Número do Cracha" />
+          <Column field="nome" header="Nome" />
+          <Column field="ramal" header="Ramal" />
+          <Column field="email" header="Email" />
+        </DataTable>
+>>>>>>> Stashed changes
       </div>
     </>
   );

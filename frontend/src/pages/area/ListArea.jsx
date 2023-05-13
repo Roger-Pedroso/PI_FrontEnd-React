@@ -136,7 +136,19 @@ export default function ListArea() {
 
       </div>
       <div>
+<<<<<<< Updated upstream
         <DataTable value={areas} tableStyle={{ minWidth: '50rem' }}>
+=======
+        <DataTable
+          value={areas}
+          tableStyle={{ minWidth: '50rem', maxHeight: '23rem' }}
+          paginator
+          rows={4}
+          filters={filters}
+          globalFilterFields={['nome', 'status', 'tipo']}
+          header={header}
+        >
+>>>>>>> Stashed changes
           <Column field="nome" header="Nome" />
           <Column field="status" header="Status" sortable />
           <Column field="tipo" header="Tipo" />

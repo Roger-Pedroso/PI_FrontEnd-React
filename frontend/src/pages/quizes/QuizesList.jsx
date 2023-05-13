@@ -42,7 +42,20 @@ export default function QuizesList() {
           />
 
         </div>
+<<<<<<< Updated upstream
         <DataTable value={quizes} scrollable scrollHeight="550px" tableStyle={{ maxHeight: '100px' }}>
+=======
+        <DataTable
+          value={quizes}
+          scrollable
+          paginator
+          rows={4}
+          tableStyle={{ minWidth: '50rem', maxHeight: '23rem' }}
+          filters={filters}
+          globalFilterFields={['nome', 'descricao']}
+          header={header}
+        >
+>>>>>>> Stashed changes
           <Column field="nome" header="Nome" />
           <Column field="descricao" header="Descrição" />
           <Column body={editTemplate} />

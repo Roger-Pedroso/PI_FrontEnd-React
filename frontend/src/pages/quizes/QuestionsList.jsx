@@ -40,7 +40,21 @@ export default function QuestionsList() {
           />
 
         </div>
+<<<<<<< Updated upstream
         <DataTable value={questions} scrollable scrollHeight="550px" tableStyle={{ maxHeight: '100px' }}>
+=======
+        <DataTable
+          value={questions}
+          scrollable
+          paginator
+          rows={4}
+          scrollHeight="550px"
+          tableStyle={{ minWidth: '50rem', maxHeight: '23rem' }}
+          filters={filters}
+          globalFilterFields={['nome_campo', 'descricao', 'tipo', 'alternativas']}
+          header={header}
+        >
+>>>>>>> Stashed changes
           <Column field="nome_campo" header="Nome" />
           <Column field="descricao" header="Descrição" />
           <Column field="tipo" header="Tipo" />

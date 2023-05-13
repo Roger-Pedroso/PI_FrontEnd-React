@@ -117,7 +117,19 @@ export default function ListSuperior() {
           />
 
         </div>
+<<<<<<< Updated upstream
         <DataTable value={superiores} tableStyle={{ minWidth: '50rem' }}>
+=======
+        <DataTable
+          value={superiores}
+          tableStyle={{ minWidth: '50rem', maxHeight: '23rem' }}
+          paginator
+          rows={4}
+          filters={filters}
+          globalFilterFields={['nome', 'cracha', 'cargo', 'email', 'sector.nome']}
+          header={header}
+        >
+>>>>>>> Stashed changes
           <Column field="nome" header="Nome" />
           <Column field="cracha" header="Crachá" sortable />
           <Column field="cargo" header="Cargo" />
