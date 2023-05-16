@@ -6,20 +6,25 @@ import api from '../../utils/Api';
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [userID, setUserID] = useState('');
-
+  const [user, setUser] = useState(null);
   const authUser = (credentials) => {
     try {
-      setUserID(api.post('login/adm', credentials));
+      const parsedUser = api.post('login/adm', credentials);
+      if (parsedUser.userId !== null) {
+        setUser(parsedUser);
+        sessionStorage.setItem('isLoggedKey', true);
+      } else {
+        sessionStorage.setItem('isLoggedKey', false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const memo = useMemo(() => ({
-    userID,
+    user,
     authUser,
-  }), [authUser]);
+  }), [authUser, user]);
 
   return (
     <AuthContext.Provider value={memo}>

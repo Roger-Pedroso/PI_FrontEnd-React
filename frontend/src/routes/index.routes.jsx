@@ -4,9 +4,12 @@ import PublicRoutes from './public.routes';
 import PrivateRoutes from './private.routes';
 
 function AllRoutes() {
-  const aux = false;
-  // const aux = sessionStorage.getItem('isLoggedKey') === 'logado';
-  return aux ? <PrivateRoutes /> : <PublicRoutes />;
+  if (sessionStorage.getItem('isLoggedKey') === true) {
+    return <PrivateRoutes />;
+  }
+  return <PublicRoutes />;
+
+  // return sessionStorage.getItem('isLoggedKey') ? <PrivateRoutes /> : <PublicRoutes />;
 }
 
 export default AllRoutes;

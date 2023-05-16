@@ -18,36 +18,14 @@ export default function Login() {
   const navigate = useNavigate();
   const { authUser } = useContext(AuthContext);
 
-  //   const [warning, setWarning] = useState('');
-  //   const navigate = useNavigate();
-
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  //   const onSubmit = async () => api.post('/login/adm', { credentials });
-  //   const isValid = (e) => {
-  //     onSubmit();
-  //     e.preventDefault();
-  //     if (onSubmit === true) {
-  //       navigate('/');
-  //     } else {
-  //       setWarning('Email ou senha inválidos!');
-  //     }
-  //   };
-
   const handleLogin = async () => {
     authUser(credentials);
-    sessionStorage.setItem('isLoggedKey', 'logado');
+    window.location.reload();
     navigate('/admin');
-    // try {
-    //   console.log(credentials);
-    //   const response = await api.post('/login/adm', { ...credentials });
-    //   console.log(response);
-    //   // navigate('/');
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (
@@ -89,12 +67,7 @@ export default function Login() {
         <a style={{ color: 'white' }} href="/login/rec">Esqueceu sua senha?</a>
       </div>
       {/* </form> */}
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }}>
-        <p style={{ color: 'red' }}>
-          a:
-          {' '}
-        </p>
-      </div>
+      <div style={{ textAlign: 'end', fontSize: '1.2em' }} />
     </div>
   );
 }
