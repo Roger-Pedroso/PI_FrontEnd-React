@@ -1,10 +1,9 @@
 /* eslint-disable linebreak-style */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-// import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Toast } from 'primereact/toast';
 import logo from '../../../img/logo.jpg';
 import { AuthContext } from '../../../context/Login/AuthContext';
 // import api from '../../../utils/Api';
@@ -15,17 +14,24 @@ export default function Login() {
     senha: '',
   });
 
-  const navigate = useNavigate();
-  const { authUser } = useContext(AuthContext);
+  const { login, authenticated } = useContext(AuthContext);
+  const toast = useRef(null);
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: 'Email ou senha inválidos', life: 3000,
+    });
+  };
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = async () => {
-    authUser(credentials);
-    window.location.reload();
-    navigate('/admin');
+  const handleLogin = () => {
+    login({ ...credentials });
+    if (authenticated !== true) {
+      showError();
+    }
   };
 
   return (
@@ -33,6 +39,7 @@ export default function Login() {
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '95vh',
     }}
     >
+      <div><Toast ref={toast} /></div>
 
       <div>
         <img style={{ height: '200px' }} id="logo" src={logo} alt="" />
@@ -50,11 +57,11 @@ export default function Login() {
       >
 
         <div className="p-inputgroup">
-          <InputText id="email" placeholder="Email" onChange={(e) => { onChange(e); }} name="email" type="email" />
+          <InputText id="email" placeholder="Email" onChange={(e) => onChange(e)} name="email" type="email" />
         </div>
 
         <div className="p-inputgroup">
-          <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => { onChange(e); }} name="senha" />
+          <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => onChange(e)} name="senha" />
         </div>
       </div>
 
@@ -64,7 +71,10 @@ export default function Login() {
       </div>
 
       <div style={{ marginTop: '20px' }}>
-        <a style={{ color: 'white' }} href="/login/rec">Esqueceu sua senha?</a>
+        <a style={{ color: 'white' }} href="/login/rec">
+          Esqueceu sua senha?
+          {authenticated}
+        </a>
       </div>
       {/* </form> */}
       <div style={{ textAlign: 'end', fontSize: '1.2em' }} />

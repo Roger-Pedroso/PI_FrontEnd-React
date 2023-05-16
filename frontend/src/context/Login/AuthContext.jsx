@@ -1,30 +1,46 @@
 import React, {
   createContext, useMemo, useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const authUser = (credentials) => {
+function AuthProvider({ children }) {
+  const [authenticated, setAuthenticated] = useState(sessionStorage.getItem('auth-key'));
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+
+  const login = async (credentials) => {
     try {
-      const parsedUser = api.post('login/adm', credentials);
-      if (parsedUser.userId !== null) {
-        setUser(parsedUser);
-        sessionStorage.setItem('isLoggedKey', true);
-      } else {
-        sessionStorage.setItem('isLoggedKey', false);
-      }
+      await api.post('/login/adm', { ...credentials }).then((response) => {
+        const req = response.data;
+        if (req.userId !== null) {
+          setUserId(req.userId);
+          sessionStorage.setItem('auth-key', true);
+          setAuthenticated(true);
+          navigate('/admin');
+        } else {
+          setUserId(null);
+        }
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
+  const logout = () => {
+    setUserId(null);
+    sessionStorage.removeItem('auth-key');
+    setAuthenticated(false);
+  };
+
   const memo = useMemo(() => ({
-    user,
-    authUser,
-  }), [authUser, user]);
+    authenticated,
+    login,
+    logout,
+    userId,
+  }), [authenticated, login, logout, userId]);
 
   return (
     <AuthContext.Provider value={memo}>
@@ -32,3 +48,5 @@ export default function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+export { AuthContext, AuthProvider };

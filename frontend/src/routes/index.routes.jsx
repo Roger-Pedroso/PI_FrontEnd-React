@@ -1,13 +1,13 @@
 /* eslint-disable linebreak-style */
-import React from 'react';
+import React, { useContext } from 'react';
 import PublicRoutes from './public.routes';
 import PrivateRoutes from './private.routes';
+import { AuthContext } from '../context/Login/AuthContext';
 
 function AllRoutes() {
-  if (sessionStorage.getItem('isLoggedKey') === true) {
-    return <PrivateRoutes />;
-  }
-  return <PublicRoutes />;
+  const { authenticated } = useContext(AuthContext);
+
+  return authenticated ? <PrivateRoutes /> : <PublicRoutes />;
 
   // return sessionStorage.getItem('isLoggedKey') ? <PrivateRoutes /> : <PublicRoutes />;
 }

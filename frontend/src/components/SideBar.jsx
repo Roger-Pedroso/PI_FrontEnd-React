@@ -99,8 +99,16 @@ export default function SideBar() {
         justifyContent: 'center',
       }}
       >
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <img src={logo} alt="" style={{ height: '100px' }} />
+          <div
+            className="flex"
+            style={{
+              borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px',
+            }}
+          >
+            user
+          </div>
         </div>
         <div style={{ color: 'black' }}>
           <PanelMenu
