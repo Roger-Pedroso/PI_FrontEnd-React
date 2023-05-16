@@ -16,6 +16,7 @@ import ListAdmin from '../pages/admin/ListaAdministrador';
 import QuestionsList from '../pages/quizes/QuestionsList';
 import QuizesList from '../pages/quizes/QuizesList';
 import SendQuiz from '../pages/quizes/SendQuiz';
+import AnsweringQuiz from '../pages/AnsweringQuiz/AnsweringQuiz';
 
 function AllRoutes() {
   return (
@@ -37,6 +38,8 @@ function AllRoutes() {
         <Route path="quizes/QuizesList" element={<QuizesList />} />
         <Route path="quizes/CreateQuiz/:id" element={<CreateQuiz />} />
         <Route path="quizes/SendQuiz/:id" element={<SendQuiz />} />
+        <Route path="client/AnsweringQuiz" element={<AnsweringQuiz />} />
+        <Route path="client/AnsweringQuiz/:id" element={<AnsweringQuiz />} />
 
       </Route>
     </Routes>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { ListBox } from 'primereact/listbox';
 import { Button } from 'primereact/button';
@@ -11,6 +11,7 @@ export default function SendQuiz() {
   const location = useLocation();
   // eslint-disable-next-line no-unused-vars
   const [quiz, setQuiz] = useState({
+    id: '',
     nome: '',
     descricao: '',
     questoes: [],
@@ -24,6 +25,7 @@ export default function SendQuiz() {
   const [numChaves, setNumChaves] = useState('');
   const [areYouSure, setAreYouSure] = useState(false);
   const isSuperiorSelected = (selectedSuperior === '' || (numChaves === '' || numChaves === null));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const quizId = location.pathname.substring(17, location.pathname.length);
@@ -54,8 +56,10 @@ export default function SendQuiz() {
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
-    // eslint-disable-next-line max-len
-    setQuiz({ nome: quizParsed.nome, descricao: quizParsed.descricao, questoes: quizParsed.questions });
+    setQuiz({
+      // eslint-disable-next-line max-len
+      id: quizParsed.id, nome: quizParsed.nome, descricao: quizParsed.descricao, questoes: quizParsed.questions,
+    });
     let number = 0;
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < quizParsed.questions.length; i++) {
@@ -72,7 +76,8 @@ export default function SendQuiz() {
   };
 
   const submit = () => {
-    // codigo de submit e geração de chaves
+    // eslint-disable-next-line no-undef
+    navigate(`/client/AnsweringQuiz/${quiz.id}`);
   };
 
   return (
