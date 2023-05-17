@@ -12,6 +12,7 @@ import QuestionsList from '../pages/quizes/QuestionsList';
 import QuizesList from '../pages/quizes/QuizesList';
 import SendQuiz from '../pages/quizes/SendQuiz';
 import CreateAdmin from '../pages/admin/CreateAdmin';
+import Profile from '../pages/admin/Profile';
 import App from '../App';
 
 export default function PrivateRoutes() {
@@ -20,6 +21,7 @@ export default function PrivateRoutes() {
       <Route path="/" element={<App />}>
         <Route path="admin/cadastrar" element={<CreateAdmin />} />
         <Route path="admin" element={<ListaAdministrador />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="supervisor/cadastrar" element={<CreateSuperior />} />
         <Route path="supervisor" element={<ListSuperior />} />
         <Route path="area" element={<ListArea />} />

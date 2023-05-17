@@ -1,10 +1,13 @@
 import React, { useContext } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 import logo from '../img/logo.jpg';
 import { AuthContext } from '../context/Login/AuthContext';
 
 export default function SideBar() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const items = [
     {
       label: 'Administradores',
@@ -105,12 +108,17 @@ export default function SideBar() {
           <img src={logo} alt="" style={{ height: '100px' }} />
           <div
             className="flex"
-            style={{
-              borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px',
-            }}
-          >
-            {user?.nome}
 
+          >
+            <Button
+              style={{
+                borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',
+              }}
+              icon="pi pi-user"
+              onClick={() => navigate('/profile')}
+            >
+              {user?.nome}
+            </Button>
           </div>
         </div>
         <div style={{ color: 'black' }}>

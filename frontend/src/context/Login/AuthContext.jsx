@@ -1,5 +1,5 @@
 import React, {
-  createContext, useEffect, useMemo, useState,
+  createContext, useMemo, useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/Api';
@@ -8,29 +8,31 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [authenticated, setAuthenticated] = useState(sessionStorage.getItem('auth-key') || false);
-  const [userId, setUserId] = useState(sessionStorage.getItem('user-id') || null);
-  const [user, setUser] = useState({});
+  const [userString, setUserString] = useState(sessionStorage.getItem('user-key'));
+  const [user, setUser] = useState(JSON.parse(userString));
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const id = sessionStorage.getItem('user-id' || false);
-    const aux = api.get(`/user/${id}`);
-    setUser(aux);
-  }, [user]);
+  const findUserById = async (id) => {
+    await api.get(`/user/${id}`).then((response) => {
+      sessionStorage.setItem('user-key', JSON.stringify(response.data));
+      console.log(setUser);
+      console.log(setUserString);
+    });
+  };
 
   const login = async (credentials) => {
     try {
       await api.post('/login/adm', { ...credentials }).then((response) => {
         const req = response.data;
         if (req.userId !== null) {
-          setUserId(req.userId);
+          findUserById(req.userId);
           sessionStorage.setItem('auth-key', true);
           sessionStorage.setItem('user-id', req.userId);
           setAuthenticated(true);
-          window.location.reload();
           navigate('/admin');
+          window.location.reload();
         } else {
-          setUserId(null);
+          setAuthenticated(false);
         }
       });
     } catch (error) {
@@ -39,7 +41,6 @@ function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    setUserId(null);
     sessionStorage.removeItem('auth-key');
     sessionStorage.removeItem('user-id');
     setAuthenticated(false);
@@ -50,8 +51,7 @@ function AuthProvider({ children }) {
     login,
     user,
     logout,
-    userId,
-  }), [authenticated, login, logout, userId, user]);
+  }), [authenticated, login, logout, user]);
 
   return (
     <AuthContext.Provider value={memo}>
