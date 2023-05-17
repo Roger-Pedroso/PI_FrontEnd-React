@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import logo from '../img/logo.jpg';
+import { AuthContext } from '../context/Login/AuthContext';
 
 export default function SideBar() {
+  const { user } = useContext(AuthContext);
   const items = [
     {
       label: 'Administradores',
@@ -107,7 +109,8 @@ export default function SideBar() {
               borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px',
             }}
           >
-            user
+            {user?.nome}
+
           </div>
         </div>
         <div style={{ color: 'black' }}>

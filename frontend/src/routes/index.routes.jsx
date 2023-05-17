@@ -8,8 +8,6 @@ function AllRoutes() {
   const { authenticated } = useContext(AuthContext);
 
   return authenticated ? <PrivateRoutes /> : <PublicRoutes />;
-
-  // return sessionStorage.getItem('isLoggedKey') ? <PrivateRoutes /> : <PublicRoutes />;
 }
 
 export default AllRoutes;

@@ -44,7 +44,9 @@ export default function ListaAdministrador() {
   };
 
   useEffect(() => {
-    findAdmin();
+    if (admin.length === 0) {
+      findAdmin();
+    }
   }, [admin]);
 
   return (
