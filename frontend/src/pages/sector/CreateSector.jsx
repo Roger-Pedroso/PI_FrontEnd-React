@@ -74,7 +74,7 @@ export default function CreateSector() {
 
           <div className="p-inputgroup">
             <Spans icon="pi pi-user" />
-            <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome da Área" />
+            <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome do Setor" />
           </div>
           <div className="p-inputgroup">
             <Spans icon="pi pi-user" />
@@ -82,7 +82,9 @@ export default function CreateSector() {
           </div>
           <div className="p-inputgroup flex align-items-center">
             <span className="p-inputgroup-addon mr-3">
-              Status
+              Status:
+              {' '}
+              {status ? 'Ativo' : 'Inativo'}
             </span>
             <InputSwitch checked={status} onChange={(e) => setStatus(e.value)} />
           </div>

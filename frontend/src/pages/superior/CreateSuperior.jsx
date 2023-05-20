@@ -48,8 +48,7 @@ export default function CreateSuperior() {
     return true;
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
       setSuperior({ ...superior, idSector: selectedArea.id });
     } catch (err) {
@@ -71,7 +70,7 @@ export default function CreateSuperior() {
       <div style={{ textAlign: 'center' }}><h1>Cadastrar Superior Imediato</h1></div>
 
       <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <form onSubmit={(e) => { onSubmit(e); }} style={{ width: '60%' }}>
+        <div style={{ width: '60%' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="p-inputgroup">
               <Spans icon="pi pi-user" />
@@ -125,9 +124,9 @@ export default function CreateSuperior() {
             }}
           >
             <Button label="Cancelar" onClick={superiorRoute} />
-            <Button label="Confirmar" type="submit" />
+            <Button label="Confirmar" onClick={onSubmit} />
           </div>
-        </form>
+        </div>
       </div>
       <div>
         <Toast ref={toast} />

@@ -4,11 +4,13 @@ import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
 import { AuthContext } from '../../../context/Login/AuthContext';
 // import api from '../../../utils/Api';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: '',
     senha: '',
@@ -27,8 +29,8 @@ export default function Login() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = () => {
-    login({ ...credentials });
+  const handleLogin = async () => {
+    await login({ ...credentials });
     if (authenticated !== true) {
       showError();
     }
@@ -66,14 +68,13 @@ export default function Login() {
       </div>
 
       <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-        <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" onClick={handleLogin} />
+        <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" onClick={() => navigate('/')} />
         <Button style={{ backgroundColor: '#75298c' }} label="Entrar" onClick={handleLogin} />
       </div>
 
       <div style={{ marginTop: '20px' }}>
-        <a style={{ color: 'white' }} href="/login/rec">
+        <a style={{ color: 'white' }} href="/recovery">
           Esqueceu sua senha?
-          {authenticated}
         </a>
       </div>
       {/* </form> */}

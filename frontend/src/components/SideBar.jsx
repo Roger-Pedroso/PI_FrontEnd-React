@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import logo from '../img/logo.jpg';
+import { AuthContext } from '../context/Login/AuthContext';
 
 export default function SideBar() {
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
+  const onConfirm = () => {
+    logout();
+    navigate('/');
+  };
+  const confirm = () => {
+    confirmDialog({
+      message: 'Tem certeza que quer sair?',
+      header: 'Confirmação',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      accept: onConfirm,
+    });
+  };
   const items = [
     {
       label: 'Administradores',
@@ -66,7 +83,7 @@ export default function SideBar() {
       ],
     },
     {
-      label: 'Areas',
+      label: 'Setores',
       icon: 'pi pi-fw pi-th-large',
       items: [
         {
@@ -95,6 +112,7 @@ export default function SideBar() {
 
   return (
     <div>
+      <div><ConfirmDialog /></div>
       <div style={{
         display: 'flex',
         flexDirection: 'column',
@@ -105,9 +123,18 @@ export default function SideBar() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <img src={logo} alt="" style={{ height: '100px' }} />
           <div
-            className="flex"
-
+            className="flex gap-3"
           >
+            <Button
+              icon="pi pi-times"
+              onClick={confirm}
+              style={{
+                borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',
+              }}
+            >
+              Logout
+
+            </Button>
             <Button
               style={{
                 borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',

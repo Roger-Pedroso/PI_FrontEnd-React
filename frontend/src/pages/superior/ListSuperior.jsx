@@ -226,8 +226,8 @@ export default function ListSuperior() {
             display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px',
           }}
           >
-            <Button label="Sim" onClick={() => editSuperior()} />
-            <Button label="Não" onClick={() => setEditMessage(false)} />
+            <Button label="Cancelar" onClick={() => setEditMessage(false)} />
+            <Button label="Editar" onClick={() => editSuperior()} />
           </div>
         </Dialog>
       </div>

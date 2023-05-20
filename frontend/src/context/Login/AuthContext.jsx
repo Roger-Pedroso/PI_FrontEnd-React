@@ -27,7 +27,6 @@ function AuthProvider({ children }) {
         if (req.userId !== null) {
           findUserById(req.userId);
           sessionStorage.setItem('auth-key', true);
-          sessionStorage.setItem('user-id', req.userId);
           setAuthenticated(true);
           navigate('/app');
           window.location.reload();
@@ -42,7 +41,7 @@ function AuthProvider({ children }) {
 
   const logout = () => {
     sessionStorage.removeItem('auth-key');
-    sessionStorage.removeItem('user-id');
+    sessionStorage.removeItem('user-key');
     setAuthenticated(false);
   };
 

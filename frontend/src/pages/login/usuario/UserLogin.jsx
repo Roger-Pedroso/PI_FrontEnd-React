@@ -44,7 +44,7 @@ export default function Login() {
 
         </div>
 
-        <div style={{ marginTop: '20px' }}>
+        <div className="flex gap-2" style={{ marginTop: '20px' }}>
           <a href="/login">
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
           </a>
