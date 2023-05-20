@@ -7,9 +7,9 @@ import LoginAdmin from '../pages/login/admin/AdminLogin';
 export default function PublicRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginUser />} />
-      <Route path="login/admin" element={<LoginAdmin />} />
-      <Route path="recuperar" element={<LoginRecovery />} />
+      <Route path="/" element={<LoginUser />} />
+      <Route path="login" element={<LoginAdmin />} />
+      <Route path="recovery" element={<LoginRecovery />} />
     </Routes>
   );
 }

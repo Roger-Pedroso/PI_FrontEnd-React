@@ -1,147 +1,83 @@
-import { Button } from 'primereact/button';
-import { Password } from 'primereact/password';
-import React, { useContext, useRef, useState } from 'react';
-import { InputMask } from 'primereact/inputmask';
-import { Calendar } from 'primereact/calendar';
+import React, { useContext } from 'react';
 import { InputText } from 'primereact/inputtext';
-import { Toast } from 'primereact/toast';
-import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import Spans from '../../components/Spans';
-import api from '../../utils/Api';
+import { Button } from 'primereact/button';
 import { AuthContext } from '../../context/Login/AuthContext';
+import profile from '../../img/profile.png';
 
 export default function Profile() {
-  const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-  const toast = useRef(null);
-  const [isDisabled, setIsDisabled] = useState(true);
   const { user } = useContext(AuthContext);
-  const [editedUser, setEditedUser] = useState({});
-
-  const showWarn = (msg) => {
-    toast.current.show({
-      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
-    });
-  };
-
-  const showError = () => {
-    toast.current.show({
-      severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar administrador.', life: 3000,
-    });
-  };
-
-  const [date, setDate] = useState('');
-
-  const onChange = (e) => {
-    if (e.target.name === 'nascimento') {
-      setDate(e.target.value);
-    } else {
-      setEditedUser({ ...editedUser, [e.target.name]: e.target.value });
-    }
-  };
-
-  const checkInput = (object) => {
-    if (object.nome === '' || object.email === '' || object.ramal === '' || object.cracha === '' || object.senha === '') {
-      return false;
-    }
-    return true;
-  };
-
-  const checkPass = (object) => {
-    if (object.senha !== password) {
-      return false;
-    } return true;
-  };
-
-  const onSubmit = async () => {
-    const userParsed = { ...editedUser, nascimento: format(new Date(date), 'yyyy-MM-dd') };
-    if (checkInput(userParsed)) {
-      if (checkPass(userParsed)) {
-        try {
-          await api.put(`/user/${user?.id}`, { ...userParsed });
-          navigate('/admin');
-          console.log(setIsDisabled);
-        } catch (error) {
-          showError();
-        }
-      } else {
-        showWarn('Senhas não conferem!');
-      }
-    } else {
-      showWarn('Um ou mais campos estão vazios.');
-    }
-  };
   return (
-
-    <>
-
-      <div style={{ textAlign: 'center' }}>
-        <h1>Cadastro de Administradores</h1>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <div style={{ width: '60%' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-user" />
-              <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome" value={user?.nome} disabled={isDisabled} />
-            </div>
-
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-inbox" />
-              <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" value={user?.email} disabled={isDisabled} />
-            </div>
-
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-tag" />
-
+    <div className="flex-column" style={{ marginTop: '10%' }}>
+      <div className="flex justify-content-center align-items-center">
+        <img src={profile} alt="" style={{ width: '300px' }} />
+        <div
+          className="flex-column"
+          style={{
+            backgroundColor: '#c4c4c4', borderRadius: '10px', marginLeft: '40px', padding: '35px',
+          }}
+        >
+          <div className="flex justify-content-center" style={{ marginBottom: '15px' }}>
+            <h1>
+              {user?.nome}
+            </h1>
+          </div>
+          <div className="flex gap-5" style={{ marginBottom: '50px' }}>
+            <div className="flex gap-1">
               <InputText
                 placeholder="Crachá"
                 type="number"
                 name="cracha"
-                value={user?.cracha}
-                disabled
-                onChange={(e) => { onChange(e); }}
+                readOnly
               />
+              <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} />
             </div>
-
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-calendar" />
-              <Calendar name="nascimento" placeholder="Data de nascimento" onChange={(e) => { onChange(e); }} id="date" value={user?.nascimento} useGrouping={false} disabled />
-            </div>
-
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-phone" />
-              <InputMask name="ramal" onChange={(e) => { onChange(e); }} mask="452103-9999" placeholder="Ramal" useGrouping={false} value={user?.ramal} disabled />
-            </div>
-
-            <div className="p-inputgroup">
-              <Spans icon="pi pi-key" />
-              <Password
-                onChange={(e) => setPassword(e.target.value)}
-                feedback={false}
-                toggleMask
-                disabled
-                placeholder="Confirmação de senha"
+            <div className="flex gap-1">
+              <InputText
+                placeholder="Crachá"
+                type="number"
+                name="cracha"
+                readOnly
               />
+              <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} />
             </div>
-
-            <div
-              className="flex justify-content-end gap-3"
-              style={{
-                marginTop: '20px',
-              }}
-            >
-              <Button label="Cancelar" />
-              <Button label="Confirmar" type="button" onClick={onSubmit} />
+          </div>
+          <div className="flex gap-5" style={{ marginBottom: '50px' }}>
+            <div className="flex gap-1">
+              <InputText
+                placeholder="Crachá"
+                type="number"
+                name="cracha"
+                readOnly
+              />
+              <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} />
             </div>
+            <div className="flex gap-1">
+              <InputText
+                placeholder="Crachá"
+                type="number"
+                name="cracha"
+                readOnly
+              />
+              <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} />
+            </div>
+          </div>
+          <div className="flex gap-5" style={{ marginBottom: '50px' }}>
+            <div className="flex gap-1">
+              <InputText
+                placeholder="Crachá"
+                type="number"
+                name="cracha"
+                readOnly
+              />
+              <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} />
+            </div>
+          </div>
+          <div className="flex justify-content-end gap-2" style={{ marginTop: '50px' }}>
+            <Button label="Alterar senha" />
+            <Button label="Salvar" />
           </div>
         </div>
       </div>
-      <div>
-        <Toast ref={toast} />
-      </div>
-    </>
+    </div>
   );
 }

@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import logo from '../img/logo.jpg';
-import { AuthContext } from '../context/Login/AuthContext';
 
 export default function SideBar() {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const items = [
     {
@@ -16,12 +14,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/admin/cadastrar',
+          url: '/app/admin/new',
         },
         {
           label: 'Listar',
           icon: 'pi pi-fw pi-list',
-          url: '/admin',
+          url: '/app/admin',
         },
       ],
     },
@@ -32,12 +30,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar Superior',
           icon: 'pi pi-fw pi-plus',
-          url: '/supervisor/cadastrar',
+          url: '/app/superior/new',
         },
         {
           label: 'Listar Superior',
           icon: 'pi pi-fw pi-list',
-          url: '/supervisor',
+          url: '/app/superior',
         },
       ],
     },
@@ -48,22 +46,22 @@ export default function SideBar() {
         {
           label: 'Cadastrar Questões',
           icon: 'pi pi-fw pi-plus',
-          url: '/quizes/CreateQuestions',
+          url: '/app/questions/new',
         },
         {
           label: 'Listar Questões',
           icon: 'pi pi-fw pi-list',
-          url: '/quizes/QuestionsList',
+          url: '/app/questions',
         },
         {
           label: 'Criar Modelo de Questionário',
           icon: 'pi pi-fw pi-plus',
-          url: '/quizes/CreateQuiz',
+          url: '/app/quizes/new',
         },
         {
           label: 'Listar Modelo de Questionário',
           icon: 'pi pi-fw pi-list',
-          url: '/quizes/QuizesList',
+          url: '/app/quizes',
         },
       ],
     },
@@ -74,12 +72,12 @@ export default function SideBar() {
         {
           label: 'Cadastrar',
           icon: 'pi pi-fw pi-plus',
-          url: '/area/cadastrar',
+          url: '/app/sector/new',
         },
         {
           label: 'Listar',
           icon: 'pi pi-fw pi-list',
-          url: '/area',
+          url: '/app/sector',
         },
       ],
     },
@@ -115,9 +113,9 @@ export default function SideBar() {
                 borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',
               }}
               icon="pi pi-user"
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/app/profile')}
             >
-              {user?.nome}
+              Perfil
             </Button>
           </div>
         </div>

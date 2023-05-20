@@ -64,7 +64,7 @@ export default function Cadastro() {
       if (checkPass(adminParsed)) {
         try {
           await api.post('/user', { ...adminParsed });
-          navigate('/admin');
+          navigate('/app/admin');
         } catch (error) {
           showError();
         }

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import ListaAdministrador from '../pages/admin/ListaAdministrador';
+import ListAdmin from '../pages/admin/ListAdmin';
 import CreateSuperior from '../pages/superior/CreateSuperior';
 import ListSuperior from '../pages/superior/ListSuperior';
-import ListArea from '../pages/area/ListArea';
-import CreateArea from '../pages/area/CreateArea';
+import ListSector from '../pages/area/ListSector';
+import CreateSector from '../pages/area/CreateSector';
 import CreateQuestions from '../pages/quizes/CreateQuestions';
 import CreateQuiz from '../pages/quizes/CreateQuiz';
 import QuestionsList from '../pages/quizes/QuestionsList';
@@ -18,21 +18,21 @@ import App from '../App';
 export default function PrivateRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<App />}>
-        <Route path="admin/cadastrar" element={<CreateAdmin />} />
-        <Route path="admin" element={<ListaAdministrador />} />
+      <Route path="/app" element={<App />}>
+        <Route path="admin/new" element={<CreateAdmin />} />
+        <Route path="admin" element={<ListAdmin />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="supervisor/cadastrar" element={<CreateSuperior />} />
-        <Route path="supervisor" element={<ListSuperior />} />
-        <Route path="area" element={<ListArea />} />
-        <Route path="area/cadastrar" element={<CreateArea />} />
-        <Route path="quizes/CreateQuestions" element={<CreateQuestions />} />
-        <Route path="quizes/CreateQuestions/:id" element={<CreateQuestions />} />
-        <Route path="quizes/CreateQuiz" element={<CreateQuiz />} />
-        <Route path="quizes/QuestionsList" element={<QuestionsList />} />
-        <Route path="quizes/QuizesList" element={<QuizesList />} />
-        <Route path="quizes/CreateQuiz/:id" element={<CreateQuiz />} />
-        <Route path="quizes/SendQuiz/:id" element={<SendQuiz />} />
+        <Route path="superior/new" element={<CreateSuperior />} />
+        <Route path="superior" element={<ListSuperior />} />
+        <Route path="sector" element={<ListSector />} />
+        <Route path="sector/new" element={<CreateSector />} />
+        <Route path="questions/new" element={<CreateQuestions />} />
+        <Route path="questions/new/:id" element={<CreateQuestions />} />
+        <Route path="quizes/new" element={<CreateQuiz />} />
+        <Route path="questions" element={<QuestionsList />} />
+        <Route path="quizes" element={<QuizesList />} />
+        <Route path="quizes/new/:id" element={<CreateQuiz />} />
+        <Route path="quizes/send/:id" element={<SendQuiz />} />
       </Route>
     </Routes>
   );

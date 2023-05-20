@@ -40,7 +40,7 @@ export default function ListaAdministrador() {
   };
   const navigate = useNavigate();
   const createAdmin = () => {
-    navigate('/admin/cadastrar');
+    navigate('/app/admin/new');
   };
 
   useEffect(() => {

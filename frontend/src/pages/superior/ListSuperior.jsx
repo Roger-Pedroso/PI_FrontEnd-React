@@ -12,7 +12,7 @@ import api from '../../utils/Api';
 export default function ListSuperior() {
   const navigate = useNavigate();
   const createSuperior = () => {
-    navigate('/supervisor/cadastrar');
+    navigate('/app/superior/new');
   };
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [superiores, setSuperiores] = useState([]);

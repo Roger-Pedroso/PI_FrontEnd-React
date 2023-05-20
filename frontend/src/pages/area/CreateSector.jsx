@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
-export default function CreateArea() {
+export default function CreateSector() {
   const navigate = useNavigate();
   const [area, setArea] = useState({ nome: '', tipo: '' });
   const [status, setStatus] = useState(true);
@@ -60,12 +60,12 @@ export default function CreateArea() {
   };
 
   const backToList = () => {
-    navigate('/area');
+    navigate('/app/sector');
   };
   return (
     <div>
       <div className="flex justify-content-center">
-        <h1>Cadastro de Área</h1>
+        <h1>Cadastro de Setor</h1>
       </div>
 
       <div className="flex justify-content-center mt-5">

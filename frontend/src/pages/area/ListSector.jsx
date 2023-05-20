@@ -12,7 +12,7 @@ import { FilterMatchMode } from 'primereact/api';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
-export default function ListArea() {
+export default function ListSector() {
   const navigate = useNavigate();
   const [areas, setAreas] = useState([]);
   const [deleteMessage, setDeleteMessage] = useState(false);
@@ -68,7 +68,7 @@ export default function ListArea() {
   }, [areas]);
 
   const createArea = () => {
-    navigate('/area/cadastrar');
+    navigate('/app/sector/new');
   };
 
   const toast = useRef(null);

@@ -29,7 +29,7 @@ function AuthProvider({ children }) {
           sessionStorage.setItem('auth-key', true);
           sessionStorage.setItem('user-id', req.userId);
           setAuthenticated(true);
-          navigate('/admin');
+          navigate('/app');
           window.location.reload();
         } else {
           setAuthenticated(false);

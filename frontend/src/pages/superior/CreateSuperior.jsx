@@ -57,14 +57,14 @@ export default function CreateSuperior() {
     }
     if (checkInput(superior) === true) {
       await api.post('/superior', { ...superior });
-      navigate('/supervisor');
+      navigate('/app/superior');
     } else {
       showWarn();
     }
   };
 
   const superiorRoute = () => {
-    navigate('/supervisor');
+    navigate('/app/superior');
   };
   return (
     <div>
