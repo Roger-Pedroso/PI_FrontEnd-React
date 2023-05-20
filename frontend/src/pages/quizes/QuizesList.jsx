@@ -10,7 +10,7 @@ import api from '../../utils/Api';
 export default function QuizesList() {
   const navigate = useNavigate();
   const createQuiz = () => {
-    navigate('/quizes/CreateQuiz');
+    navigate('/app/quizes/new');
   };
   const [quizes, setQuizes] = useState([]);
 
@@ -51,10 +51,10 @@ export default function QuizesList() {
   }, [quizes]);
 
   const editTemplate = (e) => (
-    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/quizes/CreateQuiz/${e.id}`)} />
+    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/new/${e.id}`)} />
   );
   const sendTemplate = (e) => (
-    <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/quizes/SendQuiz/${e.id}`)} />
+    <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/send/${e.id}`)} />
   );
   return (
     <div>

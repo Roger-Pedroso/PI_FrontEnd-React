@@ -60,7 +60,7 @@ export default function CreateQuiz() {
     setSourceQuestions(data2.filter((item1) => !quizParsed.questions.some((item2) => item1.id === item2.id)));
   };
   useEffect(() => {
-    if (location.pathname !== '/quizes/CreateQuiz') {
+    if (location.pathname !== '/app/quizes/new') {
       const quizId = location.pathname.substring(19, location.pathname.length);
       findQuizById(quizId);
     } else {
@@ -77,7 +77,7 @@ export default function CreateQuiz() {
   }
 
   const submit = async () => {
-    if (location.pathname === '/quizes/CreateQuiz') {
+    if (location.pathname === '/app/quizes/new') {
       await api.post('/quiz', { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
     } else {
       console.log(targetQuestions);
@@ -85,7 +85,7 @@ export default function CreateQuiz() {
     }
   };
   const handleSubmit = () => {
-    if (location.pathname === '/quizes/CreateQuiz') {
+    if (location.pathname === '/app/quizes/new') {
       if (isTitleEmpty) {
         showError();
       } else if (targetQuestions.length === 0) {
@@ -93,20 +93,20 @@ export default function CreateQuiz() {
       } else {
         submit();
         showSuccess();
-        navigate('/quizes/QuizesList');
+        navigate('/app/quizes');
       }
     } else if (targetQuestions.length === 0) {
       showWarn();
     } else {
       submit();
       showSuccess();
-      navigate('/quizes/QuizesList');
+      navigate('/app/quizes');
     }
   };
   return (
     <div>
       <div className="flex justify-content-center">
-        <h1>{location.pathname === '/quizes/CreateQuiz' ? 'Criar Modelo de Questionário' : 'Editar Modelo de Questionário'}</h1>
+        <h1>{location.pathname === '/app/quizes/new' ? 'Criar Modelo de Questionário' : 'Editar Modelo de Questionário'}</h1>
       </div>
 
       <div style={{
@@ -162,7 +162,7 @@ export default function CreateQuiz() {
           />
         </div>
         <div className="flex justify-content-center gap-3">
-          <Button label="Listar" onClick={() => navigate('/quizes/QuizesList')} />
+          <Button label="Listar" onClick={() => navigate('/app/quizes')} />
           <Button label="Salvar e Listar" onClick={() => { setList(true); handleSubmit(); }} />
           <Toast ref={toast} />
         </div>

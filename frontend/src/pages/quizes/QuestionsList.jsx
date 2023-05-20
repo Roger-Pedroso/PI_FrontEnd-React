@@ -10,7 +10,7 @@ import api from '../../utils/Api';
 export default function QuestionsList() {
   const navigate = useNavigate();
   const createQuestion = () => {
-    navigate('/quizes/CreateQuestions');
+    navigate('/app/questions/new');
   };
   const [questions, setQuestions] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -50,7 +50,7 @@ export default function QuestionsList() {
   }, [questions]);
 
   const editTemplate = (e) => (
-    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/quizes/CreateQuestions/${e.id}`)} />
+    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/questions/new/${e.id}`)} />
   );
 
   return (
