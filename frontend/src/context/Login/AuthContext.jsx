@@ -30,6 +30,7 @@ function AuthProvider({ children }) {
       window.location.reload();
     });
   };
+
   const login = async (credentials) => {
     try {
       await api.post('/login/adm', { ...credentials }).then((response) => {

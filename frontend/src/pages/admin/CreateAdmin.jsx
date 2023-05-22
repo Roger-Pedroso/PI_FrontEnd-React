@@ -35,11 +35,10 @@ export default function Cadastro() {
     });
   };
 
-  const [date, setDate] = useState('');
-
   const onChange = (e) => {
     if (e.target.name === 'nascimento') {
-      setDate(e.target.value);
+      const date = (e.target.value);
+      setAdmin({ ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') });
     } else {
       setAdmin({ ...admin, [e.target.name]: e.target.value });
     }
@@ -59,11 +58,10 @@ export default function Cadastro() {
   };
 
   const onSubmit = async () => {
-    const adminParsed = { ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') };
-    if (checkInput(adminParsed)) {
-      if (checkPass(adminParsed)) {
+    if (checkInput(admin)) {
+      if (checkPass(admin)) {
         try {
-          await api.post('/user', { ...adminParsed });
+          await api.post('/user', { ...admin });
           navigate('/app/admin');
         } catch (error) {
           showError();

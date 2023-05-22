@@ -22,6 +22,12 @@ export default function Profile() {
     });
   };
 
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: 'Editado com sucesso!', life: 3000,
+    });
+  };
+
   const showError = () => {
     toast.current.show({
       severity: 'error', summary: 'Erro', detail: 'Erro ao editar Perfil.', life: 3000,
@@ -49,6 +55,7 @@ export default function Profile() {
       if (checkField(editedUser) === true) {
         await api.put(`/user/${user?.id}`, { ...editedUser });
         updateUser();
+        showSuccess();
       } else {
         showWarn();
       }
