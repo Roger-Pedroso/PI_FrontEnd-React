@@ -11,25 +11,33 @@ function AuthProvider({ children }) {
   const [userString, setUserString] = useState(sessionStorage.getItem('user-key'));
   const [user, setUser] = useState(JSON.parse(userString));
   const navigate = useNavigate();
-
   const findUserById = async (id) => {
     await api.get(`/user/${id}`).then((response) => {
       sessionStorage.setItem('user-key', JSON.stringify(response.data));
-      console.log(setUser);
-      console.log(setUserString);
+      setUser(response.data);
+      setUserString(JSON.stringify(response.data));
+      navigate('/app');
+      window.location.reload();
+      return true;
     });
   };
 
+  const updateUser = async () => {
+    await api.get(`/user/${user.id}`).then((response) => {
+      sessionStorage.setItem('user-key', JSON.stringify(response.data));
+      setUser(response.data);
+      setUserString(JSON.stringify(response.data));
+      window.location.reload();
+    });
+  };
   const login = async (credentials) => {
     try {
       await api.post('/login/adm', { ...credentials }).then((response) => {
         const req = response.data;
         if (req.userId !== null) {
-          findUserById(req.userId);
           sessionStorage.setItem('auth-key', true);
           setAuthenticated(true);
-          navigate('/app');
-          window.location.reload();
+          findUserById(req.userId);
         } else {
           setAuthenticated(false);
         }
@@ -49,8 +57,9 @@ function AuthProvider({ children }) {
     authenticated,
     login,
     user,
+    updateUser,
     logout,
-  }), [authenticated, login, logout, user]);
+  }), [authenticated, login, logout, user, updateUser]);
 
   return (
     <AuthContext.Provider value={memo}>
