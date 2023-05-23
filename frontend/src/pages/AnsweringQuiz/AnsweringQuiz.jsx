@@ -14,15 +14,10 @@ export default function AnsweringQuiz() {
     descricao: '',
   });
   const [questions, setQuestions] = useState([]);
-  const [targetQuestion, setTargetQuestion] = useState({});
   const [index, setIndex] = useState();
   const [buttonVisible, setButtonVisible] = useState(false);
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
-  const [zeroa10, setZeroa10] = useState(false);
-  const [alternativaQ, setAlternativaQ] = useState(false);
-  const [mult, setMult] = useState(false);
-  const [aberta, setAberta] = useState(false);
   const question0 = index !== 0;
   const lastquestion = index !== questions.length - 1;
   const location = useLocation();
@@ -68,43 +63,8 @@ export default function AnsweringQuiz() {
     }
   }
 
-  const handleQuestionChange = () => {
-    if (index === 0 || index > 0 || index < questions.length - 1) {
-      setTargetQuestion(questions[index]);
-    }
-  };
-
-  const verifyQuestion = () => {
-    if (targetQuestion.tipo === '0_a_10') {
-      setZeroa10(true);
-      setAlternativaQ(false);
-      setMult(false);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'alternativa') {
-      setZeroa10(false);
-      setAlternativaQ(true);
-      setMult(false);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'multipla_escolha') {
-      setZeroa10(false);
-      setAlternativaQ(false);
-      setMult(true);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'aberta') {
-      setZeroa10(false);
-      setAlternativaQ(false);
-      setMult(false);
-      setAberta(true);
-    }
-  };
-
   useEffect(() => {
-    handleQuestionChange();
   }, [index]);
-
-  useEffect(() => {
-    verifyQuestion();
-  }, [targetQuestion]);
 
   return (
     <div>
@@ -114,10 +74,6 @@ export default function AnsweringQuiz() {
       <div className="flex justify-content-center items-center" style={{ height: '70vh', marginTop: '20px' }}>
         <div className="card flex justify-content-center" style={{ width: '90%', height: '100%' }}>
           <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); setButtonVisible(true); }} style={{ height: '15%', marginTop: '175px' }} />
-          {zeroa10 && <Questions0a10 question={targetQuestion} /> }
-          {alternativaQ && <QuestionsAlternativas question={targetQuestion} /> }
-          {mult && <QuestionsME question={targetQuestion} /> }
-          {aberta && <QuestionsOpen question={targetQuestion} /> }
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
