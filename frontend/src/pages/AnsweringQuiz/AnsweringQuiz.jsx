@@ -14,6 +14,7 @@ export default function AnsweringQuiz() {
     descricao: '',
   });
   const [questions, setQuestions] = useState([]);
+  const [componentQuestions, setComponentQuestions] = useState([]);
   const [index, setIndex] = useState();
   const [buttonVisible, setButtonVisible] = useState(false);
   const [buttonVisible1, setButtonVisible1] = useState(true);
@@ -62,6 +63,20 @@ export default function AnsweringQuiz() {
       setIndex(index - 1);
     }
   }
+  console.log(componentQuestions);
+  const verifyQuestions = (item) => {
+    let questionComponent = null;
+    if (item.tipo === '0_a_10') {
+      questionComponent = <Questions0a10 item={item} />;
+    } else if (item.tipo === 'alternativa') {
+      questionComponent = <QuestionsAlternativas item={item} />;
+    } else if (item.tipo === 'multipla_escolha') {
+      questionComponent = <QuestionsME item={item} />;
+    } else if (item.tipo === 'aberta') {
+      questionComponent = <QuestionsOpen item={item} />;
+    }
+    setComponentQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
+  };
 
   useEffect(() => {
   }, [index]);
@@ -73,7 +88,8 @@ export default function AnsweringQuiz() {
       </div>
       <div className="flex justify-content-center items-center" style={{ height: '70vh', marginTop: '20px' }}>
         <div className="card flex justify-content-center" style={{ width: '90%', height: '100%' }}>
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); setButtonVisible(true); }} style={{ height: '15%', marginTop: '175px' }} />
+          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); setButtonVisible(true); questions.forEach((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px' }} />
+          {componentQuestions[index]}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
