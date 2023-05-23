@@ -8,7 +8,7 @@ export default function QuestionsOpen(question) {
   }, []);
 
   return (
-    <div>
+    <div style={{ margin: '150px' }}>
       <h2>{targetQuestion.question.nome_campo}</h2>
     </div>
   );

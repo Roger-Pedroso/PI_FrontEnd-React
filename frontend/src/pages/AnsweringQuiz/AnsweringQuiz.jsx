@@ -1,12 +1,10 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Rating } from 'primereact/rating';
 import api from '../../utils/Api';
-import Questions0a10 from './QuestionsCards/Questions0a10';
-import QuestionsAlternativas from './QuestionsCards/QuestionsAlternativas';
-import QuestionsME from './QuestionsCards/QuestionsME';
-import QuestionsOpen from './QuestionsCards/QuestionsOpen';
 
 export default function AnsweringQuiz() {
   const [quiz, setQuiz] = useState({
@@ -14,17 +12,10 @@ export default function AnsweringQuiz() {
     descricao: '',
   });
   const [questions, setQuestions] = useState([]);
-  const [targetQuestion, setTargetQuestion] = useState({});
-  const [index, setIndex] = useState();
-  const [buttonVisible, setButtonVisible] = useState(false);
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
-  const [zeroa10, setZeroa10] = useState(false);
-  const [alternativaQ, setAlternativaQ] = useState(false);
-  const [mult, setMult] = useState(false);
-  const [aberta, setAberta] = useState(false);
-  const question0 = index !== 0;
-  const lastquestion = index !== questions.length - 1;
+  const [renderedQuestions, setRenderedQuestions] = useState([]);
+  const [value, setValue] = useState(null);
   const location = useLocation();
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);
@@ -45,6 +36,63 @@ export default function AnsweringQuiz() {
     }
   }, [questions]);
 
+  function zeroa10(item) {
+    return (
+      <div>
+        <h2>{item.nome_campo}</h2>
+        <p><i>descrição</i></p>
+        <Rating
+          value={value}
+          onChange={(e) => setValue(e.value)}
+          stars={10}
+          cancel={false}
+        />
+        <p>
+          Nota:
+          {' '}
+          {value}
+        </p>
+      </div>
+    );
+  }
+
+  function alternativa() {
+    return (
+      <div className="card">
+        <h1>teste altternativa</h1>
+      </div>
+    );
+  }
+
+  function me() {
+    return (
+      <div className="card">
+        <h1>teste multipla escolha</h1>
+      </div>
+    );
+  }
+
+  function aberta() {
+    return (
+      <div className="card">
+        <h1>teste aberta</h1>
+      </div>
+    );
+  }
+  const verifyQuestions = (item) => {
+    let questionComponent = null;
+    if (item.tipo === '0_a_10') {
+      questionComponent = zeroa10(item);
+    } else if (item.tipo === 'alternativa') {
+      questionComponent = alternativa();
+    } else if (item.tipo === 'multipla_escolha') {
+      questionComponent = me();
+    } else if (item.tipo === 'aberta') {
+      questionComponent = aberta();
+    }
+    setRenderedQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
+  };
+
   questions.sort((a, b) => {
     const tipoOrder = {
       '0_a_10': 0,
@@ -56,74 +104,24 @@ export default function AnsweringQuiz() {
     return tipoOrder[a.tipo] - tipoOrder[b.tipo];
   });
 
-  function indexUp() {
-    if (index !== questions.length) {
-      setIndex(index + 1);
-    }
-  }
-
-  function indexDown() {
-    if (index === 1 || index > 1) {
-      setIndex(index - 1);
-    }
-  }
-
-  const handleQuestionChange = () => {
-    if (index === 0 || index > 0 || index < questions.length - 1) {
-      setTargetQuestion(questions[index]);
-    }
-  };
-
-  const verifyQuestion = () => {
-    if (targetQuestion.tipo === '0_a_10') {
-      setZeroa10(true);
-      setAlternativaQ(false);
-      setMult(false);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'alternativa') {
-      setZeroa10(false);
-      setAlternativaQ(true);
-      setMult(false);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'multipla_escolha') {
-      setZeroa10(false);
-      setAlternativaQ(false);
-      setMult(true);
-      setAberta(false);
-    } else if (targetQuestion.tipo === 'aberta') {
-      setZeroa10(false);
-      setAlternativaQ(false);
-      setMult(false);
-      setAberta(true);
-    }
-  };
-
-  useEffect(() => {
-    handleQuestionChange();
-  }, [index]);
-
-  useEffect(() => {
-    verifyQuestion();
-  }, [targetQuestion]);
-
   return (
     <div>
       <div className="flex justify-content-center" style={{ margin: '10px' }}>
         <h1>{quiz.nome}</h1>
       </div>
-      <div className="flex justify-content-center items-center" style={{ height: '70vh', marginTop: '20px' }}>
-        <div className="card flex justify-content-center" style={{ width: '90%', height: '100%' }}>
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); setButtonVisible(true); }} style={{ height: '15%', marginTop: '175px' }} />
-          {zeroa10 && <Questions0a10 question={targetQuestion} /> }
-          {alternativaQ && <QuestionsAlternativas question={targetQuestion} /> }
-          {mult && <QuestionsME question={targetQuestion} /> }
-          {aberta && <QuestionsOpen question={targetQuestion} /> }
+      <div className="flex justify-content-center items-center" style={{ marginTop: '20px' }}>
+        <div
+          className="card"
+          style={{
+            width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          }}
+        >
+          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setButtonVisible1(false); questions.forEach((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px' }} />
+          {renderedQuestions}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
-        <Button label="Questão Anterior" onClick={() => indexDown()} visible={buttonVisible && question0} />
-        <Button label="Próxima Questão" onClick={() => indexUp()} visible={buttonVisible && lastquestion} />
-        <Button label="Finalizar Questionário" visible={!lastquestion} onClick={() => setEndQuiz(true)} />
+        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} />
         <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar o questionário?
