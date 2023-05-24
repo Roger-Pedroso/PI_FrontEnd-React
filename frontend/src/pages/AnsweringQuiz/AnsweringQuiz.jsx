@@ -15,11 +15,10 @@ export default function AnsweringQuiz() {
   });
   const [questions, setQuestions] = useState([]);
   const [componentQuestions, setComponentQuestions] = useState([]);
+  const [targetQuestion, setTargetQuestion] = useState();
   const [index, setIndex] = useState();
-  const [buttonVisible, setButtonVisible] = useState(false);
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
-  const question0 = index !== 0;
   const lastquestion = index !== questions.length - 1;
   const location = useLocation();
   const findQuizById = async (id) => {
@@ -48,22 +47,9 @@ export default function AnsweringQuiz() {
       multipla_escolha: 2,
       aberta: 3,
     };
-
     return tipoOrder[a.tipo] - tipoOrder[b.tipo];
   });
 
-  function indexUp() {
-    if (index !== questions.length) {
-      setIndex(index + 1);
-    }
-  }
-
-  function indexDown() {
-    if (index === 1 || index > 1) {
-      setIndex(index - 1);
-    }
-  }
-  console.log(componentQuestions);
   const verifyQuestions = (item) => {
     let questionComponent = null;
     if (item.tipo === '0_a_10') {
@@ -79,7 +65,12 @@ export default function AnsweringQuiz() {
   };
 
   useEffect(() => {
+    setTargetQuestion(componentQuestions[index]);
+    console.log(targetQuestion);
+    console.log(index);
   }, [index]);
+
+  console.log(componentQuestions);
 
   return (
     <div>
@@ -87,14 +78,12 @@ export default function AnsweringQuiz() {
         <h1>{quiz.nome}</h1>
       </div>
       <div className="flex justify-content-center items-center" style={{ height: '70vh', marginTop: '20px' }}>
-        <div className="card flex justify-content-center" style={{ width: '90%', height: '100%' }}>
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); setButtonVisible(true); questions.forEach((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px' }} />
-          {componentQuestions[index]}
+        <div className="card flex justify-content-center" style={{ width: '90%', height: '100%', flexDirection: 'column' }}>
+          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); questions.map((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px' }} />
+          {componentQuestions.map((item) => item)}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
-        <Button label="Questão Anterior" onClick={() => indexDown()} visible={buttonVisible && question0} />
-        <Button label="Próxima Questão" onClick={() => indexUp()} visible={buttonVisible && lastquestion} />
         <Button label="Finalizar Questionário" visible={!lastquestion} onClick={() => setEndQuiz(true)} />
         <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">

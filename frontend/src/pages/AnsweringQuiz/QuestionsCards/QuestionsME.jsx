@@ -1,11 +1,17 @@
 /* eslint-disable react/destructuring-assignment */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function QuestionsME(item) {
-  console.log(item);
+  const [targetQuestion, setTargetQuestion] = useState(item.item);
+  useEffect(() => {
+    if (targetQuestion === null) {
+      setTargetQuestion(item.item);
+    }
+  }, [targetQuestion]);
+
   return (
     <div>
-      <h2>{item.nome_campo}</h2>
+      <h2>{targetQuestion.nome_campo}</h2>
     </div>
   );
 }
