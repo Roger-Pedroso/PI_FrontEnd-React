@@ -15,11 +15,8 @@ export default function AnsweringQuiz() {
   });
   const [questions, setQuestions] = useState([]);
   const [componentQuestions, setComponentQuestions] = useState([]);
-  const [targetQuestion, setTargetQuestion] = useState();
-  const [index, setIndex] = useState();
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
-  const lastquestion = index !== questions.length - 1;
   const location = useLocation();
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);
@@ -64,27 +61,27 @@ export default function AnsweringQuiz() {
     setComponentQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
   };
 
-  useEffect(() => {
-    setTargetQuestion(componentQuestions[index]);
-    console.log(targetQuestion);
-    console.log(index);
-  }, [index]);
-
-  console.log(componentQuestions);
+  console.log('questioms', componentQuestions);
 
   return (
     <div>
-      <div className="flex justify-content-center" style={{ margin: '10px' }}>
+      <div className="flex justify-content-center" style={{ margin: '10px', flexDirection: 'column', alignItems: 'center' }}>
         <h1>{quiz.nome}</h1>
+        <h2 style={{ margin: '-5px' }}><i>Nome do Superior</i></h2>
       </div>
-      <div className="flex justify-content-center items-center" style={{ height: '70vh', marginTop: '20px' }}>
-        <div className="card flex justify-content-center" style={{ width: '90%', height: '100%', flexDirection: 'column' }}>
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setIndex(0); setButtonVisible1(false); questions.map((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px' }} />
+      <div className="flex justify-content-center items-center" style={{ marginTop: '20px' }}>
+        <div
+          className="card"
+          style={{
+            width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(89,31,107,255)',
+          }}
+        >
+          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setButtonVisible1(false); questions.map((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px', width: '50%' }} />
           {componentQuestions.map((item) => item)}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
-        <Button label="Finalizar Questionário" visible={!lastquestion} onClick={() => setEndQuiz(true)} />
+        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} />
         <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar o questionário?
