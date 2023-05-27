@@ -40,8 +40,6 @@ export default function QuestionsME(item) {
     setSelectedAlternativas(updateArray);
   };
 
-  console.log(selectedAlternativas);
-
   return (
     <div style={{ width: '100%' }}>
       <div

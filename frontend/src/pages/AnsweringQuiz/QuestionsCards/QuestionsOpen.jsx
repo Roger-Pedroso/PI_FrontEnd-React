@@ -11,7 +11,6 @@ export default function QuestionsOpen(item) {
     }
   }, [targetQuestion]);
 
-  console.log(description);
   return (
     <div style={{ width: '100%' }}>
       <div

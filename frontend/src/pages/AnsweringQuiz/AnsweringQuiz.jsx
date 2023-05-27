@@ -17,6 +17,7 @@ export default function AnsweringQuiz() {
   const [componentQuestions, setComponentQuestions] = useState([]);
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
+  const [answers, setAnswers] = useState([]);
   const location = useLocation();
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);
@@ -61,8 +62,12 @@ export default function AnsweringQuiz() {
     setComponentQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
   };
 
-  console.log('questioms', componentQuestions);
+  const constructRespostas = (item) => {
+    const novaResposta = { id_question: item.id, resposta: '' };
+    setAnswers((prevRespostas) => [...prevRespostas, novaResposta]);
+  };
 
+  console.log(answers);
   return (
     <div>
       <div className="flex justify-content-center" style={{ margin: '10px', flexDirection: 'column', alignItems: 'center' }}>
@@ -76,7 +81,7 @@ export default function AnsweringQuiz() {
             width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(89,31,107,255)',
           }}
         >
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setButtonVisible1(false); questions.map((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px', width: '50%' }} />
+          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setButtonVisible1(false); questions.map((item) => constructRespostas(item)); questions.forEach((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px', width: '50%' }} />
           {componentQuestions.map((item) => item)}
         </div>
       </div>
