@@ -8,10 +8,10 @@ function AnswersProvider({ children }) {
     exemplo: '',
   }]);
 
-  const memo = useMemo(() => [{
+  const memo = useMemo(() => ({
     form,
     setForm,
-  }], [form, setForm]);
+  }), [form, setForm]);
 
   return (
     <AnswersContext.Provider value={memo}>
