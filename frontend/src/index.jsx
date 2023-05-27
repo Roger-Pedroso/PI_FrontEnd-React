@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import AppProvider from './context';
+import { AnswersProvider } from './context/AnswersContext';
 
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -16,9 +17,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AppProvider>
-        <AllRoutes />
-      </AppProvider>
+      <AnswersProvider>
+        <AppProvider>
+          <AllRoutes />
+        </AppProvider>
+      </AnswersProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

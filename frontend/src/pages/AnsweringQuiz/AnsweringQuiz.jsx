@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -7,12 +7,18 @@ import Questions0a10 from './QuestionsCards/Questions0a10';
 import QuestionsAlternativas from './QuestionsCards/QuestionsAlternativas';
 import QuestionsME from './QuestionsCards/QuestionsME';
 import QuestionsOpen from './QuestionsCards/QuestionsOpen';
+import { AnswersContext } from '../../context/AnswersContext';
 
 export default function AnsweringQuiz() {
   const [quiz, setQuiz] = useState({
     nome: '',
     descricao: '',
   });
+
+  // Exemplo de importar variavel do contexto para utilizar
+  const { form, setForm } = useContext(AnswersContext);
+  // ******************************************************
+
   const [questions, setQuestions] = useState([]);
   const [componentQuestions, setComponentQuestions] = useState([]);
   const [buttonVisible1, setButtonVisible1] = useState(true);
