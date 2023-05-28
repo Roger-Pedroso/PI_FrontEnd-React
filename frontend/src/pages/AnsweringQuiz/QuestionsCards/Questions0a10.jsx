@@ -1,15 +1,28 @@
 /* eslint-disable react/destructuring-assignment */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Rating } from 'primereact/rating';
+import { AnswersContext } from '../../../context/AnswersContext';
 
 export default function Questions0a10(item) {
   const [targetQuestion, setTargetQuestion] = useState(item.item);
+  const { answers, setAnswers } = useContext(AnswersContext);
+
   useEffect(() => {
     if (targetQuestion === null) {
       setTargetQuestion(item.item);
     }
   }, [targetQuestion]);
   const [value, setValue] = useState(null);
+
+  const handleValueChange = (e) => {
+    setValue(e.value);
+    const indice = answers.findIndex((answer) => answer.id_question === targetQuestion.id);
+    if (indice !== -1) {
+      const newAnswer = [...answers];
+      newAnswer[indice].resposta = e.value;
+      setAnswers(newAnswer);
+    }
+  };
   return (
     <div style={{ width: '100%' }}>
       <div
@@ -21,7 +34,7 @@ export default function Questions0a10(item) {
         <div style={{ width: '100%', margin: '-10px' }}>
           <p style={{ margin: '-8px', fontSize: '12px' }}>
             <b>
-              {targetQuestion.obrigatorio === 'false' ? '*Opcional' : '*Obrigatório'}
+              {targetQuestion.obrigatorio === false ? '*Opcional' : '*Obrigatório'}
             </b>
           </p>
           <p style={{ textAlign: 'end' }}>
@@ -33,7 +46,7 @@ export default function Questions0a10(item) {
         <p><i>{targetQuestion.descricao}</i></p>
         <Rating
           value={value}
-          onChange={(e) => setValue(e.value)}
+          onChange={(e) => handleValueChange(e)}
           stars={10}
           cancel={false}
         />

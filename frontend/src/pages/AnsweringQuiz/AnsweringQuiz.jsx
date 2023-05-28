@@ -16,14 +16,13 @@ export default function AnsweringQuiz() {
   });
 
   // Exemplo de importar variavel do contexto para utilizar
-  const { form, setForm } = useContext(AnswersContext);
+  const { answers, setAnswers } = useContext(AnswersContext);
   // ******************************************************
 
   const [questions, setQuestions] = useState([]);
   const [componentQuestions, setComponentQuestions] = useState([]);
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [endQuiz, setEndQuiz] = useState(false);
-  const [answers, setAnswers] = useState([]);
   const location = useLocation();
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);

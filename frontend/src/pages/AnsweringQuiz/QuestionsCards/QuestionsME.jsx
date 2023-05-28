@@ -1,11 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { RadioButton } from 'primereact/radiobutton';
 import { Button } from 'primereact/button';
+import { AnswersContext } from '../../../context/AnswersContext';
 
 export default function QuestionsME(item) {
   const [targetQuestion, setTargetQuestion] = useState(item.item);
   const [selectedAlternativas, setSelectedAlternativas] = useState([]);
+  const { answers, setAnswers } = useContext(AnswersContext);
   let checkedConst = false;
   const alternativas = JSON.parse(targetQuestion.alternativas);
   useEffect(() => {
@@ -25,6 +27,16 @@ export default function QuestionsME(item) {
       setSelectedAlternativas([...selectedAlternativas, e.value]);
     }
   };
+
+  useEffect(() => {
+    const indice = answers.findIndex((answer) => answer.id_question === targetQuestion.id);
+    if (indice !== -1) {
+      const newAnswer = [...answers];
+      newAnswer[indice].resposta = selectedAlternativas;
+      setAnswers(newAnswer);
+      console.log(answers);
+    }
+  }, [selectedAlternativas]);
 
   const verifyAlternativaChecked = (alternativa) => {
     if (selectedAlternativas.includes(alternativa)) {
@@ -51,7 +63,7 @@ export default function QuestionsME(item) {
         <div style={{ width: '100%', margin: '-10px' }}>
           <p style={{ margin: '-8px', fontSize: '12px' }}>
             <b>
-              {targetQuestion.obrigatorio === 'false' ? '*Opcional' : '*Obrigatório'}
+              {targetQuestion.obrigatorio === false ? '*Opcional' : '*Obrigatório'}
             </b>
           </p>
           <p style={{ textAlign: 'end' }}>
