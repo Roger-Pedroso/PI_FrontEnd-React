@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState, useEffect, useContext, useRef,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 import Questions0a10 from './QuestionsCards/Questions0a10';
 import QuestionsAlternativas from './QuestionsCards/QuestionsAlternativas';
@@ -14,15 +17,13 @@ export default function AnsweringQuiz() {
     nome: '',
     descricao: '',
   });
-
-  // Exemplo de importar variavel do contexto para utilizar
   const { answers, setAnswers } = useContext(AnswersContext);
-  // ******************************************************
-
   const [questions, setQuestions] = useState([]);
   const [componentQuestions, setComponentQuestions] = useState([]);
   const [buttonVisible1, setButtonVisible1] = useState(true);
+  const [buttonVisible2, setButtonVisible2] = useState(false);
   const [endQuiz, setEndQuiz] = useState(false);
+  const toast = useRef();
   const location = useLocation();
   const findQuizById = async (id) => {
     const qst = await api.get(`/quiz/${id}`);
@@ -67,12 +68,41 @@ export default function AnsweringQuiz() {
     setComponentQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
   };
 
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Há questões obrigatórias não preenchidas!', life: 3000,
+    });
+  };
+
+  const submit = async () => {
+    await api.post('/resposta', answers.map((answer) => answer));
+  };
+
+  const verifyAnswers = () => {
+    let isAnswerEmpty;
+    answers.forEach((answer) => {
+      if (answer.obrigatorio === true) {
+        if (answer.resposta === '' || answer.resposta === null || answer.resposta.length === 0) {
+          isAnswerEmpty = true;
+        }
+      }
+    });
+
+    if (isAnswerEmpty) {
+      setEndQuiz(false);
+      showError();
+    } else {
+      submit();
+    }
+  };
+
   const constructRespostas = (item) => {
-    const novaResposta = { id_question: item.id, resposta: '' };
+    const novaResposta = { id_question: item.id, resposta: '', obrigatorio: item.obrigatorio };
     setAnswers((prevRespostas) => [...prevRespostas, novaResposta]);
   };
 
   console.log(answers);
+
   return (
     <div>
       <div className="flex justify-content-center" style={{ margin: '10px', flexDirection: 'column', alignItems: 'center' }}>
@@ -83,25 +113,38 @@ export default function AnsweringQuiz() {
         <div
           className="card"
           style={{
-            width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(89,31,107,255)',
+            width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(89,31,107,255)', minHeight: '75vh',
           }}
         >
-          <Button label="Iniciar Questionário" visible={buttonVisible1} onClick={() => { setButtonVisible1(false); questions.map((item) => constructRespostas(item)); questions.forEach((item) => verifyQuestions(item)); }} style={{ height: '15%', marginTop: '175px', width: '50%' }} />
+          <Button
+            label="Iniciar Questionário"
+            visible={buttonVisible1}
+            onClick={() => {
+              setButtonVisible1(false);
+              setButtonVisible2(true);
+              questions.map((item) => constructRespostas(item));
+              questions.forEach((item) => verifyQuestions(item));
+            }}
+            style={{
+              marginTop: '225px', backgroundColor: 'white', color: 'rgba(89,31,107,255)', border: '2px solid black', boxShadow: '10px 10px 10px purple',
+            }}
+          />
           {componentQuestions.map((item) => item)}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
-        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} />
+        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} visible={buttonVisible2} />
         <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar o questionário?
           </p>
           <br />
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-            <Button label="Sim" />
+            <Button label="Sim" onClick={() => verifyAnswers()} />
             <Button label="Não" onClick={() => setEndQuiz(false)} />
           </div>
         </Dialog>
+        <Toast ref={toast} />
       </div>
     </div>
   );
