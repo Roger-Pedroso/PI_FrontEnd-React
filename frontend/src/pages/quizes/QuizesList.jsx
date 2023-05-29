@@ -13,7 +13,6 @@ export default function QuizesList() {
     navigate('/app/quizes/new');
   };
   const [quizes, setQuizes] = useState([]);
-
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -22,9 +21,7 @@ export default function QuizesList() {
   const onGlobalFilterChange = (e) => {
     const { value } = e.target;
     const afilters = { ...filters };
-
     afilters.global.value = value;
-
     setFilters(afilters);
     setGlobalFilterValue(value);
   };
@@ -56,6 +53,16 @@ export default function QuizesList() {
   const sendTemplate = (e) => (
     <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/send/${e.id}`)} />
   );
+  const copiarQuiz = async (e) => {
+    const quizParsed = {
+      nome: `${e.nome} - CÓPIA`,
+      descricao: e.descricao,
+    };
+    await api.post('/quiz', { ...quizParsed, questions: e.questions.map((qst) => qst.id) });
+  };
+  const copyTemplate = (e) => (
+    <Button icon="pi pi-copy" style={{ backgroundColor: 'white' }} onClick={() => { copiarQuiz(e); window.location.reload(); }} />
+  );
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
@@ -84,6 +91,7 @@ export default function QuizesList() {
           <Column field="descricao" header="Descrição" />
           <Column body={editTemplate} />
           <Column body={sendTemplate} />
+          <Column body={copyTemplate} />
         </DataTable>
       </div>
     </div>

@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import AppProvider from './context';
+import { AnswersProvider } from './context/AnswersContext';
 import { AuthProvider } from './context/Login/AuthContext';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -17,9 +18,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <AppProvider>
-          <AllRoutes />
-        </AppProvider>
+        <AnswersProvider>
+          <AppProvider>
+            <AllRoutes />
+          </AppProvider>
+        </AnswersProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React, { useContext } from 'react';
 import PublicRoutes from './public.routes';
 import PrivateRoutes from './private.routes';
