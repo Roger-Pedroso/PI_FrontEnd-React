@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { ListBox } from 'primereact/listbox';
 import { Button } from 'primereact/button';
@@ -8,8 +8,6 @@ import { Dialog } from 'primereact/dialog';
 import api from '../../utils/Api';
 
 export default function SendQuiz() {
-  const location = useLocation();
-  // eslint-disable-next-line no-unused-vars
   const [quiz, setQuiz] = useState({
     id: '',
     nome: '',
@@ -24,13 +22,13 @@ export default function SendQuiz() {
   const [numQuestions, setNumQuestions] = useState('');
   const [numChaves, setNumChaves] = useState('');
   const [areYouSure, setAreYouSure] = useState(false);
+  const { id } = useParams();
   const isSuperiorSelected = (selectedSuperior === '' || (numChaves === '' || numChaves === null));
   const navigate = useNavigate();
 
   useEffect(() => {
-    const quizId = location.pathname.substring(17, location.pathname.length);
     // eslint-disable-next-line no-use-before-define
-    findQuizById(quizId);
+    findQuizById();
   }, []);
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function SendQuiz() {
     }
   }, [setores]);
 
-  const findQuizById = async (id) => {
+  const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
     setQuiz({
@@ -77,7 +75,7 @@ export default function SendQuiz() {
 
   const submit = () => {
     // eslint-disable-next-line no-undef
-    navigate(`/client/AnsweringQuiz/${quiz.id}`);
+    navigate(`/app/quizes/answer/${quiz.id}`);
   };
 
   return (

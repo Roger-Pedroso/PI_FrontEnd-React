@@ -33,13 +33,13 @@ export default function AnsweringQuiz() {
   };
 
   useEffect(() => {
-    const quizId = location.pathname.substring(22, location.pathname.length);
+    const quizId = location.pathname.substring(19, location.pathname.length);
     findQuizById(quizId);
   }, []);
 
   useEffect(() => {
     if (questions.length < 1) {
-      const quizId = location.pathname.substring(22, location.pathname.length);
+      const quizId = location.pathname.substring(19, location.pathname.length);
       findQuizById(quizId);
     }
   }, [questions]);

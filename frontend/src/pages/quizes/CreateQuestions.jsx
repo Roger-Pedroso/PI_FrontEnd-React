@@ -1,11 +1,13 @@
 /* eslint-disable no-return-assign */
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect, useRef, useState,
+} from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
@@ -14,8 +16,9 @@ export default function CreateQuestions() {
   const [mult, setMult] = useState(false);
   const [type, setType] = useState(null);
   const [obrigatorio, setObrigatorio] = useState(false);
-  const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
+  const [alternativas, setAlternativas] = useState([{ idd: 1, value: '' }]);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
+  const { id } = useParams();
   const [question, setQuestion] = useState({
     nome_campo: '',
     descricao: '',
@@ -26,7 +29,7 @@ export default function CreateQuestions() {
   const isTypeDouble = (type === 'alternativa' || type === 'multipla_escolha');
   const [idEditedQuestion, setIdEditedQuestion] = useState('');
 
-  const findQuestionById = async (id) => {
+  const findQuestionById = async () => {
     const qst = await api.get(`/question/${id}`);
     const questionParsed = qst.data;
     setIdEditedQuestion(questionParsed.id);
@@ -39,17 +42,12 @@ export default function CreateQuestions() {
       value: alter,
       id: index + 1,
     }));
-    console.log(alte);
     setAlternativas(alte);
   };
 
   useEffect(() => {
-    if (location.pathname !== '/quizes/CreateQuestions') {
-      const questionId = location.pathname.substring(24, location.pathname.length);
-
-      findQuestionById(questionId);
-    }
-  }, [location.pathname]);
+    findQuestionById();
+  }, []);
 
   const isTypeUndefined = type === null;
   const vazio = alternativas.length <= 1;
@@ -58,12 +56,12 @@ export default function CreateQuestions() {
     setQuestion({ ...question, [e.target.name]: e.target.value });
   };
   const addAlternativa = () => {
-    const novaAlternativa = { id: Date.now(), value: '' };
+    const novaAlternativa = { idd: Date.now(), value: '' };
     setAlternativas([...alternativas, novaAlternativa]);
   };
-  const handleAlternativaChange = (event, id) => {
+  const handleAlternativaChange = (event, idd) => {
     const novasAlternativas = [...alternativas];
-    const index = alternativas.findIndex((alter) => alter.id === id);
+    const index = alternativas.findIndex((alter) => alter.idd === idd);
     novasAlternativas[index].value = event.target.value;
     setAlternativas(novasAlternativas);
   };
@@ -95,7 +93,7 @@ export default function CreateQuestions() {
   };
 
   const submit = async () => {
-    if (location.pathname === '/quizes/CreateQuestions') {
+    if (location.pathname === '/app/questions/new') {
       if (type !== 'alternativa' && type !== 'multipla_escolha') {
       // eslint-disable-next-line object-shorthand
         const newQuestion = { ...question, tipo: type, obrigatorio };
@@ -115,7 +113,7 @@ export default function CreateQuestions() {
       // eslint-disable-next-line object-shorthand
       const newQuestion = { ...question, tipo: type, obrigatorio };
       await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-      navigate('/quizes/QuestionsList');
+      navigate('/app/questions');
     } else {
       const newQuestion = {
         ...question,
@@ -129,7 +127,7 @@ export default function CreateQuestions() {
   };
 
   const handleSubmit = () => {
-    if (location.pathname === '/quizes/CreateQuestions') {
+    if (location.pathname === '/app/questions/new') {
       if (isTitleEmpty || isTypeUndefined) {
         showError();
       } else if (type === 'alternativa' || type === 'multipla_escolha') {
@@ -170,7 +168,7 @@ export default function CreateQuestions() {
         className="flex justify-content-center"
         style={{ margin: '15px' }}
       >
-        <h1>{location.pathname === '/quizes/CreateQuestions' ? 'Criar Questões' : 'Editar Questão'}</h1>
+        <h1>{location.pathname === '/app/questions/new' ? 'Criar Questões' : 'Editar Questão'}</h1>
       </div>
 
       <div
@@ -247,7 +245,7 @@ export default function CreateQuestions() {
                 {alternativas.map((alternativa, index) => (
                   <div
                     className=" flex justify-content-center"
-                    key={alternativa.id}
+                    key={alternativa.idd}
                   >
                     <Spans icon="pi pi-pencil" />
                     <InputText
@@ -256,7 +254,7 @@ export default function CreateQuestions() {
                       value={alternativa.value}
                       onChange={(event) => handleAlternativaChange(
                         event,
-                        alternativa.id,
+                        alternativa.idd,
                       )}
                     />
                     <Button
@@ -329,7 +327,7 @@ export default function CreateQuestions() {
                 {alternativas.map((alternativa, index) => (
                   <div
                     className=" flex justify-content-center"
-                    key={alternativa.id}
+                    key={alternativa.idd}
                   >
                     <Spans icon="pi pi-pencil" />
                     <InputText
@@ -338,7 +336,7 @@ export default function CreateQuestions() {
                       value={alternativa.value}
                       onChange={(event) => handleAlternativaChange(
                         event,
-                        alternativa.id,
+                        alternativa.idd,
                       )}
                     />
                     <Button

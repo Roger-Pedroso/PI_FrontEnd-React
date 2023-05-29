@@ -6,7 +6,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { PickList } from 'primereact/picklist';
 import { Toast } from 'primereact/toast';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
@@ -17,6 +17,7 @@ export default function CreateQuiz() {
   const [list, setList] = useState(false);
   const [isTitleEmpty, setIsTitleEmpty] = useState(true);
   const [idEditedQuiz, setIdEditedQuiz] = useState('');
+  const { id } = useParams();
   const toast = useRef();
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,7 +49,7 @@ export default function CreateQuiz() {
     const data = await api.get('/question');
     setSourceQuestions(data.data);
   };
-  const findQuizById = async (id) => {
+  const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
     setIdEditedQuiz(quizParsed.id);
@@ -61,8 +62,7 @@ export default function CreateQuiz() {
   };
   useEffect(() => {
     if (location.pathname !== '/app/quizes/new') {
-      const quizId = location.pathname.substring(19, location.pathname.length);
-      findQuizById(quizId);
+      findQuizById();
     } else {
       findQuestion();
     }
