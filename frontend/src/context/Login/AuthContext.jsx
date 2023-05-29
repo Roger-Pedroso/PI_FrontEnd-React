@@ -52,6 +52,7 @@ function AuthProvider({ children }) {
     sessionStorage.removeItem('auth-key');
     sessionStorage.removeItem('user-key');
     setAuthenticated(false);
+    navigate('/login');
   };
 
   const memo = useMemo(() => ({

@@ -1,38 +1,101 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
 import { format } from 'date-fns';
 import { Toast } from 'primereact/toast';
+import { Password } from 'primereact/password';
 import { AuthContext } from '../../context/Login/AuthContext';
 import profile from '../../img/profile.png';
 import api from '../../utils/Api';
 
 export default function Profile() {
-  const { user, updateUser } = useContext(AuthContext);
+  const { logout, user, updateUser } = useContext(AuthContext);
   const [nascimento] = useState(format(new Date(user?.nascimento), 'dd/MM/yyyy'));
   const [editedUser, setEditedUser] = useState({});
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
   const toast = useRef(null);
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  const [initialRender, setInitialRender] = useState(false);
+  const [matched, setMatched] = useState(false);
 
-  const showWarn = () => {
+  const showWarn = (msg) => {
     toast.current.show({
-      severity: 'warn', summary: 'Aviso', detail: 'Um ou mais campos estão vazios', life: 3000,
+      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
     });
   };
 
-  const showSuccess = () => {
+  const showSuccess = (msg) => {
     toast.current.show({
-      severity: 'success', summary: 'Concluído', detail: 'Editado com sucesso!', life: 3000,
+      severity: 'success', summary: 'Concluído', detail: msg, life: 3000,
     });
   };
 
-  const showError = () => {
+  const showError = (msg) => {
     toast.current.show({
-      severity: 'error', summary: 'Erro', detail: 'Erro ao editar Perfil.', life: 3000,
+      severity: 'error', summary: 'Erro', detail: msg, life: 3000,
     });
   };
+
+  const onPasswordChange = (e) => {
+    if (e.target.name === 'senhaAtual') {
+      setPassword(e.target.value);
+    } else if (e.target.name === 'senhaNova') {
+      setNewPassword(e.target.value);
+    } else if (e.target.name === 'confirmaSenha') {
+      setConfirmation(e.target.value);
+    }
+  };
+
+  const passwordMatch = async () => {
+    const email = user?.email;
+    const senha = password;
+    try {
+      const response = await api.post('/login/adm', { email, senha });
+      const req = response.data;
+      setMatched(req.status);
+      setInitialRender(Math.random());
+    } catch (error) {
+      showError('Não foi possível se comunicar com o backend');
+    }
+  };
+
+  const passwordSubmit = () => {
+    passwordMatch();
+  };
+
+  useEffect(() => {
+    if (initialRender !== false) {
+      if (password !== '' && newPassword !== '' && confirmation !== '') {
+        if (matched === true) {
+          if (confirmation === newPassword) {
+            const senha = newPassword;
+            try {
+              api.put(`/user/${user?.id}`, { senha });
+              showSuccess('A senha foi alterada com sucesso!');
+              setTimeout(() => {
+                logout();
+              }, 2000);
+            } catch (error) {
+              showError('Não foi possível alterar a senha.');
+            }
+          } else {
+            showWarn('A nova senha não confere.');
+          }
+        } else {
+          showWarn('A senha atual não confere');
+        }
+      } else {
+        showWarn('Nenhum campo pode ficar vazio!');
+      }
+    }
+  }, [initialRender]);
 
   const onChange = (e) => {
     if (e.target.name === 'nascimento') {
@@ -54,88 +117,71 @@ export default function Profile() {
     try {
       if (checkField(editedUser) === true) {
         await api.put(`/user/${user?.id}`, { ...editedUser });
-        updateUser();
-        showSuccess();
+        showSuccess('Editado com sucesso!');
+        setTimeout(() => {
+          updateUser();
+        }, 2000);
       } else {
-        showWarn();
+        showWarn('Um ou mais campos estão vazios');
       }
     } catch (error) {
-      showError();
+      showError('Erro ao editar Perfil.');
     }
   };
 
   return (
-    <div className="flex-column" style={{ marginTop: '10%' }}>
+    <div className="flex-column" style={{ marginTop: '2%' }}>
       <Toast ref={toast} />
-      <div className="flex justify-content-center align-items-center">
-        <img src={profile} alt="" style={{ width: '300px' }} />
-        <div
-          className="flex-column"
-          style={{
-            backgroundColor: '#c4c4c4', borderRadius: '10px', marginLeft: '40px', padding: '35px',
-          }}
-        >
-          <div className="flex gap-5" style={{ marginBottom: '50px', justifyContent: 'space-between' }}>
-            <div>
-              <h3>Nome</h3>
-              <div style={{
-                maxWidth: '1px', minWidth: '200px', backgroundColor: '#dedede', padding: '1px', borderRadius: '5px',
-              }}
-              >
-                <h3 style={{ margin: '10px' }}>{user?.nome}</h3>
-              </div>
-            </div>
-            <div>
-              <h3>Data de nascimento</h3>
-              <div
-                style={{
-                  maxWidth: '1px', minWidth: '200px', backgroundColor: '#dedede', padding: '1px', borderRadius: '5px',
-                }}
-              >
-                <h3 style={{ margin: '10px' }}>{nascimento}</h3>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-5" style={{ marginBottom: '50px', justifyContent: 'space-between' }}>
-            <div>
-              <h3>Email</h3>
-              <div
-                style={{
-                  minWidth: '200px', backgroundColor: '#dedede', padding: '1px', borderRadius: '5px',
-                }}
-              >
-                <h3 style={{ margin: '10px' }}>{user?.email}</h3>
-              </div>
-            </div>
-            <div>
-              <h3>Crachá</h3>
-              <div style={{
-                maxWidth: '1px', minWidth: '200px', backgroundColor: '#dedede', padding: '1px', borderRadius: '5px',
-              }}
-              >
-                <h3 style={{ margin: '10px' }}>{user?.cracha}</h3>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-5" style={{ marginBottom: '50px', justifyContent: 'space-between' }}>
-            <div>
-              <h3>Ramal</h3>
-              <div style={{
-                maxWidth: '1px', minWidth: '200px', backgroundColor: '#dedede', padding: '1px', borderRadius: '5px',
-              }}
-              >
-                <h3 style={{ margin: '10px' }}>{user?.ramal}</h3>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-content-end gap-2" style={{ marginTop: '50px' }}>
-            <Button label="Alterar senha" />
+      <div className="flex justify-content-center">
+        <img src={profile} alt="perfil" style={{ maxWidth: '10vw' }} />
+      </div>
+      <div className="flex justify-content-center">
+        <div className="flex-column card" style={{ minWidth: '30vw', boxShadow: '0 0px 5px 1px #471956' }}>
+          <h3>
+            Nome
+          </h3>
+          <h4 style={{ marginTop: '-1vh' }}>{user?.nome}</h4>
+          <h3>Data de nascimento</h3>
+          <h4 style={{ marginTop: '-1vh' }}>{nascimento}</h4>
+          <h3>Email</h3>
+          <h4 style={{ marginTop: '-1vh' }}>{user?.email}</h4>
+          <h3>Crachá</h3>
+          <h4 style={{ marginTop: '-1vh' }}>{user?.cracha}</h4>
+          <h3>Ramal</h3>
+          <h4 style={{ marginTop: '-1vh' }}>{user?.ramal}</h4>
+          <div className="flex gap-1" style={{ justifyContent: 'flex-end' }}>
+            <Button label="Alterar senha" onClick={() => setVisible2(true)} />
             <Button label="Editar perfil" onClick={() => setVisible(true)} />
           </div>
         </div>
       </div>
       <div>
-        <Dialog visible={visible} header="Edição de perfil" onHide={() => setVisible(false)}>
+        <Dialog visible={visible2} header="Alterar senha" onHide={() => setVisible2(false)} className="flex-column" style={{ minWidth: '23vw' }}>
+          <div>
+            <h3>Senha atual</h3>
+            <div className="p-inputgroup">
+              <Password name="senhaAtual" onChange={(e) => onPasswordChange(e)} feedback={false} />
+            </div>
+          </div>
+          <div>
+            <h3>Nova senha</h3>
+            <div className="p-inputgroup">
+              <Password name="senhaNova" onChange={(e) => onPasswordChange(e)} />
+            </div>
+          </div>
+          <div>
+            <h3>Confirme a nova senha</h3>
+            <div className="p-inputgroup">
+              <Password name="confirmaSenha" onChange={(e) => onPasswordChange(e)} feedback={false} />
+            </div>
+          </div>
+          <div className="flex gap-3" style={{ marginTop: '4vh', justifyContent: 'flex-end' }}>
+            <Button label="Alterar senha" onClick={passwordSubmit} />
+          </div>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog visible={visible} header="Editar perfil" onHide={() => setVisible(false)}>
           <div className="flex gap-5">
             <div>
               <h3>Nome</h3>
@@ -166,7 +212,7 @@ export default function Profile() {
             }}
             >
               <div>
-                <Button label="Confirmar" onClick={() => onSubmit()} />
+                <Button label="Editar perfil" onClick={() => onSubmit()} />
               </div>
             </div>
           </div>
