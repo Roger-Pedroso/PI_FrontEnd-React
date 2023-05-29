@@ -49,7 +49,9 @@ export default function CreateSector() {
         const areaParsed = { ...area, status: status ? 'Ativo' : 'Inativo' };
         await api.post('/sector', { ...areaParsed });
         showSuccess();
-        navigate('/area');
+        setTimeout(() => {
+          navigate('/app/sector');
+        }, 2000);
       } catch (error) {
         console.log(error);
         showError();

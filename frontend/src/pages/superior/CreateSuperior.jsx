@@ -26,6 +26,18 @@ export default function CreateSuperior() {
     });
   };
 
+  const showSuccess = (msg) => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: msg, life: 3000,
+    });
+  };
+
+  const showError = (msg) => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: msg, life: 3000,
+    });
+  };
+
   const findAreas = async () => {
     const data = await api.get('/sector');
     setAreas(data.data);
@@ -52,11 +64,14 @@ export default function CreateSuperior() {
     try {
       setSuperior({ ...superior, idSector: selectedArea.id });
     } catch (err) {
-      console.log(err);
+      showError('Ocorreu um erro ao criar um superior.');
     }
     if (checkInput(superior) === true) {
       await api.post('/superior', { ...superior });
-      navigate('/app/superior');
+      showSuccess('Superior imediato criado com sucesso!');
+      setTimeout(() => {
+        navigate('app/superior');
+      }, 2000);
     } else {
       showWarn();
     }

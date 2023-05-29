@@ -23,6 +23,12 @@ export default function Cadastro() {
     senha: '',
   });
 
+  const showSuccess = (msg) => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: msg, life: 3000,
+    });
+  };
+
   const showWarn = (msg) => {
     toast.current.show({
       severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
@@ -62,7 +68,10 @@ export default function Cadastro() {
       if (checkPass(admin)) {
         try {
           await api.post('/user', { ...admin });
-          navigate('/app/admin');
+          showSuccess('Administrador cadastrado!');
+          setTimeout(() => {
+            navigate('/app/admin');
+          }, 2000);
         } catch (error) {
           showError();
         }
