@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
-export default function CreateArea() {
+export default function CreateSector() {
   const navigate = useNavigate();
   const [area, setArea] = useState({ nome: '', tipo: '' });
   const [status, setStatus] = useState(true);
@@ -49,7 +49,9 @@ export default function CreateArea() {
         const areaParsed = { ...area, status: status ? 'Ativo' : 'Inativo' };
         await api.post('/sector', { ...areaParsed });
         showSuccess();
-        navigate('/area');
+        setTimeout(() => {
+          navigate('/app/sector');
+        }, 2000);
       } catch (error) {
         console.log(error);
         showError();
@@ -60,12 +62,12 @@ export default function CreateArea() {
   };
 
   const backToList = () => {
-    navigate('/area');
+    navigate('/app/sector');
   };
   return (
     <div>
       <div className="flex justify-content-center">
-        <h1>Cadastro de Área</h1>
+        <h1>Cadastro de Setor</h1>
       </div>
 
       <div className="flex justify-content-center mt-5">
@@ -74,7 +76,7 @@ export default function CreateArea() {
 
           <div className="p-inputgroup">
             <Spans icon="pi pi-user" />
-            <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome da Área" />
+            <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome do Setor" />
           </div>
           <div className="p-inputgroup">
             <Spans icon="pi pi-user" />
@@ -82,7 +84,9 @@ export default function CreateArea() {
           </div>
           <div className="p-inputgroup flex align-items-center">
             <span className="p-inputgroup-addon mr-3">
-              Status
+              Status:
+              {' '}
+              {status ? 'Ativo' : 'Inativo'}
             </span>
             <InputSwitch checked={status} onChange={(e) => setStatus(e.value)} />
           </div>

@@ -20,7 +20,7 @@ export default function Login() {
     onSubmit();
     e.preventDefault();
     if (onSubmit === true) {
-      navigate('/');
+      navigate('/app');
     } else {
       setWarning('Chave de acesso inválida! Verifique com um administrador.');
     }
@@ -44,8 +44,8 @@ export default function Login() {
 
         </div>
 
-        <div style={{ marginTop: '20px' }}>
-          <a href="/login/admin">
+        <div className="flex gap-2" style={{ marginTop: '20px' }}>
+          <a href="/login">
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
           </a>
           <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" />

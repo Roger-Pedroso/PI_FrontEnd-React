@@ -23,6 +23,12 @@ export default function Cadastro() {
     senha: '',
   });
 
+  const showSuccess = (msg) => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: msg, life: 3000,
+    });
+  };
+
   const showWarn = (msg) => {
     toast.current.show({
       severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
@@ -35,11 +41,10 @@ export default function Cadastro() {
     });
   };
 
-  const [date, setDate] = useState('');
-
   const onChange = (e) => {
     if (e.target.name === 'nascimento') {
-      setDate(e.target.value);
+      const date = (e.target.value);
+      setAdmin({ ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') });
     } else {
       setAdmin({ ...admin, [e.target.name]: e.target.value });
     }
@@ -59,12 +64,14 @@ export default function Cadastro() {
   };
 
   const onSubmit = async () => {
-    const adminParsed = { ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') };
-    if (checkInput(adminParsed)) {
-      if (checkPass(adminParsed)) {
+    if (checkInput(admin)) {
+      if (checkPass(admin)) {
         try {
-          await api.post('/user', { ...adminParsed });
-          navigate('/admin');
+          await api.post('/user', { ...admin });
+          showSuccess('Administrador cadastrado!');
+          setTimeout(() => {
+            navigate('/app/admin');
+          }, 2000);
         } catch (error) {
           showError();
         }

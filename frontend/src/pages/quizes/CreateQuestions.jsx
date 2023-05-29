@@ -124,7 +124,7 @@ export default function CreateQuestions() {
         alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
       };
       await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-      navigate('/quizes/QuestionsList');
+      navigate('/app/questions');
     }
   };
 

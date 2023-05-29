@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import AppProvider from './context';
 import { AnswersProvider } from './context/AnswersContext';
-
+import { AuthProvider } from './context/Login/AuthContext';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
@@ -17,11 +17,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AnswersProvider>
-        <AppProvider>
-          <AllRoutes />
-        </AppProvider>
-      </AnswersProvider>
+      <AuthProvider>
+        <AnswersProvider>
+          <AppProvider>
+            <AllRoutes />
+          </AppProvider>
+        </AnswersProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );
