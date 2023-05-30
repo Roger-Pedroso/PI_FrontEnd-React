@@ -49,6 +49,7 @@ export default function QuestionsOpen(item) {
           onChange={(e) => handleDescriptionChange(e)}
           rows={5}
           cols={80}
+          autoResize
         />
       </div>
     </div>
