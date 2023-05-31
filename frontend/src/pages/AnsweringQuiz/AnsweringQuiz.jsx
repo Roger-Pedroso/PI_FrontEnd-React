@@ -68,14 +68,24 @@ export default function AnsweringQuiz() {
     setComponentQuestions((prevQuestions) => [...prevQuestions, questionComponent]);
   };
 
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso!', detail: 'Há questões obrigatórias não preenchidas!', life: 3000,
+    });
+  };
+
   const showError = () => {
     toast.current.show({
-      severity: 'error', summary: 'Erro!', detail: 'Há questões obrigatórias não preenchidas!', life: 3000,
+      severity: 'error', summary: 'Error!', detail: 'Ocorreu um erro ao enviar as respostas. Tente novamente.', life: 3000,
     });
   };
 
   const submit = async () => {
-    await api.post('/resposta', answers.map((answer) => answer));
+    try {
+      await api.post('/resposta', answers.map((answer) => answer));
+    } catch (err) {
+      showError();
+    }
   };
 
   const verifyAnswers = () => {
@@ -90,7 +100,7 @@ export default function AnsweringQuiz() {
 
     if (isAnswerEmpty) {
       setEndQuiz(false);
-      showError();
+      showWarn();
     } else {
       submit();
     }
@@ -100,8 +110,6 @@ export default function AnsweringQuiz() {
     const novaResposta = { id_question: item.id, resposta: '', obrigatorio: item.obrigatorio };
     setAnswers((prevRespostas) => [...prevRespostas, novaResposta]);
   };
-
-  console.log(answers);
 
   return (
     <div>

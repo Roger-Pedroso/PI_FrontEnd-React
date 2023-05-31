@@ -7,16 +7,15 @@ import { Button } from 'primereact/button';
 import { PickList } from 'primereact/picklist';
 import { Toast } from 'primereact/toast';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Dialog } from 'primereact/dialog';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
 export default function CreateQuiz() {
   const [targetQuestions, setTargetQuestions] = useState([]);
   const [sourceQuestions, setSourceQuestions] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [list, setList] = useState(false);
-  const [isTitleEmpty, setIsTitleEmpty] = useState(true);
   const [idEditedQuiz, setIdEditedQuiz] = useState('');
+  const [areYouSure, setAreYouSure] = useState(false);
   const { id } = useParams();
   const toast = useRef();
   const navigate = useNavigate();
@@ -32,9 +31,15 @@ export default function CreateQuiz() {
     });
   };
 
+  const showError2 = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao criar o questionário. Tente novamente.', life: 3000,
+    });
+  };
+
   const showSuccess = () => {
     toast.current.show({
-      severity: 'success', summary: 'Successo!', detail: 'Questionário salvo com sucesso!', life: 3000,
+      severity: 'success', summary: 'Successo!', detail: 'Questionário salvo com sucesso! Redirecionando à listagem...', life: 3000,
     });
   };
 
@@ -42,6 +47,7 @@ export default function CreateQuiz() {
     nome: '',
     descricao: '',
   });
+  const isTitleEmpty = quiz.nome === '';
   const onChangeQuiz = (e) => {
     setQuiz({ ...quiz, [e.target.name]: e.target.value });
   };
@@ -72,35 +78,42 @@ export default function CreateQuiz() {
     setSourceQuestions(e.source);
     setTargetQuestions(e.target);
   }
-  function handleTitleChange(e) {
-    setIsTitleEmpty(e.target.value === '');
-  }
 
   const submit = async () => {
-    if (location.pathname === '/app/quizes/new') {
-      await api.post('/quiz', { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
-    } else {
-      console.log(targetQuestions);
-      await api.put(`/quiz/${idEditedQuiz}`, { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
+    try {
+      if (location.pathname === '/app/quizes/new') {
+        await api.post('/quiz', { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/quizes');
+        }, 2000);
+      } else {
+        await api.put(`/quiz/${idEditedQuiz}`, { ...quiz, questions: targetQuestions.map((qst) => qst.id) });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/quizes');
+        }, 2000);
+      }
+    } catch (err) {
+      showError2();
     }
   };
+
   const handleSubmit = () => {
-    if (location.pathname === '/app/quizes/new') {
-      if (isTitleEmpty) {
-        showError();
-      } else if (targetQuestions.length === 0) {
-        showWarn();
-      } else {
-        submit();
-        showSuccess();
-        navigate('/app/quizes');
-      }
+    if (isTitleEmpty) {
+      showError();
     } else if (targetQuestions.length === 0) {
       showWarn();
     } else {
       submit();
-      showSuccess();
-      navigate('/app/quizes');
+    }
+  };
+
+  const handleEdit = () => {
+    if (location.pathname === '/app/quizes/new') {
+      handleSubmit();
+    } else {
+      setAreYouSure(true);
     }
   };
   return (
@@ -116,7 +129,7 @@ export default function CreateQuiz() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div className="p-inputgroup">
             <Spans icon="pi pi-question" />
-            <InputText name="nome" placeholder="Nome do Questionário (OBRIGATÓRIO)" onChange={(e) => { onChangeQuiz(e); handleTitleChange(e); }} value={quiz.nome} />
+            <InputText name="nome" placeholder="Nome do Questionário (OBRIGATÓRIO)" onChange={(e) => { onChangeQuiz(e); }} value={quiz.nome} />
           </div>
           <div className="p-inputgroup">
             <Spans icon="pi pi-align-justify" />
@@ -163,9 +176,18 @@ export default function CreateQuiz() {
         </div>
         <div className="flex justify-content-center gap-3">
           <Button label="Listar" onClick={() => navigate('/app/quizes')} />
-          <Button label="Salvar e Listar" onClick={() => { setList(true); handleSubmit(); }} />
+          <Button label="Salvar e Listar" onClick={() => handleEdit()} />
           <Toast ref={toast} />
         </div>
+        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+          <p className="m-0">
+            Tem certeza que deseja editar esse questionário?
+          </p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <Button label="Sim" onClick={() => handleSubmit()} />
+            <Button label="Não" onClick={() => setAreYouSure(false)} />
+          </div>
+        </Dialog>
       </div>
     </div>
   );

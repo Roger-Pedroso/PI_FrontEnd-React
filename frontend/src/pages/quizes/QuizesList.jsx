@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode } from 'primereact/api';
+import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 
 export default function QuizesList() {
@@ -14,9 +16,24 @@ export default function QuizesList() {
   };
   const [quizes, setQuizes] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [areYouSure, setAreYouSure] = useState(false);
+  const [copyModel, setCopyModel] = useState();
+  const toast = useRef();
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Successo!', detail: 'Modelo duplicado com sucesso! Atualizando a lista...', life: 3000,
+    });
+  };
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao duplicar o modelo. Tente novamente.', life: 3000,
+    });
+  };
 
   const onGlobalFilterChange = (e) => {
     const { value } = e.target;
@@ -54,15 +71,25 @@ export default function QuizesList() {
     <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/send/${e.id}`)} />
   );
   const copiarQuiz = async (e) => {
-    const quizParsed = {
-      nome: `${e.nome} - CÓPIA`,
-      descricao: e.descricao,
-    };
-    await api.post('/quiz', { ...quizParsed, questions: e.questions.map((qst) => qst.id) });
+    try {
+      const quizParsed = {
+        nome: `${e.nome} - CÓPIA`,
+        descricao: e.descricao,
+      };
+      await api.post('/quiz', { ...quizParsed, questions: e.questions.map((qst) => qst.id) });
+      showSuccess();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+      showError();
+    }
   };
+
   const copyTemplate = (e) => (
-    <Button icon="pi pi-copy" style={{ backgroundColor: 'white' }} onClick={() => { copiarQuiz(e); window.location.reload(); }} />
+    <Button icon="pi pi-copy" style={{ backgroundColor: 'white' }} onClick={() => { setCopyModel(e); setAreYouSure(true); }} />
   );
+
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
@@ -93,6 +120,16 @@ export default function QuizesList() {
           <Column body={sendTemplate} />
           <Column body={copyTemplate} />
         </DataTable>
+        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+          <p className="m-0">
+            Tem certeza que deseja duplicar esse modelo?
+          </p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <Button label="Sim" onClick={() => copiarQuiz(copyModel)} />
+            <Button label="Não" onClick={() => setAreYouSure(false)} />
+          </div>
+        </Dialog>
+        <Toast ref={toast} />
       </div>
     </div>
   );

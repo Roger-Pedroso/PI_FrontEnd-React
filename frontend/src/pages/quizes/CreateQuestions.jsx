@@ -17,12 +17,13 @@ export default function CreateQuestions() {
   const [type, setType] = useState(null);
   const [obrigatorio, setObrigatorio] = useState(false);
   const [alternativas, setAlternativas] = useState([{ idd: 1, value: '' }]);
-  const [isTitleEmpty, setIsTitleEmpty] = useState(true);
+  const [areYouSure, setAreYouSure] = useState(false);
   const { id } = useParams();
   const [question, setQuestion] = useState({
     nome_campo: '',
     descricao: '',
   });
+  const isTitleEmpty = question.nome_campo === '';
   const toast = useRef();
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,13 +71,10 @@ export default function CreateQuestions() {
     novasAlternativas.splice(index, 1);
     setAlternativas(novasAlternativas);
   };
-  function handleTitleChange(e) {
-    setIsTitleEmpty(e.target.value === '');
-  }
 
   const showSuccess = () => {
     toast.current.show({
-      severity: 'success', summary: 'Successo!', detail: 'Questão salva com sucesso!', life: 3000,
+      severity: 'success', summary: 'Successo!', detail: 'Questão salva com sucesso! Atualizando...', life: 3000,
     });
   };
 
@@ -88,17 +86,46 @@ export default function CreateQuestions() {
 
   const showError = () => {
     toast.current.show({
-      severity: 'error', summary: 'Erro!', detail: 'Preencha todos os campos obrigatórios!', life: 3000,
+      severity: 'warn', summary: 'Aviso!', detail: 'Preencha todos os campos obrigatórios!', life: 3000,
+    });
+  };
+
+  const showError2 = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao criar a questão. Tente novamente.', life: 3000,
     });
   };
 
   const submit = async () => {
-    if (location.pathname === '/app/questions/new') {
-      if (type !== 'alternativa' && type !== 'multipla_escolha') {
-      // eslint-disable-next-line object-shorthand
+    try {
+      if (location.pathname === '/app/questions/new') {
+        if (type !== 'alternativa' && type !== 'multipla_escolha') {
+          const newQuestion = { ...question, tipo: type, obrigatorio };
+          await api.post('/question', { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          const newQuestion = {
+            ...question,
+            tipo: type,
+            obrigatorio,
+            alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
+          };
+          await api.post('/question', { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      } else if (type !== 'alternativa' && type !== 'multipla_escolha') {
         const newQuestion = { ...question, tipo: type, obrigatorio };
-        await api.post('/question', { ...newQuestion });
-        window.location.reload();
+        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/questions');
+        }, 2000);
       } else {
         const newQuestion = {
           ...question,
@@ -106,51 +133,36 @@ export default function CreateQuestions() {
           obrigatorio,
           alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
         };
-        await api.post('/question', { ...newQuestion });
-        window.location.reload();
+        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/questions');
+        }, 2000);
       }
-    } else if (type !== 'alternativa' && type !== 'multipla_escolha') {
-      // eslint-disable-next-line object-shorthand
-      const newQuestion = { ...question, tipo: type, obrigatorio };
-      await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-      navigate('/app/questions');
-    } else {
-      const newQuestion = {
-        ...question,
-        tipo: type,
-        obrigatorio,
-        alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
-      };
-      await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-      navigate('/app/questions');
+    } catch (err) {
+      showError2();
     }
   };
 
   const handleSubmit = () => {
-    if (location.pathname === '/app/questions/new') {
-      if (isTitleEmpty || isTypeUndefined) {
-        showError();
-      } else if (type === 'alternativa' || type === 'multipla_escolha') {
-        if (alternativas.length <= 1) {
-          showWarn();
-        } else {
-          submit();
-          showSuccess();
-        }
-      } else {
-        submit();
-        showSuccess();
-      }
+    if (isTitleEmpty || isTypeUndefined) {
+      showError();
     } else if (type === 'alternativa' || type === 'multipla_escolha') {
       if (alternativas.length <= 1) {
         showWarn();
       } else {
         submit();
-        showSuccess();
       }
     } else {
       submit();
-      showSuccess();
+    }
+  };
+
+  const handleEdit = () => {
+    if (location.pathname === '/app/questions/new') {
+      handleSubmit();
+    } else {
+      setAreYouSure(true);
     }
   };
 
@@ -194,7 +206,6 @@ export default function CreateQuestions() {
               placeholder="Nome da Questão (OBRIGATÓRIO)"
               onChange={(e) => {
                 onChange(e);
-                handleTitleChange(e);
               }}
               value={question.nome_campo}
             />
@@ -435,8 +446,18 @@ export default function CreateQuestions() {
         }}
       >
         <Button label="Listar" onClick={() => navigate('/quizes/QuestionsList')} />
-        <Button label="Salvar" onClick={() => handleSubmit()} />
+        <Button label="Salvar" onClick={() => handleEdit()} />
         <Toast ref={toast} />
+        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+          <p className="m-0">
+            Tem certeza que deseja editar essa questão?
+            Todos os questionários relacionados a essa questão também serão alterados!
+          </p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <Button label="Sim" onClick={() => handleSubmit()} />
+            <Button label="Não" onClick={() => setAreYouSure(false)} />
+          </div>
+        </Dialog>
       </div>
     </div>
   );
