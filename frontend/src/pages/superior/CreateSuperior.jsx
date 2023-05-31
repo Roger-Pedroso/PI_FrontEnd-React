@@ -61,19 +61,19 @@ export default function CreateSuperior() {
   };
 
   const onSubmit = async () => {
+    setSuperior({ ...superior, idSector: selectedArea.id });
     try {
-      setSuperior({ ...superior, idSector: selectedArea.id });
-    } catch (err) {
-      showError('Ocorreu um erro ao criar um superior.');
-    }
-    if (checkInput(superior) === true) {
-      await api.post('/superior', { ...superior });
-      showSuccess('Superior imediato criado com sucesso!');
-      setTimeout(() => {
-        navigate('app/superior');
-      }, 2000);
-    } else {
-      showWarn();
+      if (checkInput(superior) === true) {
+        await api.post('/superior', { ...superior });
+        showSuccess('Superior imediato criado com sucesso!');
+        setTimeout(() => {
+          navigate('/app/superior');
+        }, 2000);
+      } else {
+        showWarn();
+      }
+    } catch (error) {
+      showError('Ocorreu um erro ao se comunicar com o backend.');
     }
   };
 
