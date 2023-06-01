@@ -86,13 +86,17 @@ export default function Cadastro() {
 
     <>
 
-      <div style={{ textAlign: 'center' }}>
-        <h1>Cadastro de Administradores</h1>
-      </div>
-
       <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <div style={{ width: '60%' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ width: '70%' }}>
+          <div
+            className="card"
+            style={{
+              display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '5vw', paddingRight: '5vw',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+              <h1>Cadastro de Administradores</h1>
+            </div>
             <div className="p-inputgroup">
               <Spans icon="pi pi-user" />
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
@@ -147,7 +151,7 @@ export default function Cadastro() {
             <div
               className="flex justify-content-end gap-3"
               style={{
-                marginTop: '20px',
+                marginTop: '50px',
               }}
             >
               <Button label="Cancelar" />

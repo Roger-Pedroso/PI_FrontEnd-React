@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
@@ -66,14 +65,12 @@ export default function CreateSector() {
   };
   return (
     <div>
-      <div className="flex justify-content-center">
-        <h1>Cadastro de Setor</h1>
-      </div>
-
-      <div className="flex justify-content-center mt-5">
-        {/* <form onSubmit={(e) => { onSubmit(e); }}> */}
-        <div className="flex flex-column gap-3" style={{ width: '50%' }}>
-
+      <div style={{ marginBottom: '60px' }} />
+      <div className="flex justify-content-center mt-5" style={{ margin: '60px' }}>
+        <div className="card flex flex-column gap-3" style={{ width: '70%', paddingLeft: '5vw', paddingRight: '5vw' }}>
+          <div className="flex justify-content-center" style={{ marginBottom: '50px' }}>
+            <h1>Cadastro de Setor</h1>
+          </div>
           <div className="p-inputgroup">
             <Spans icon="pi pi-user" />
             <InputText name="nome" onChange={(e) => { onChange(e); }} id="nome" placeholder="Nome do Setor" />
@@ -82,23 +79,19 @@ export default function CreateSector() {
             <Spans icon="pi pi-user" />
             <InputText name="tipo" onChange={(e) => { onChange(e); }} id="tipo" placeholder="Tipo" />
           </div>
-          <div className="p-inputgroup flex align-items-center">
-            <span className="p-inputgroup-addon mr-3">
-              Status:
-              {' '}
-              {status ? 'Ativo' : 'Inativo'}
-            </span>
+          <div className="flex gap-3 p-inputgroup flex align-items-center">
             <InputSwitch checked={status} onChange={(e) => setStatus(e.value)} />
+            Status:
+            {' '}
+            {status ? 'Ativo' : 'Inativo'}
           </div>
 
-          <div className="flex gap-3 justify-content-end">
+          <div className="flex gap-3 justify-content-end" style={{ marginTop: '50px' }}>
             <Button label="Cancelar" onClick={backToList} />
             <Button label="Enviar" type="button" onClick={onSubmit} />
           </div>
 
         </div>
-        {/* </form> */}
-
       </div>
       <div>
         <Toast ref={toast} />
