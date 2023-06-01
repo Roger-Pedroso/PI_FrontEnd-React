@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
-import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import logo from '../img/logo.jpg';
+import sqhg from '../img/sqhg.png';
 import { AuthContext } from '../context/Login/AuthContext';
 
 export default function SideBar() {
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const onConfirm = () => {
     logout();
     navigate('/');
@@ -23,10 +23,30 @@ export default function SideBar() {
       accept: onConfirm,
     });
   };
+  const profile = [
+    {
+      label: user?.nome,
+      icon: 'pi pi-user',
+      style: { backgroundColor: 'purple' },
+      items: [
+        {
+          label: 'Ver perfil',
+          icon: 'pi pi-user-edit',
+          url: '/app/profile',
+        },
+        {
+          label: 'Sair',
+          icon: 'pi pi-sign-out',
+          command: () => confirm(),
+        },
+      ],
+    },
+  ];
+
   const items = [
     {
       label: 'Administradores',
-      icon: 'pi pi-user',
+      icon: 'pi pi-users',
       items: [
         {
           label: 'Cadastrar',
@@ -120,33 +140,19 @@ export default function SideBar() {
         justifyContent: 'center',
       }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <img src={logo} alt="" style={{ height: '100px' }} />
-          <div
-            className="flex gap-3"
-          >
-            <Button
-              icon="pi pi-times"
-              onClick={confirm}
-              style={{
-                borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',
-              }}
-            >
-              Logout
-
-            </Button>
-            <Button
-              style={{
-                borderRadius: '5px', backgroundColor: '#9c27b0', color: 'white', padding: '10px', gap: '10px',
-              }}
-              icon="pi pi-user"
-              onClick={() => navigate('/app/profile')}
-            >
-              Perfil
-            </Button>
-          </div>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}
+        >
+          <a href="/app">
+            <img src={logo} alt="" style={{ height: '100px' }} />
+          </a>
+          <img src={sqhg} alt="" style={{ height: '70px' }} />
         </div>
-        <div style={{ color: 'black' }}>
+        <div>
+          <PanelMenu className="profile-css" model={profile} />
+        </div>
+        <div>
           <PanelMenu
             model={items}
           />
