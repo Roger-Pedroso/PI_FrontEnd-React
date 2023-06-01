@@ -206,17 +206,14 @@ export default function ListSector() {
 
                   <div className="p-inputgroup">
                     <Spans icon="pi pi-user" />
-                    <InputText name="tipo" onChange={(e) => { onChange(e); }} id="tipo" placeholder="Tipo" />
+                    <InputText name="tipo" onChange={(e) => { onChange(e); }} id="tipo" placeholder="Tipo" value={editedArea.tipo} />
                   </div>
 
-                  <div className="p-inputgroup flex align-items-center">
-                    <span className="p-inputgroup-addon mr-3">
-                      Status
-                    </span>
-                    <InputSwitch
-                      checked={status}
-                      onChange={(e) => { setStatus(e.target.value); }}
-                    />
+                  <div className="flex gap-3 p-inputgroup flex align-items-center">
+                    <InputSwitch checked={status} onChange={(e) => setStatus(e.value)} />
+                    Status:
+                    {' '}
+                    {status ? 'Ativo' : 'Inativo'}
                   </div>
                 </div>
               </div>

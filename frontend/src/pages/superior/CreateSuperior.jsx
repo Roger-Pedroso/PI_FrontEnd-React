@@ -82,11 +82,16 @@ export default function CreateSuperior() {
   };
   return (
     <div>
-      <div style={{ textAlign: 'center' }}><h1>Cadastrar Superior Imediato</h1></div>
 
       <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <div style={{ width: '60%' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ width: '70%' }}>
+          <div
+            className="card"
+            style={{
+              display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '5vw', paddingRight: '5vw',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '50px' }}><h1>Cadastrar Superior Imediato</h1></div>
             <div className="p-inputgroup">
               <Spans icon="pi pi-user" />
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
@@ -129,17 +134,15 @@ export default function CreateSuperior() {
                 className="w-full md:w-14rem"
               />
             </div>
-
-          </div>
-
-          <div
-            className="flex justify-content-end gap-3"
-            style={{
-              marginTop: '20px',
-            }}
-          >
-            <Button label="Cancelar" onClick={superiorRoute} />
-            <Button label="Confirmar" onClick={onSubmit} />
+            <div
+              className="flex justify-content-end gap-3"
+              style={{
+                marginTop: '50px',
+              }}
+            >
+              <Button label="Cancelar" onClick={superiorRoute} />
+              <Button label="Confirmar" onClick={onSubmit} />
+            </div>
           </div>
         </div>
       </div>
