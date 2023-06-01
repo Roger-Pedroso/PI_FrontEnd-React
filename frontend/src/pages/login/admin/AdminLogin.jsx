@@ -47,12 +47,6 @@ export default function Login() {
         <img style={{ height: '200px' }} id="logo" src={logo} alt="" />
       </div>
 
-      {/* <form
-        onSubmit={handleLogin}
-        style={{
-          display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end',
-        }}
-      > */}
       <div style={{
         display: 'flex', gap: '10px', flexDirection: 'column',
       }}
@@ -77,7 +71,7 @@ export default function Login() {
           Esqueceu sua senha?
         </a>
       </div>
-      {/* </form> */}
+
       <div style={{ textAlign: 'end', fontSize: '1.2em' }} />
     </div>
   );

@@ -77,7 +77,7 @@ export default function Profile() {
           if (confirmation === newPassword) {
             const senha = newPassword;
             try {
-              api.put(`/user/${user?.id}`, { senha });
+              api.put(`/user/change-password/${user?.id}`, { senha });
               showSuccess('A senha foi alterada com sucesso!');
               setTimeout(() => {
                 logout();
