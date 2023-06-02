@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect, useContext, useRef,
 } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -23,9 +23,10 @@ export default function AnsweringQuiz() {
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [buttonVisible2, setButtonVisible2] = useState(false);
   const [endQuiz, setEndQuiz] = useState(false);
+  const { id } = useParams();
   const toast = useRef();
-  const location = useLocation();
-  const findQuizById = async (id) => {
+  const navigate = useNavigate();
+  const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
     setQuiz({ nome: quizParsed.nome, descricao: quizParsed.descricao });
@@ -33,14 +34,12 @@ export default function AnsweringQuiz() {
   };
 
   useEffect(() => {
-    const quizId = location.pathname.substring(19, location.pathname.length);
-    findQuizById(quizId);
+    findQuizById();
   }, []);
 
   useEffect(() => {
     if (questions.length < 1) {
-      const quizId = location.pathname.substring(19, location.pathname.length);
-      findQuizById(quizId);
+      findQuizById();
     }
   }, [questions]);
 
@@ -82,7 +81,41 @@ export default function AnsweringQuiz() {
 
   const submit = async () => {
     try {
-      await api.post('/resposta', answers.map((answer) => answer));
+      answers.forEach(async (answer) => {
+        let newAnswer;
+        if (answer.obrigatorio === true) {
+          if (answer.tipo === 'multipla_escolha') {
+            newAnswer = {
+              idQuestion: answer.id_question, idQuiz: id, resposta: JSON.stringify(answer.resposta),
+            };
+            await api.post('/answer', { ...newAnswer });
+          } else {
+            newAnswer = {
+              idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
+            };
+            await api.post('/answer', { ...newAnswer });
+          }
+        } else if (answer.obrigatorio === false) {
+          if (answer.resposta.length > 0) {
+            if (answer.tipo === 'multipla_escolha') {
+              newAnswer = {
+                idQuestion: answer.id_question,
+                idQuiz: id,
+                resposta: JSON.stringify(answer.resposta),
+              };
+              await api.post('/answer', { ...newAnswer });
+            } else {
+              newAnswer = {
+                idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
+              };
+              await api.post('/answer', { ...newAnswer });
+            }
+          }
+        }
+      });
+      setTimeout(() => {
+        navigate(`/app/quizes/keys/${quiz.id}`);
+      }, 2000);
     } catch (err) {
       showError();
     }
@@ -107,7 +140,9 @@ export default function AnsweringQuiz() {
   };
 
   const constructRespostas = (item) => {
-    const novaResposta = { id_question: item.id, resposta: '', obrigatorio: item.obrigatorio };
+    const novaResposta = {
+      id_question: item.id, resposta: '', obrigatorio: item.obrigatorio, tipo: item.tipo,
+    };
     setAnswers((prevRespostas) => [...prevRespostas, novaResposta]);
   };
 
@@ -141,7 +176,7 @@ export default function AnsweringQuiz() {
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
-        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} visible={buttonVisible2} />
+        <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} visible={buttonVisible2} style={{ marginBottom: '10px' }} />
         <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar o questionário?

@@ -5,7 +5,6 @@ import { AuthContext } from '../context/Login/AuthContext';
 
 function AllRoutes() {
   const { authenticated } = useContext(AuthContext);
-  console.log(authenticated);
   const a = true;
   console.log(a);
 

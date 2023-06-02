@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { ListBox } from 'primereact/listbox';
 import { Button } from 'primereact/button';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 
 export default function SendQuiz() {
@@ -22,9 +23,22 @@ export default function SendQuiz() {
   const [numQuestions, setNumQuestions] = useState('');
   const [numChaves, setNumChaves] = useState('');
   const [areYouSure, setAreYouSure] = useState(false);
+  const toast = useRef();
   const { id } = useParams();
   const isSuperiorSelected = (selectedSuperior === '' || (numChaves === '' || numChaves === null));
   const navigate = useNavigate();
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso!', detail: 'Aconteceu um erro ao cadastrar as chaves. Tente novamente.', life: 3000,
+    });
+  };
+
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Successo!', detail: 'Chaves cadastradas e questionário em execução! Redirecionando...', life: 3000,
+    });
+  };
 
   useEffect(() => {
     // eslint-disable-next-line no-use-before-define
@@ -73,9 +87,19 @@ export default function SendQuiz() {
     setSuperioresBySetor(superiores.filter((superior) => superior.sector.id === selectedSetor.id));
   };
 
-  const submit = () => {
-    // eslint-disable-next-line no-undef
-    navigate(`/app/quizes/answer/${quiz.id}`);
+  const submit = async () => {
+    try {
+      const newKey = { idQuiz: quiz.id, idSuperior: selectedSuperior.id };
+      console.log(numChaves);
+      await api.post('/key', { ...newKey, numberOfKeys: numChaves });
+      showSuccess();
+      setTimeout(() => {
+        navigate(`/app/quizes/keys/${quiz.id}`);
+      }, 2000);
+    } catch (err) {
+      showError();
+      setAreYouSure(false);
+    }
   };
 
   return (
@@ -116,6 +140,7 @@ export default function SendQuiz() {
             <Button label="Não" onClick={() => setAreYouSure(false)} />
           </div>
         </Dialog>
+        <Toast ref={toast} />
       </div>
     </div>
   );
