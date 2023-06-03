@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect, useContext, useRef,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -23,9 +23,10 @@ export default function AnsweringQuiz() {
   const [buttonVisible1, setButtonVisible1] = useState(true);
   const [buttonVisible2, setButtonVisible2] = useState(false);
   const [endQuiz, setEndQuiz] = useState(false);
+  const [endQuiz2, setEndQuiz2] = useState(false);
+  const navigate = useNavigate();
   const { id } = useParams();
   const toast = useRef();
-  const navigate = useNavigate();
   const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
@@ -79,6 +80,13 @@ export default function AnsweringQuiz() {
     });
   };
 
+  function thankYou() {
+    return (
+      <div style={{ color: 'white', marginTop: '225px' }}>
+        <h2>Obrigado pelas suas respostas! Redirecionando...</h2>
+      </div>
+    );
+  }
   const submit = async () => {
     try {
       answers.forEach(async (answer) => {
@@ -113,9 +121,11 @@ export default function AnsweringQuiz() {
           }
         }
       });
+      setEndQuiz(false);
+      setEndQuiz2(true);
       setTimeout(() => {
-        navigate(`/app/quizes/keys/${quiz.id}`);
-      }, 2000);
+        navigate('/login');
+      }, 3000);
     } catch (err) {
       showError();
     }
@@ -172,7 +182,7 @@ export default function AnsweringQuiz() {
               marginTop: '225px', backgroundColor: 'white', color: 'rgba(89,31,107,255)', border: '2px solid black', boxShadow: '10px 10px 10px purple',
             }}
           />
-          {componentQuestions.map((item) => item)}
+          {endQuiz2 ? thankYou() : componentQuestions.map((item) => item)}
         </div>
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>

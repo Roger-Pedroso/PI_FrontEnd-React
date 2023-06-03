@@ -4,6 +4,7 @@ import PrivateRoutes from './private.routes';
 import { AuthContext } from '../context/Login/AuthContext';
 
 function AllRoutes() {
+  // eslint-disable-next-line no-unused-vars
   const { authenticated } = useContext(AuthContext);
   const a = true;
   console.log(a);

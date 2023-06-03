@@ -16,7 +16,6 @@ import Profile from '../pages/admin/Profile';
 import AnsweringQuiz from '../pages/AnsweringQuiz/AnsweringQuiz';
 import Keys from '../pages/quizes/Keys';
 import App from '../App';
-import ThankYou from '../pages/AnsweringQuiz/ThankYou';
 
 export default function PrivateRoutes() {
   return (
@@ -38,7 +37,6 @@ export default function PrivateRoutes() {
         <Route path="quizes/send/:id" element={<SendQuiz />} />
         <Route path="quizes/answer/:id" element={<AnsweringQuiz />} />
         <Route path="quizes/keys/:id" element={<Keys />} />
-        <Route path="quizes/answer/thankyou" element={<ThankYou />} />
       </Route>
     </Routes>
   );

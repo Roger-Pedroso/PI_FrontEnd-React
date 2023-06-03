@@ -92,6 +92,7 @@ export default function SendQuiz() {
       const newKey = { idQuiz: quiz.id, idSuperior: selectedSuperior.id };
       console.log(numChaves);
       await api.post('/key', { ...newKey, numberOfKeys: numChaves });
+      await api.put(`/status-quiz/${id}`, { status: true });
       showSuccess();
       setTimeout(() => {
         navigate(`/app/quizes/keys/${quiz.id}`);
