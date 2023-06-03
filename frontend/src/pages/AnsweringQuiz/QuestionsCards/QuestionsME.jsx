@@ -34,7 +34,6 @@ export default function QuestionsME(item) {
       const newAnswer = [...answers];
       newAnswer[indice].resposta = selectedAlternativas;
       setAnswers(newAnswer);
-      console.log(answers);
     }
   }, [selectedAlternativas]);
 
