@@ -124,7 +124,7 @@ export default function AnsweringQuiz() {
       setEndQuiz(false);
       setEndQuiz2(true);
       setTimeout(() => {
-        navigate('/login');
+        navigate('/');
       }, 3000);
     } catch (err) {
       showError();

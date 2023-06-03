@@ -20,6 +20,7 @@ export default function QuizesList() {
   const [areYouSure, setAreYouSure] = useState(false);
   const [areYouSure2, setAreYouSure2] = useState(false);
   const [copyModel, setCopyModel] = useState();
+  const [keys, setKeys] = useState();
   const [inativeModel, setInativeModel] = useState();
   const toast = useRef();
   const [filters, setFilters] = useState({
@@ -32,9 +33,21 @@ export default function QuizesList() {
     });
   };
 
+  const showSuccess2 = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Successo!', detail: 'Questionário desativado com sucesso! Atualizando a lista...', life: 3000,
+    });
+  };
+
   const showError = () => {
     toast.current.show({
       severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao duplicar o modelo. Tente novamente.', life: 3000,
+    });
+  };
+
+  const showError2 = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao desativar o questionário. Tente novamente.', life: 3000,
     });
   };
 
@@ -68,10 +81,10 @@ export default function QuizesList() {
   }, [quizes]);
 
   const editTemplate = (e) => (
-    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/new/${e.id}`)} visible={e.status === false || e.status === null} />
+    <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/new/${e.id}`)} visible={e.status === false} />
   );
   const sendTemplate = (e) => (
-    <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/send/${e.id}`)} visible={e.status === false || e.status === null} />
+    <Button icon="pi pi-send" style={{ backgroundColor: 'white' }} onClick={() => navigate(`/app/quizes/send/${e.id}`)} visible={e.status === false} />
   );
   const copiarQuiz = async (e) => {
     try {
@@ -98,7 +111,20 @@ export default function QuizesList() {
   );
 
   const inativeQuiz = async (e) => {
-    await api.put(`/status-quiz/${e.id}`, { status: null });
+    try {
+      await api.put(`/status-quiz/${e.id}`, { status: false });
+      const kys = await api.get(`/key-by-quiz/${e.id}`);
+      setKeys(kys.data);
+      keys.forEach(async (key) => {
+        await api.put(`key/${key.id}`, { status: false });
+      });
+      showSuccess2();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+      showError2();
+    }
   };
 
   const statusTemplate = (e) => (

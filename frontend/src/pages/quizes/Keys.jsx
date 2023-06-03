@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
 import { useParams } from 'react-router-dom';
-import { Column } from 'primereact/column';
+import { Divider } from 'primereact/divider';
 import api from '../../utils/Api';
 
 export default function Keys() {
   const [quiz, setQuiz] = useState(null);
-  const [keysParsed, setKeysParsed] = useState([]);
+  const [keys, setKeys] = useState([]);
+  const [superior, setSuperior] = useState('');
+  let numberOfKeysActive = 0;
+  const isSuperiorSelected = superior !== '';
   const { id } = useParams();
 
   const findQuiz = async () => {
@@ -19,15 +21,8 @@ export default function Keys() {
   };
 
   const findKeys = async () => {
-    const kys = await api.get('/key');
-    const keys = kys.data;
-    console.log(keys);
-    keys.forEach((key) => {
-      if (key.quiz.id === id) {
-        const keyss = key.key_access;
-        setKeysParsed([...keysParsed, { keys: keyss }]);
-      }
-    });
+    const kys = await api.get(`/key-by-quiz/${id}`);
+    setKeys(kys.data);
   };
   useEffect(() => {
     findQuiz();
@@ -39,28 +34,50 @@ export default function Keys() {
     }
   }, []);
   useEffect(() => {
-    if (keysParsed.length === 0) {
+    if (keys.length === 0) {
       findKeys();
     }
   }, []);
-  console.log(keysParsed);
+
+  function returnKeys(key) {
+    if (key.status === true) {
+      numberOfKeysActive += 1;
+      if (!isSuperiorSelected) {
+        setSuperior(key.superior.nome);
+      }
+      return (
+        <p>{key.keyAccess}</p>
+      );
+    }
+    return null;
+  }
+
   return (
     <div>
-      <div className="card" style={{ margin: '20px' }}>
-        <div className="flex justify-content-between align-items-center">
-          <h1>Chaves do Questionário:</h1>
+      <div className="card" style={{ margin: '20px', backgroundColor: 'rgba(89,31,107,255)' }}>
+        <div className="flex align-items-center" style={{ flexDirection: 'column', color: 'white' }}>
+          <h1 style={{ color: 'white', margin: '-5px' }}>Chaves do Questionário.</h1>
+          <h3 style={{ color: 'white' }}>
+            Superior avaliado:
+            {' '}
+            {superior}
+            .
+          </h3>
         </div>
-        <DataTable
-          value={keysParsed}
-          scrollable
-          paginator
-          rows={9}
-          scrollHeight="550px"
-          tableStyle={{ maxHeight: '100px' }}
-          globalFilterFields={['nome_campo', 'descricao', 'tipo', 'alternativas']}
+        <div
+          className="card flex justify-content-center align-items-center"
+          style={{
+            flexDirection: 'column', border: '2px solid black', boxShadow: '10px 10px 10px purple', backgroundColor: 'white',
+          }}
         >
-          <Column field="keys" />
-        </DataTable>
+          {keys.map((key) => returnKeys(key))}
+          <Divider type="solid" style={{ border: '1px solid black' }} />
+          <p>
+            <b>Número de Chaves Ativas: </b>
+            {numberOfKeysActive}
+            .
+          </p>
+        </div>
       </div>
     </div>
   );
