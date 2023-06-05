@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
       sessionStorage.setItem('user-key', JSON.stringify(response.data));
       setUser(response.data);
       setUserString(JSON.stringify(response.data));
-      navigate('/app');
+      navigate('/app/profile');
       window.location.reload();
       return true;
     });
