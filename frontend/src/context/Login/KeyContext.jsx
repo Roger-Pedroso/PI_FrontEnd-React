@@ -7,26 +7,10 @@ const KeyContext = createContext();
 function KeyProvider({ children }) {
   const navigate = useNavigate();
   const [key, setKey] = useState('');
-  const [keyId, setKeyId] = useState(sessionStorage.getItem('keyId'));
 
   const saveKeyId = (id) => {
     sessionStorage.setItem('keyId', id);
   };
-
-  async function getKeyId() {
-    try {
-      const response = await api.get(`/key/${key}`);
-      const { status, data } = response;
-      if (status === 404) {
-        return false;
-      }
-      setKeyId(data.id);
-      saveKeyId(data.id);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
 
   const sendToQuiz = (id) => {
     sessionStorage.setItem('auth-key', true);
@@ -41,9 +25,11 @@ function KeyProvider({ children }) {
       if (status === 404) {
         return false;
       }
-      getKeyId();
-      saveKeyId();
-      sendToQuiz(data.quiz.id);
+      if (data.status === false) {
+        return 'utilizada';
+      }
+      saveKeyId(data.id);
+      sendToQuiz(data.id);
       return true;
     } catch (err) {
       return false;
@@ -68,14 +54,11 @@ function KeyProvider({ children }) {
   const memo = useMemo(() => ({
     key,
     setKey,
-    keyId,
-    setKeyId,
     getQuiz,
-    getKeyId,
     sendToQuiz,
     killKey,
     saveKeyId,
-  }), [key, setKey, keyId, getQuiz]);
+  }), [key, setKey, getQuiz]);
 
   return (
     <KeyContext.Provider value={memo}>
