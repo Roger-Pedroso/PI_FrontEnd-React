@@ -1,30 +1,16 @@
-/* eslint-disable linebreak-style */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import logo from '../../../img/logo.jpg';
-import api from '../../../utils/Api';
+import { KeyContext } from '../../../context/Login/KeyContext';
 
 export default function Login() {
-  const [key, setKey] = useState('');
-  const [warning, setWarning] = useState('');
-  const navigate = useNavigate();
-  const onChange = (e) => {
-    setKey({ ...key, [e.target.name]: e.target.value });
+  const { setKey, getQuiz } = useContext(KeyContext);
+
+  const submit = () => {
+    getQuiz();
   };
 
-  const onSubmit = async () => api.post('/login', key);
-
-  const isValid = (e) => {
-    onSubmit();
-    e.preventDefault();
-    if (onSubmit === true) {
-      navigate('/app');
-    } else {
-      setWarning('Chave de acesso inválida! Verifique com um administrador.');
-    }
-  };
   return (
 
     <div style={{
@@ -35,11 +21,11 @@ export default function Login() {
         <img style={{ height: '200px' }} src={logo} alt="" />
       </div>
 
-      <form onSubmit={(e) => { isValid(e); }} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div>
 
           <div className="p-inputgroup">
-            <InputText onChange={(e) => { onChange(e); }} name="key" placeholder="Chave de acesso" />
+            <InputText onChange={(e) => setKey(e.target.value)} name="key" placeholder="Chave de acesso" />
           </div>
 
         </div>
@@ -48,10 +34,10 @@ export default function Login() {
           <a href="/login">
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
           </a>
-          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" />
+          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" onClick={() => submit()} />
         </div>
-      </form>
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{warning}</p></div>
+      </div>
+      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{}</p></div>
     </div>
 
   );

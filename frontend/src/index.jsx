@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AppProvider from './context';
 import { AnswersProvider } from './context/AnswersContext';
 import { AuthProvider } from './context/Login/AuthContext';
+import { KeyProvider } from './context/Login/KeyContext';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
@@ -19,9 +20,11 @@ root.render(
     <BrowserRouter>
       <AuthProvider>
         <AnswersProvider>
-          <AppProvider>
-            <AllRoutes />
-          </AppProvider>
+          <KeyProvider>
+            <AppProvider>
+              <AllRoutes />
+            </AppProvider>
+          </KeyProvider>
         </AnswersProvider>
       </AuthProvider>
     </BrowserRouter>

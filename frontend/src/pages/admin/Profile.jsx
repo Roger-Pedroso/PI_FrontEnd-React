@@ -5,16 +5,16 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
-import { format } from 'date-fns';
 import { Toast } from 'primereact/toast';
 import { Password } from 'primereact/password';
+import { addDays, format } from 'date-fns';
 import { AuthContext } from '../../context/Login/AuthContext';
 import profile from '../../img/profile.png';
 import api from '../../utils/Api';
 
 export default function Profile() {
   const { logout, user, updateUser } = useContext(AuthContext);
-  const [nascimento] = useState(format(new Date(user?.nascimento), 'dd/MM/yyyy'));
+  const [nascimento] = useState(format(addDays(new Date(user?.nascimento), 1), 'dd/MM/yyyy'));
   const [editedUser, setEditedUser] = useState({});
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);

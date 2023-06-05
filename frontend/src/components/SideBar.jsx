@@ -150,7 +150,7 @@ export default function SideBar() {
           <img src={sqhg} alt="" style={{ height: '70px' }} />
         </div>
         <div>
-          <PanelMenu className="profile-css" model={profile} />
+          <PanelMenu model={profile} />
         </div>
         <div>
           <PanelMenu
