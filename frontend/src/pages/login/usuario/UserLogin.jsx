@@ -6,14 +6,8 @@ import { KeyContext } from '../../../context/Login/KeyContext';
 
 export default function Login() {
   const { setKey, getQuiz } = useContext(KeyContext);
-  const [keyAux, setKeyAux] = useState('');
-
-  const onChange = (e) => {
-    setKeyAux(e.target.value);
-  };
 
   const submit = () => {
-    setKey(keyAux);
     getQuiz();
   };
 
@@ -40,7 +34,7 @@ export default function Login() {
           <a href="/login">
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
           </a>
-          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" onClick={() => getQuiz()} />
+          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" onClick={() => submit()} />
         </div>
       </div>
       <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{}</p></div>

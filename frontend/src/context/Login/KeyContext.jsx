@@ -6,12 +6,11 @@ const KeyContext = createContext();
 
 function KeyProvider({ children }) {
   const navigate = useNavigate();
-  const [key, setKey] = useState('');
-  const [quiz, setQuiz] = useState({});
-  const [keyId, setKeyId] = useState(JSON.stringify(sessionStorage.getItem('keyId')));
+  const [key, setKey] = useState(0);
+  const [keyId, setKeyId] = useState(sessionStorage.getItem('keyId'));
 
-  const saveKeyId = () => {
-    sessionStorage.setItem('keyId', { keyId });
+  const saveKeyId = (id) => {
+    sessionStorage.setItem('keyId', id);
   };
 
   const getKeyId = async () => {
@@ -19,25 +18,26 @@ function KeyProvider({ children }) {
       await api.get(`/key/${key}`).then((response) => {
         const { data } = response;
         setKeyId(data.id);
-        saveKeyId();
+        console.log(data.id);
+        saveKeyId(data.id);
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const sendToQuiz = () => {
-    navigate(`/app/quizes/answer/${quiz.id}`);
+  const sendToQuiz = (id) => {
+    sessionStorage.setItem('auth-key', true);
+    navigate(`/app/quizes/answer/${id}`);
   };
 
   const getQuiz = async () => {
     try {
       await api.get(`/key/${key}`).then((response) => {
         const { data } = response;
-        setQuiz(data.quiz);
         getKeyId();
         saveKeyId();
-        sendToQuiz();
+        sendToQuiz(data.quiz.id);
       });
     } catch (err) {
       console.log(err);
@@ -58,8 +58,6 @@ function KeyProvider({ children }) {
   const memo = useMemo(() => ({
     key,
     setKey,
-    quiz,
-    setQuiz,
     keyId,
     setKeyId,
     getQuiz,
@@ -67,7 +65,7 @@ function KeyProvider({ children }) {
     sendToQuiz,
     killKey,
     saveKeyId,
-  }), [key, setKey, quiz, setQuiz, keyId, getQuiz]);
+  }), [key, setKey, keyId, getQuiz]);
 
   return (
     <KeyContext.Provider value={memo}>
