@@ -52,9 +52,13 @@ function KeyProvider({ children }) {
 
   const killKey = async () => {
     try {
-      await api.put(`/api/${keyId}`).then(() => {
-        console.log('chave desativada.');
+      await api.put(`/key/${sessionStorage.getItem('keyId')}`).then(() => {
         sessionStorage.removeItem('keyId');
+        sessionStorage.removeItem('auth-key');
+        setTimeout(() => {
+          navigate('/');
+          window.location.reload();
+        }, 3000);
       });
     } catch (err) {
       console.log(err);

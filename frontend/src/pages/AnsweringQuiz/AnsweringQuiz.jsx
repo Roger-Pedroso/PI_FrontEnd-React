@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect, useContext, useRef,
 } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -11,6 +11,7 @@ import QuestionsAlternativas from './QuestionsCards/QuestionsAlternativas';
 import QuestionsME from './QuestionsCards/QuestionsME';
 import QuestionsOpen from './QuestionsCards/QuestionsOpen';
 import { AnswersContext } from '../../context/AnswersContext';
+import { KeyContext } from '../../context/Login/KeyContext';
 
 export default function AnsweringQuiz() {
   const [quiz, setQuiz] = useState({
@@ -24,8 +25,8 @@ export default function AnsweringQuiz() {
   const [buttonVisible2, setButtonVisible2] = useState(false);
   const [endQuiz, setEndQuiz] = useState(false);
   const [endQuiz2, setEndQuiz2] = useState(false);
-  const navigate = useNavigate();
   const { id } = useParams();
+  const { killKey } = useContext(KeyContext);
   const toast = useRef();
   const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
@@ -123,9 +124,6 @@ export default function AnsweringQuiz() {
       });
       setEndQuiz(false);
       setEndQuiz2(true);
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
     } catch (err) {
       showError();
     }
@@ -146,6 +144,7 @@ export default function AnsweringQuiz() {
       showWarn();
     } else {
       submit();
+      killKey();
     }
   };
 
