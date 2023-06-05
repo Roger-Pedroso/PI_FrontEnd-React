@@ -6,41 +6,47 @@ const KeyContext = createContext();
 
 function KeyProvider({ children }) {
   const navigate = useNavigate();
-  const [key, setKey] = useState(0);
+  const [key, setKey] = useState('');
   const [keyId, setKeyId] = useState(sessionStorage.getItem('keyId'));
 
   const saveKeyId = (id) => {
     sessionStorage.setItem('keyId', id);
   };
 
-  const getKeyId = async () => {
+  async function getKeyId() {
     try {
-      await api.get(`/key/${key}`).then((response) => {
-        const { data } = response;
-        setKeyId(data.id);
-        console.log(data.id);
-        saveKeyId(data.id);
-      });
+      const response = await api.get(`/key/${key}`);
+      const { status, data } = response;
+      if (status === 404) {
+        return false;
+      }
+      setKeyId(data.id);
+      saveKeyId(data.id);
+      return true;
     } catch (err) {
-      console.log(err);
+      return false;
     }
-  };
+  }
 
   const sendToQuiz = (id) => {
     sessionStorage.setItem('auth-key', true);
     navigate(`/app/quizes/answer/${id}`);
+    window.location.reload();
   };
 
   const getQuiz = async () => {
     try {
-      await api.get(`/key/${key}`).then((response) => {
-        const { data } = response;
-        getKeyId();
-        saveKeyId();
-        sendToQuiz(data.quiz.id);
-      });
+      const response = await api.get(`/key/${key}`);
+      const { status, data } = response;
+      if (status === 404) {
+        return false;
+      }
+      getKeyId();
+      saveKeyId();
+      sendToQuiz(data.quiz.id);
+      return true;
     } catch (err) {
-      console.log(err);
+      return false;
     }
   };
 

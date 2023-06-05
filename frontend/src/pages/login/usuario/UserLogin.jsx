@@ -1,14 +1,45 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import logo from '../../../img/logo.jpg';
 import { KeyContext } from '../../../context/Login/KeyContext';
 
 export default function Login() {
-  const { setKey, getQuiz } = useContext(KeyContext);
+  const { key, setKey, getQuiz } = useContext(KeyContext);
+  const toast = useRef(null);
 
-  const submit = () => {
-    getQuiz();
+  const showError = (msg) => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: msg, life: 3000,
+    });
+  };
+
+  const showWarn = (msg) => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
+    });
+  };
+
+  const checkInput = () => {
+    if (key.trim() === '' || key === undefined) {
+      return false;
+    }
+    return true;
+  };
+
+  const submit = async () => {
+    if (checkInput() === true) {
+      try {
+        if (await getQuiz() === false) {
+          showWarn('Chave inválida.');
+        }
+      } catch (error) {
+        showError('Ocorreu um erro inesperado.');
+      }
+    } else {
+      showWarn('Preencha os campos corretamente.');
+    }
   };
 
   return (
@@ -17,6 +48,7 @@ export default function Login() {
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '95vh',
     }}
     >
+      <Toast ref={toast} />
       <div>
         <img style={{ height: '200px' }} src={logo} alt="" />
       </div>
