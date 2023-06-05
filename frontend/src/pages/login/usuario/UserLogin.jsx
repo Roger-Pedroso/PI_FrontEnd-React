@@ -34,7 +34,7 @@ export default function Login() {
         if (await getQuiz() === false) {
           showWarn('Chave inválida.');
         } else if (await getQuiz() === 'utilizada') {
-          showWarn('Essa chave já foi utilizada.');
+          showWarn('Essa chave já foi utilizada ou foi desativada por um administrador.');
         }
       } catch (error) {
         showError('Ocorreu um erro inesperado.');
