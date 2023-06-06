@@ -30,7 +30,7 @@ function KeyProvider({ children }) {
         return 'utilizada';
       }
       saveKeyId(data.id);
-      sendToQuiz(data.id);
+      sendToQuiz(data.quiz.id);
       return true;
     } catch (err) {
       return false;

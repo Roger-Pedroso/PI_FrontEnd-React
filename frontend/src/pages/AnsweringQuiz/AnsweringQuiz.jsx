@@ -25,14 +25,27 @@ export default function AnsweringQuiz() {
   const [buttonVisible2, setButtonVisible2] = useState(false);
   const [endQuiz, setEndQuiz] = useState(false);
   const [endQuiz2, setEndQuiz2] = useState(false);
+  const [superior, setSuperior] = useState(false);
   const { id } = useParams();
+  const chave = sessionStorage.getItem('key');
   const { killKey } = useContext(KeyContext);
   const toast = useRef();
+
   const findQuizById = async () => {
     const qst = await api.get(`/quiz/${id}`);
     const quizParsed = qst.data;
     setQuiz({ nome: quizParsed.nome, descricao: quizParsed.descricao });
     setQuestions(quizParsed.questions);
+  };
+
+  const superiorr = async () => {
+    console.log(chave);
+    const chavesrc = await api.get(`/key/${chave}`);
+    const chaveTarget = chavesrc.data;
+    const superiorsrc = await api.get(`/superior/${chaveTarget.superior.id}`);
+    const superiorTarget = superiorsrc.data;
+    setSuperior(superiorTarget);
+    console.log(superior);
   };
 
   useEffect(() => {
@@ -159,7 +172,7 @@ export default function AnsweringQuiz() {
     <div>
       <div className="flex justify-content-center" style={{ margin: '10px', flexDirection: 'column', alignItems: 'center' }}>
         <h1>{quiz.nome}</h1>
-        <h2 style={{ margin: '-5px' }}><i>Nome do Superior</i></h2>
+        <h2 style={{ margin: '-5px' }}><i>{superior.nome}</i></h2>
       </div>
       <div className="flex justify-content-center items-center" style={{ marginTop: '20px' }}>
         <div
@@ -176,6 +189,7 @@ export default function AnsweringQuiz() {
               setButtonVisible2(true);
               questions.map((item) => constructRespostas(item));
               questions.forEach((item) => verifyQuestions(item));
+              superiorr();
             }}
             style={{
               marginTop: '225px', backgroundColor: 'white', color: 'rgba(89,31,107,255)', border: '2px solid black', boxShadow: '10px 10px 10px purple',
