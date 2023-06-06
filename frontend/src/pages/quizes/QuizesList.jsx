@@ -20,7 +20,6 @@ export default function QuizesList() {
   const [areYouSure, setAreYouSure] = useState(false);
   const [areYouSure2, setAreYouSure2] = useState(false);
   const [copyModel, setCopyModel] = useState();
-  const [keys, setKeys] = useState();
   const [inativeModel, setInativeModel] = useState();
   const toast = useRef();
   const [filters, setFilters] = useState({
@@ -110,18 +109,26 @@ export default function QuizesList() {
     <Button icon="pi pi-key" style={{ backgroundColor: 'white' }} visible={e.status} onClick={() => navigate(`/app/quizes/keys/${e.id}`)} />
   );
 
-  const inativeQuiz = async (e) => {
+  const inativeKeys = async (e) => {
     try {
-      await api.put(`/status-quiz/${e.id}`, { status: false });
       const kys = await api.get(`/key-by-quiz/${e.id}`);
-      setKeys(kys.data);
+      const keys = kys.data;
       keys.forEach(async (key) => {
-        await api.put(`key/${key.id}`, { status: false });
+        await api.put(`key/${key.id}`);
       });
       showSuccess2();
       setTimeout(() => {
         window.location.reload();
       }, 2000);
+    } catch (err) {
+      showError2();
+    }
+  };
+
+  const inativeQuiz = async (e) => {
+    try {
+      await api.put(`/status-quiz/${e.id}`, { status: false });
+      inativeKeys(e);
     } catch (err) {
       showError2();
     }

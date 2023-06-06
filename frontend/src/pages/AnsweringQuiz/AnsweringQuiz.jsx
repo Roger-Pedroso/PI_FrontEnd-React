@@ -206,7 +206,7 @@ export default function AnsweringQuiz() {
           </p>
           <br />
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-            <Button label="Sim" onClick={() => verifyAnswers()} />
+            <Button label="Sim" onClick={() => { setButtonVisible2(false); verifyAnswers(); }} />
             <Button label="Não" onClick={() => setEndQuiz(false)} />
           </div>
         </Dialog>
