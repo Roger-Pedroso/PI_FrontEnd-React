@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
@@ -66,8 +67,8 @@ export default function CreateSector() {
   return (
     <div>
       <div style={{ marginBottom: '60px' }} />
-      <div className="flex justify-content-center mt-5" style={{ margin: '60px' }}>
-        <div className="card flex flex-column gap-3" style={{ width: '70%', paddingLeft: '5vw', paddingRight: '5vw' }}>
+      <div className="flex justify-content-center mt-5" style={{ margin: '0px' }}>
+        <div className="card flex flex-column gap-3" style={innerWidth > 600 ? { width: '70%', paddingLeft: '5vw', paddingRight: '5vw' } : {}}>
           <div className="flex justify-content-center" style={{ marginBottom: '50px' }}>
             <h1>Cadastro de Setor</h1>
           </div>

@@ -1,4 +1,4 @@
-/* eslint-disable linebreak-style */
+/* eslint-disable no-restricted-globals */
 import React from 'react';
 // import { PanelMenu } from 'primereact/panelmenu';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ function App() {
   function whenKey() {
     return (
       <div style={{
-        width: '100%', backgroundColor: '#DEDEDE', borderRadius: '5px', marginRight: '0px',
+        width: '100%', backgroundColor: '#DEDEDE', borderRadius: '5px',
       }}
       >
         <Outlet />
@@ -20,8 +20,10 @@ function App() {
   }
   function whenNotKey() {
     return (
-      <div className="flex justify-content-between gap-3" style={{ height: '97vh', width: '98vw' }}>
-        <div style={{
+      <div className="flex justify-content-between" style={innerWidth > 600 ? { height: '97vh', width: '98vw', gap: '15px' } : { height: '98vh', width: '98vw' }}>
+        <div style={innerWidth < 600 ? {
+          borderColor: 'black',
+        } : {
           width: '20%',
           backgroundColor: 'rgba(89,31,107,255)',
           padding: '15px',
@@ -31,10 +33,12 @@ function App() {
           borderColor: 'black',
         }}
         >
-          <SideBar />
+          {innerWidth > 600 && <SideBar />}
         </div>
-        <div style={{
+        <div style={innerWidth > 600 ? {
           width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px', overflow: 'scroll',
+        } : {
+          width: '100%', backgroundColor: '#DEDEDE', borderRadius: '5px', overflow: 'scroll',
         }}
         >
           <Outlet />

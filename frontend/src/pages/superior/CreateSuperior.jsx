@@ -64,11 +64,12 @@ export default function CreateSuperior() {
     setSuperior({ ...superior, idSector: selectedArea.id });
     try {
       if (checkInput(superior) === true) {
-        await api.post('/superior', { ...superior });
-        showSuccess('Superior imediato criado com sucesso!');
-        setTimeout(() => {
-          navigate('/app/superior');
-        }, 2000);
+        await api.post('/superior', { ...superior }).then(() => {
+          showSuccess('Superior imediato criado com sucesso!');
+          setTimeout(() => {
+            navigate('/app/superior');
+          }, 2000);
+        });
       } else {
         showWarn();
       }
