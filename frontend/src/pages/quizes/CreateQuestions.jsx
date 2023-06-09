@@ -1,9 +1,14 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-return-assign */
-import React, { useState } from 'react';
+import React, {
+  useEffect, useRef, useState,
+} from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
+import { Toast } from 'primereact/toast';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Spans from '../../components/Spans';
 import api from '../../utils/Api';
 
@@ -12,26 +17,53 @@ export default function CreateQuestions() {
   const [mult, setMult] = useState(false);
   const [type, setType] = useState(null);
   const [obrigatorio, setObrigatorio] = useState(false);
-  const [alternativas, setAlternativas] = useState([{ id: 1, value: '' }]);
-  const [isTitleEmpty, setIsTitleEmpty] = useState(true);
-
-  const isTypeUndefined = type === null;
-  const vazio = alternativas.length <= 1;
-
+  const [alternativas, setAlternativas] = useState([{ idd: 1, value: '' }]);
+  const [areYouSure, setAreYouSure] = useState(false);
+  const { id } = useParams();
   const [question, setQuestion] = useState({
     nome_campo: '',
     descricao: '',
   });
+  const isTitleEmpty = question.nome_campo === '';
+  const toast = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isTypeDouble = (type === 'alternativa' || type === 'multipla_escolha');
+  const [idEditedQuestion, setIdEditedQuestion] = useState('');
+
+  const findQuestionById = async () => {
+    const qst = await api.get(`/question/${id}`);
+    const questionParsed = qst.data;
+    setIdEditedQuestion(questionParsed.id);
+    setQuestion({ nome_campo: questionParsed.nome_campo, descricao: questionParsed.descricao });
+    setType(questionParsed.tipo);
+    setObrigatorio(questionParsed.obrigatorio);
+    setAlternativas([]);
+    const AlternativasParsed = JSON.parse(questionParsed.alternativas);
+    const alte = AlternativasParsed.map((alter, index) => ({
+      value: alter,
+      id: index + 1,
+    }));
+    setAlternativas(alte);
+  };
+
+  useEffect(() => {
+    findQuestionById();
+  }, []);
+
+  const isTypeUndefined = type === null;
+  const vazio = alternativas.length <= 1;
+
   const onChange = (e) => {
     setQuestion({ ...question, [e.target.name]: e.target.value });
   };
   const addAlternativa = () => {
-    const novaAlternativa = { id: Date.now(), value: '' };
+    const novaAlternativa = { idd: Date.now(), value: '' };
     setAlternativas([...alternativas, novaAlternativa]);
   };
-  const handleAlternativaChange = (event, id) => {
+  const handleAlternativaChange = (event, idd) => {
     const novasAlternativas = [...alternativas];
-    const index = alternativas.findIndex((alter) => alter.id === id);
+    const index = alternativas.findIndex((alter) => alter.idd === idd);
     novasAlternativas[index].value = event.target.value;
     setAlternativas(novasAlternativas);
   };
@@ -40,35 +72,85 @@ export default function CreateQuestions() {
     novasAlternativas.splice(index, 1);
     setAlternativas(novasAlternativas);
   };
-  function handleTitleChange(e) {
-    setIsTitleEmpty(e.target.value === '');
-  }
+
+  const showSuccess = () => {
+    toast.current.show({
+      severity: 'success', summary: 'Successo!', detail: 'Questão salva com sucesso! Atualizando...', life: 3000,
+    });
+  };
+
+  const showWarn = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso!', detail: 'Questão com apenas uma alternativa são invalidas!', life: 3000,
+    });
+  };
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso!', detail: 'Preencha todos os campos obrigatórios!', life: 3000,
+    });
+  };
+
+  const showError2 = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro!', detail: 'Ocorreu um erro ao criar a questão. Tente novamente.', life: 3000,
+    });
+  };
 
   const submit = async () => {
-    if (type !== 'alternativa' && type !== 'multipla_escolha') {
-      // eslint-disable-next-line object-shorthand
-      const newQuestion = { ...question, tipo: type, obrigatorio };
-      await api.post('/question', { ...newQuestion });
-    } else {
-      const newQuestion = {
-        ...question,
-        tipo: type,
-        obrigatorio,
-        alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
-      };
-      await api.post('/question', { ...newQuestion });
+    try {
+      if (location.pathname === '/app/questions/new') {
+        if (type !== 'alternativa' && type !== 'multipla_escolha') {
+          const newQuestion = { ...question, tipo: type, obrigatorio };
+          await api.post('/question', { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          const newQuestion = {
+            ...question,
+            tipo: type,
+            obrigatorio,
+            alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
+          };
+          await api.post('/question', { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      } else if (type !== 'alternativa' && type !== 'multipla_escolha') {
+        const newQuestion = { ...question, tipo: type, obrigatorio };
+        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/questions');
+        }, 2000);
+      } else {
+        const newQuestion = {
+          ...question,
+          tipo: type,
+          obrigatorio,
+          alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
+        };
+        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+        showSuccess();
+        setTimeout(() => {
+          navigate('/app/questions');
+        }, 2000);
+      }
+    } catch (err) {
+      showError2();
     }
   };
+
   const handleSubmit = () => {
     if (isTitleEmpty || isTypeUndefined) {
-      // eslint-disable-next-line no-alert
-      alert('Por favor, preencha todos os campos obrigatórios!');
+      showError();
     } else if (type === 'alternativa' || type === 'multipla_escolha') {
       if (alternativas.length <= 1) {
-        alert(
-          'Não pode questões de alternativas/multipla escolha com apenas uma opção!',
-        );
-        setType(null);
+        showWarn();
       } else {
         submit();
       }
@@ -77,23 +159,39 @@ export default function CreateQuestions() {
     }
   };
 
+  const handleEdit = () => {
+    if (location.pathname === '/app/questions/new') {
+      handleSubmit();
+    } else {
+      setAreYouSure(true);
+    }
+  };
+
+  function editarAlternativas() {
+    if (type === 'alternativa') {
+      setAlt(true);
+    } else if (type === 'multipla_escolha') {
+      setMult(true);
+    }
+  }
+
   return (
     <div>
       <div
         className="flex justify-content-center"
         style={{ margin: '15px' }}
       >
-        <h1>Criar Questões</h1>
+        <h1>{location.pathname === '/app/questions/new' ? 'Criar Questões' : 'Editar Questão'}</h1>
       </div>
 
       <div
-        style={{
+        style={innerWidth > 600 ? {
           justifyContent: 'center',
           marginTop: '150px',
           marginBottom: '10px',
           marginLeft: '60px',
           marginRight: '60px',
-        }}
+        } : { margin: '20px' }}
       >
         <div
           style={{
@@ -109,9 +207,8 @@ export default function CreateQuestions() {
               placeholder="Nome da Questão (OBRIGATÓRIO)"
               onChange={(e) => {
                 onChange(e);
-                handleTitleChange(e);
               }}
-              required
+              value={question.nome_campo}
             />
           </div>
           <div className="p-inputgroup" style={{ height: '100px' }}>
@@ -120,6 +217,7 @@ export default function CreateQuestions() {
               name="descricao"
               placeholder="Descrição (OPCIONAL)"
               onChange={(e) => onChange(e)}
+              value={question.descricao}
             />
           </div>
 
@@ -153,13 +251,13 @@ export default function CreateQuestions() {
                 justifyContent="center"
                 visible={alt}
                 maximizable
-                style={{ width: '50vw' }}
+                style={innerWidth > 600 ? { width: '50vw' } : { maxWidth: '98vw' }}
                 onHide={() => setAlt(false)}
               >
                 {alternativas.map((alternativa, index) => (
                   <div
                     className=" flex justify-content-center"
-                    key={alternativa.id}
+                    key={alternativa.idd}
                   >
                     <Spans icon="pi pi-pencil" />
                     <InputText
@@ -168,7 +266,7 @@ export default function CreateQuestions() {
                       value={alternativa.value}
                       onChange={(event) => handleAlternativaChange(
                         event,
-                        alternativa.id,
+                        alternativa.idd,
                       )}
                     />
                     <Button
@@ -235,13 +333,13 @@ export default function CreateQuestions() {
                 justifyContent="center"
                 visible={mult}
                 maximizable
-                style={{ width: '50vw' }}
+                style={innerWidth > 600 ? { width: '50vw' } : { maxWidth: '98vw' }}
                 onHide={() => setMult(false)}
               >
                 {alternativas.map((alternativa, index) => (
                   <div
                     className=" flex justify-content-center"
-                    key={alternativa.id}
+                    key={alternativa.idd}
                   >
                     <Spans icon="pi pi-pencil" />
                     <InputText
@@ -250,7 +348,7 @@ export default function CreateQuestions() {
                       value={alternativa.value}
                       onChange={(event) => handleAlternativaChange(
                         event,
-                        alternativa.id,
+                        alternativa.idd,
                       )}
                     />
                     <Button
@@ -304,6 +402,9 @@ export default function CreateQuestions() {
                 />
                 <p style={{ marginLeft: '5px' }}>Aberta</p>
               </div>
+              <div className="flex align-items-center">
+                <Button label="Editar Alternativas" onClick={() => editarAlternativas()} disabled={!isTypeDouble} />
+              </div>
             </div>
           </div>
           <div
@@ -345,8 +446,19 @@ export default function CreateQuestions() {
           justifyContent: 'end',
         }}
       >
-        <Button label="Listar" />
-        <Button label="Salvar" onClick={() => handleSubmit()} />
+        <Button label="Listar" onClick={() => navigate('/quizes/QuestionsList')} />
+        <Button label="Salvar" onClick={() => handleEdit()} />
+        <Toast ref={toast} />
+        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+          <p className="m-0">
+            Tem certeza que deseja editar essa questão?
+            Todos os questionários relacionados a essa questão também serão alterados!
+          </p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <Button label="Sim" onClick={() => handleSubmit()} />
+            <Button label="Não" onClick={() => setAreYouSure(false)} />
+          </div>
+        </Dialog>
       </div>
     </div>
   );

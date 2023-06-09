@@ -10,8 +10,12 @@ body {
     color: rgba(89,31,107,255);
 }
 
-h1{
+h1, h4{
     color: rgba(89,31,107,255);
+}
+
+h3 {
+    color: purple;
 }
 
 a{
@@ -31,4 +35,30 @@ a{
 
 #i {
     color: white;
+}
+
+.picklistquest button {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgba(89,31,107,255);
+}
+
+.picklistquest button:hover {
+    background-color: darkgrey !important;
+}
+
+.picklistquest button:focus {
+    background-color: darkgrey !important;
+}
+
+.pi-bars{
+    color: white;
+}
+
+.p-menubar{
+    border: none;
+    width: 120%;
+}
+.p-menubar-root-list{
+    width: 2000px;
 }

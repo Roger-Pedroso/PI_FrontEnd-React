@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -6,12 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
+import { FilterMatchMode } from 'primereact/api';
 import api from '../../utils/Api';
 
 export default function ListSuperior() {
   const navigate = useNavigate();
   const createSuperior = () => {
-    navigate('/supervisor/cadastrar');
+    navigate('/app/superior/new');
   };
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [superiores, setSuperiores] = useState([]);
@@ -24,6 +26,30 @@ export default function ListSuperior() {
     email: '',
   });
   const toast = useRef(null);
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
+
+  const onGlobalFilterChange = (e) => {
+    const { value } = e.target;
+    const afilters = { ...filters };
+
+    afilters.global.value = value;
+
+    setFilters(afilters);
+    setGlobalFilterValue(value);
+  };
+
+  const renderHeader = () => (
+    <div className="flex justify-content-end">
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Buscar" />
+      </span>
+    </div>
+  );
+  const header = renderHeader();
   const showSuccess = () => {
     toast.current.show({
       severity: 'success', summary: 'Concluído', detail: 'Editado com sucesso!', life: 3000,
@@ -107,9 +133,9 @@ export default function ListSuperior() {
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
-        <div className="flex justify-content-between align-items-center">
+        <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
-          <h1>Listagem de Superiores Imediatos</h1>
+          <h1>Superiores Imediatos</h1>
           <Button
             label="Cadastrar"
             onClick={createSuperior}
@@ -117,7 +143,14 @@ export default function ListSuperior() {
           />
 
         </div>
-        <DataTable value={superiores} tableStyle={{ minWidth: '50rem' }}>
+        <DataTable
+          value={superiores}
+          paginator
+          rows={9}
+          filters={filters}
+          globalFilterFields={['nome', 'cracha', 'cargo', 'email', 'sector.nome']}
+          header={header}
+        >
           <Column field="nome" header="Nome" />
           <Column field="cracha" header="Crachá" sortable />
           <Column field="cargo" header="Cargo" />
@@ -128,7 +161,7 @@ export default function ListSuperior() {
         </DataTable>
       </div>
       <div>
-        <Dialog header="Confirmação" visible={deleteMessage} style={{ width: '50vw' }} onHide={() => setDeleteMessage(false)}>
+        <Dialog header="Confirmação" visible={deleteMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setDeleteMessage(false)}>
           <p className="m-0">
             Tem certeza que deseja deletar o cadastro de
             {' '}
@@ -142,7 +175,7 @@ export default function ListSuperior() {
         </Dialog>
       </div>
       <div>
-        <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={{ width: '50vw' }} onHide={() => setEditMessage(false)}>
+        <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setEditMessage(false)}>
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{
@@ -193,8 +226,8 @@ export default function ListSuperior() {
             display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px',
           }}
           >
-            <Button label="Sim" onClick={() => editSuperior()} />
-            <Button label="Não" onClick={() => setEditMessage(false)} />
+            <Button label="Cancelar" onClick={() => setEditMessage(false)} />
+            <Button label="Editar" onClick={() => editSuperior()} />
           </div>
         </Dialog>
       </div>

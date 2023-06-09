@@ -1,57 +1,77 @@
-/* eslint-disable linebreak-style */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import logo from '../../../img/logo.jpg';
-import api from '../../../utils/Api';
+import { KeyContext } from '../../../context/Login/KeyContext';
 
 export default function Login() {
-  const [key, setKey] = useState('');
-  const [warning, setWarning] = useState('');
-  const navigate = useNavigate();
-  const onChange = (e) => {
-    setKey({ ...key, [e.target.name]: e.target.value });
+  const { key, setKey, getQuiz } = useContext(KeyContext);
+  const toast = useRef(null);
+
+  const showError = (msg) => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: msg, life: 3000,
+    });
   };
 
-  const onSubmit = async () => api.post('/login', key);
+  const showWarn = (msg) => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
+    });
+  };
 
-  const isValid = (e) => {
-    onSubmit();
-    e.preventDefault();
-    if (onSubmit === true) {
-      navigate('/');
+  const checkInput = () => {
+    if (key.trim() === '' || key === undefined) {
+      return false;
+    }
+    return true;
+  };
+
+  const submit = async () => {
+    if (checkInput() === true) {
+      try {
+        if (await getQuiz() === false) {
+          showWarn('Chave inválida.');
+        } else if (await getQuiz() === 'utilizada') {
+          showWarn('Essa chave já foi utilizada ou foi desativada por um administrador.');
+        }
+      } catch (error) {
+        showError('Ocorreu um erro inesperado.');
+      }
     } else {
-      setWarning('Chave de acesso inválida! Verifique com um administrador.');
+      showWarn('Preencha os campos corretamente.');
     }
   };
+
   return (
 
     <div style={{
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '95vh',
     }}
     >
+      <Toast ref={toast} />
       <div>
         <img style={{ height: '200px' }} src={logo} alt="" />
       </div>
 
-      <form onSubmit={(e) => { isValid(e); }} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div>
 
           <div className="p-inputgroup">
-            <InputText onChange={(e) => { onChange(e); }} name="key" placeholder="Chave de acesso" />
+            <InputText onChange={(e) => setKey(e.target.value)} name="key" placeholder="Chave de acesso" />
           </div>
 
         </div>
 
-        <div style={{ marginTop: '20px' }}>
-          <a href="/login/admin">
+        <div className="flex gap-2" style={{ marginTop: '20px' }}>
+          <a href="/login">
             <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
           </a>
-          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" />
+          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" onClick={() => submit()} />
         </div>
-      </form>
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{warning}</p></div>
+      </div>
+      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{}</p></div>
     </div>
 
   );

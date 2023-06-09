@@ -1,5 +1,6 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable linebreak-style */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -7,11 +8,14 @@ import { Calendar } from 'primereact/calendar';
 import { InputMask } from 'primereact/inputmask';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Toast } from 'primereact/toast';
 import api from '../../utils/Api';
 import Spans from '../../components/Spans';
 
 export default function Cadastro() {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
+  const [password, setPassword] = useState('');
+  const toast = useRef(null);
   const [admin, setAdmin] = useState({
     nome: '',
     email: '',
@@ -19,52 +23,93 @@ export default function Cadastro() {
     cracha: '',
     senha: '',
   });
-  const [date, setDate] = useState('');
+
+  const showSuccess = (msg) => {
+    toast.current.show({
+      severity: 'success', summary: 'Concluído', detail: msg, life: 3000,
+    });
+  };
+
+  const showWarn = (msg) => {
+    toast.current.show({
+      severity: 'warn', summary: 'Aviso', detail: msg, life: 3000,
+    });
+  };
+
+  const showError = () => {
+    toast.current.show({
+      severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar administrador.', life: 3000,
+    });
+  };
+
   const onChange = (e) => {
     if (e.target.name === 'nascimento') {
-      setDate(e.target.value);
+      const date = (e.target.value);
+      setAdmin({ ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') });
     } else {
       setAdmin({ ...admin, [e.target.name]: e.target.value });
     }
   };
 
+  const checkInput = (object) => {
+    if (object.nome === '' || object.email === '' || object.ramal === '' || object.cracha === '' || object.senha === '') {
+      return false;
+    }
+    return true;
+  };
+
+  const checkPass = (object) => {
+    if (object.senha !== password) {
+      return false;
+    } return true;
+  };
+
   const onSubmit = async () => {
-    try {
-      const adminParsed = { ...admin, nascimento: format(new Date(date), 'yyyy-MM-dd') };
-      console.log(adminParsed.nascimento);
-      await api.post('/user', { ...adminParsed });
-      navigate('/user');
-    } catch (error) {
-      console.log(error);
+    if (checkInput(admin)) {
+      if (checkPass(admin)) {
+        try {
+          await api.post('/user', { ...admin });
+          showSuccess('Administrador cadastrado!');
+          setTimeout(() => {
+            navigate('/app/admin');
+          }, 2000);
+        } catch (error) {
+          showError();
+        }
+      } else {
+        showWarn('Senhas não conferem!');
+      }
+    } else {
+      showWarn('Um ou mais campos estão vazios.');
     }
   };
   return (
 
     <>
 
-      <div style={{ textAlign: 'center' }}>
-        <h1>Cadastro de Administradores</h1>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <div style={{ width: '60%' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'center', margin: '60px' } : {}}>
+        <div style={innerWidth > 600 ? { width: '70%' } : {}}>
+          <div
+            className="card"
+            style={{
+              display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '5vw', paddingRight: '5vw',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+              <h1>Cadastro de Administradores</h1>
+            </div>
             <div className="p-inputgroup">
               <Spans icon="pi pi-user" />
               <InputText name="nome" onChange={(e) => { onChange(e); }} id="name" placeholder="Nome completo" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon" id="span">
-                <i className="pi pi-inbox" id="i" />
-              </span>
+              <Spans icon="pi pi-inbox" />
               <InputText name="email" onChange={(e) => { onChange(e); }} id="email" placeholder="Email" />
             </div>
 
             <div className="p-inputgroup">
-              <span className="p-inputgroup-addon" id="span">
-                <i className="pi pi-tag" id="i" />
-              </span>
+              <Spans icon="pi pi-tag" />
 
               <InputText
                 placeholder="Crachá"
@@ -97,21 +142,27 @@ export default function Cadastro() {
             <div className="p-inputgroup">
               <Spans icon="pi pi-key" />
               <Password
+                onChange={(e) => setPassword(e.target.value)}
                 feedback={false}
                 toggleMask
                 placeholder="Confirmação de senha"
               />
             </div>
 
-            <div style={{
-              display: 'flex', marginTop: '20px', gap: '10px', justifyContent: 'flex-end',
-            }}
+            <div
+              className="flex justify-content-end gap-3"
+              style={{
+                marginTop: '50px',
+              }}
             >
               <Button label="Cancelar" />
               <Button label="Confirmar" type="button" onClick={onSubmit} />
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Toast ref={toast} />
       </div>
     </>
   );
