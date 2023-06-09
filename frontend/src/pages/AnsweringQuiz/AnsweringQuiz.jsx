@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, {
   useState, useEffect, useContext, useRef,
 } from 'react';
@@ -200,7 +201,7 @@ export default function AnsweringQuiz() {
       </div>
       <div className="flex justify-content-center gap-5" style={{ margin: '15px' }}>
         <Button label="Finalizar Questionário" onClick={() => setEndQuiz(true)} visible={buttonVisible2} style={{ marginBottom: '10px' }} />
-        <Dialog header="Confirmação" visible={endQuiz} style={{ width: '50vw' }} onHide={() => setEndQuiz(false)}>
+        <Dialog header="Confirmação" visible={endQuiz} style={innerWidth > 600 ? { width: '50vw' } : { width: '95vw' }} onHide={() => setEndQuiz(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar o questionário?
           </p>
