@@ -20,7 +20,7 @@ function App() {
   }
   function whenNotKey() {
     return (
-      <div className="flex justify-content-between" style={innerWidth > 600 ? { height: '97vh', width: '98vw', gap: '15px' } : { height: '98vh', width: '98vw' }}>
+      <div className="flex justify-content-between" style={innerWidth > 600 ? { height: '97vh', width: '98vw', gap: '15px' } : { flexDirection: 'column', height: '94vh', maxWidth: '98vw' }}>
         <div style={innerWidth < 600 ? {
           borderColor: 'black',
         } : {
@@ -33,7 +33,7 @@ function App() {
           borderColor: 'black',
         }}
         >
-          {innerWidth > 600 && <SideBar />}
+          <SideBar />
         </div>
         <div style={innerWidth > 600 ? {
           width: '80%', backgroundColor: '#DEDEDE', borderRadius: '5px', overflow: 'scroll',

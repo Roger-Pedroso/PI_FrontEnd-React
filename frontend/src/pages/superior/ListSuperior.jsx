@@ -135,7 +135,7 @@ export default function ListSuperior() {
       <div className="card" style={{ margin: '20px' }}>
         <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
-          <h1>Listagem de Superiores Imediatos</h1>
+          <h1>Superiores Imediatos</h1>
           <Button
             label="Cadastrar"
             onClick={createSuperior}

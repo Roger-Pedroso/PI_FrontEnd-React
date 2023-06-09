@@ -144,7 +144,7 @@ export default function QuizesList() {
       <div className="card" style={{ margin: '20px' }}>
         <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
-          <h1>Listagem de Modelos de Questionário</h1>
+          <h1>Questionários</h1>
           <Button
             label="Cadastrar"
             onClick={createQuiz}

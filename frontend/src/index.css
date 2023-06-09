@@ -50,3 +50,15 @@ a{
 .picklistquest button:focus {
     background-color: darkgrey !important;
 }
+
+.pi-bars{
+    color: white;
+}
+
+.p-menubar{
+    border: none;
+    width: 120%;
+}
+.p-menubar-root-list{
+    width: 2000px;
+}
