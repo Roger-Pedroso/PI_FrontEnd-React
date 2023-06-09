@@ -15,6 +15,7 @@ export default function CreateSuperior() {
     cracha: '',
     cargo: '',
     email: '',
+    idSector: '',
   });
   const navigate = useNavigate();
   const [selectedArea, setSelectedArea] = useState(null);
@@ -51,26 +52,33 @@ export default function CreateSuperior() {
   }, [areas]);
 
   const onChange = (e) => {
+    if (e.target.name === 'area') {
+      setSelectedArea(e.target.value);
+    }
     setSuperior({ ...superior, [e.target.name]: e.target.value });
   };
 
   const checkInput = (object) => {
-    if (object.nome === '' || object.cargo === '' || object.cracha === '' || object.email === '') {
+    if (object.nome === '' || object.cargo === '' || object.cracha === '' || object.email === '' || object.idSector === '') {
       return false;
     }
     return true;
   };
 
   const onSubmit = async () => {
-    setSuperior({ ...superior, idSector: selectedArea.id });
     try {
-      if (checkInput(superior) === true) {
-        await api.post('/superior', { ...superior }).then(() => {
-          showSuccess('Superior imediato criado com sucesso!');
-          setTimeout(() => {
-            navigate('/app/superior');
-          }, 2000);
-        });
+      if (selectedArea !== null) {
+        const parsedSuperior = ({ ...superior, idSector: selectedArea.id });
+        if (checkInput(parsedSuperior) === true) {
+          await api.post('/superior', { ...parsedSuperior }).then(() => {
+            showSuccess('Superior imediato criado com sucesso!');
+            setTimeout(() => {
+              navigate('/app/superior');
+            }, 2000);
+          });
+        } else {
+          showWarn();
+        }
       } else {
         showWarn();
       }
@@ -129,7 +137,8 @@ export default function CreateSuperior() {
               <Spans icon="pi pi-table" />
               <Dropdown
                 value={selectedArea}
-                onChange={(e) => setSelectedArea(e.target.value)}
+                onChange={(e) => { onChange(e); }}
+                name="area"
                 options={areas}
                 optionLabel="nome"
                 placeholder="Selecione uma área"
