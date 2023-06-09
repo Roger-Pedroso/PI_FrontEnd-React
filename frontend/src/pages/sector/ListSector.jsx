@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable linebreak-style */
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
@@ -148,7 +149,7 @@ export default function ListSector() {
 
   return (
     <div className="card" style={{ margin: '20px' }}>
-      <div className="flex justify-content-between align-items-center">
+      <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
         <h1>Listagem de Áreas</h1>
         <Button
@@ -161,7 +162,6 @@ export default function ListSector() {
       <div>
         <DataTable
           value={areas}
-          tableStyle={{ minWidth: '50rem' }}
           paginator
           rows={5}
           filters={filters}
@@ -177,7 +177,7 @@ export default function ListSector() {
       </div>
       <div>
         <div>
-          <Dialog header="Confirmação" visible={deleteMessage} style={{ width: '50vw' }} onHide={() => setDeleteMessage(false)}>
+          <Dialog header="Confirmação" visible={deleteMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setDeleteMessage(false)}>
             <p className="m-0">
               Tem certeza que deseja deletar o cadastro de
               {' '}
@@ -192,7 +192,7 @@ export default function ListSector() {
         </div>
         <div>
           <div>
-            <Dialog header={`Editar ${editedArea.nome}`} visible={editMessage} style={{ width: '50vw' }} onHide={() => setEditMessage(false)}>
+            <Dialog header={`Editar ${editedArea.nome}`} visible={editMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setEditMessage(false)}>
 
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{

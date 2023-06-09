@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, {
   useContext, useEffect, useRef, useState,
 } from 'react';
@@ -182,7 +183,7 @@ export default function Profile() {
       </div>
       <div>
         <Dialog visible={visible} header="Editar perfil" onHide={() => setVisible(false)}>
-          <div className="flex gap-5">
+          <div className={innerWidth > 600 ? 'flex gap-5' : 'flex-column'}>
             <div>
               <h3>Nome</h3>
               <InputText name="nome" onChange={(e) => onChange(e)} defaultValue={user?.nome} />
@@ -192,7 +193,7 @@ export default function Profile() {
               <Calendar name="nascimento" mask="99-99-9999" onChange={(e) => onChange(e)} placeholder={nascimento} />
             </div>
           </div>
-          <div className="flex gap-5">
+          <div className={innerWidth > 600 ? 'flex gap-5' : 'flex-column'}>
             <div>
               <h3>Email</h3>
               <InputText name="email" onChange={(e) => onChange(e)} defaultValue={user?.email} />
@@ -202,14 +203,14 @@ export default function Profile() {
               <InputText name="cracha" onChange={(e) => onChange(e)} defaultValue={user?.cracha} />
             </div>
           </div>
-          <div className="flex gap-5">
+          <div className={innerWidth > 600 ? 'flex gap-5' : 'flex-column'}>
             <div>
               <h3>Ramal</h3>
               <InputText name="ramal" mask="452103-9999" onChange={(e) => onChange(e)} defaultValue={user?.ramal} />
             </div>
-            <div style={{
+            <div style={innerWidth > 600 ? {
               display: 'flex', width: '100%', alignItems: 'flex-end', justifyContent: 'end',
-            }}
+            } : { marginTop: '10px' }}
             >
               <div>
                 <Button label="Editar perfil" onClick={() => onSubmit()} />

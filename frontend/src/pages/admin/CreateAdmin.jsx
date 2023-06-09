@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable linebreak-style */
 import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
@@ -86,8 +87,8 @@ export default function Cadastro() {
 
     <>
 
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '60px' }}>
-        <div style={{ width: '70%' }}>
+      <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'center', margin: '60px' } : {}}>
+        <div style={innerWidth > 600 ? { width: '70%' } : {}}>
           <div
             className="card"
             style={{

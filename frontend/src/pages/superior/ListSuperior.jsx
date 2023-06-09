@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -132,7 +133,7 @@ export default function ListSuperior() {
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
-        <div className="flex justify-content-between align-items-center">
+        <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
           <h1>Listagem de Superiores Imediatos</h1>
           <Button
@@ -144,7 +145,6 @@ export default function ListSuperior() {
         </div>
         <DataTable
           value={superiores}
-          tableStyle={{ minWidth: '50rem' }}
           paginator
           rows={9}
           filters={filters}
@@ -161,7 +161,7 @@ export default function ListSuperior() {
         </DataTable>
       </div>
       <div>
-        <Dialog header="Confirmação" visible={deleteMessage} style={{ width: '50vw' }} onHide={() => setDeleteMessage(false)}>
+        <Dialog header="Confirmação" visible={deleteMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setDeleteMessage(false)}>
           <p className="m-0">
             Tem certeza que deseja deletar o cadastro de
             {' '}
@@ -175,7 +175,7 @@ export default function ListSuperior() {
         </Dialog>
       </div>
       <div>
-        <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={{ width: '50vw' }} onHide={() => setEditMessage(false)}>
+        <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setEditMessage(false)}>
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{

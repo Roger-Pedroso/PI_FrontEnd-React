@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -51,9 +52,9 @@ export default function ListaAdministrador() {
 
   return (
     <div className="card" style={{ margin: '20px' }}>
-      <div className="flex justify-content-between align-items-center">
+      <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
-        <h1>Listagem de Administradores</h1>
+        <h1>Administradores</h1>
         <Button
           label="Cadastrar"
           onClick={createAdmin}
@@ -66,7 +67,6 @@ export default function ListaAdministrador() {
           value={admin}
           paginator
           rows={9}
-          tableStyle={{ minWidth: '50rem' }}
           dataKey="id"
           filters={filters}
           globalFilterFields={['nome', 'cracha', 'ramal', 'email']}
