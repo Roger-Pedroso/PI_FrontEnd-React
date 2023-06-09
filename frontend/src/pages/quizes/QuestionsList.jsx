@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
@@ -56,7 +57,7 @@ export default function QuestionsList() {
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
-        <div className="flex justify-content-between align-items-center">
+        <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
           <h1>Listagem de Questões</h1>
           <Button

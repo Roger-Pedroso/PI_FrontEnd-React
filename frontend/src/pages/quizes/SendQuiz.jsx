@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from 'primereact/card';
@@ -125,7 +126,7 @@ export default function SendQuiz() {
         <Button label="Gerar chaves e enviar" disabled={isSuperiorSelected} onClick={() => setAreYouSure(true)} />
       </div>
       <div>
-        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+        <Dialog header="Confirmação" visible={areYouSure} style={innerWidth > 600 ? { width: '50vw' } : { width: '95vw' }} onHide={() => setAreYouSure(false)}>
           <p className="m-0">
             Tem certeza que deseja gerar
             {' '}

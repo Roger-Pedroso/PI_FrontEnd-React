@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
@@ -141,7 +142,7 @@ export default function QuizesList() {
   return (
     <div>
       <div className="card" style={{ margin: '20px' }}>
-        <div className="flex justify-content-between align-items-center">
+        <div style={innerWidth > 600 ? { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } : { fontSize: '0.7em' }}>
 
           <h1>Listagem de Modelos de Questionário</h1>
           <Button
@@ -157,7 +158,7 @@ export default function QuizesList() {
           paginator
           rows={9}
           scrollHeight="550px"
-          tableStyle={{ maxHeight: '100px' }}
+          tableStyle={innerWidth > 600 ? { maxHeight: '100px' } : {}}
           filters={filters}
           globalFilterFields={['nome', 'descricao']}
           header={header}
@@ -170,7 +171,7 @@ export default function QuizesList() {
           <Column body={keyTemplate} header="Chaves" />
           <Column body={statusTemplate} header="Status" />
         </DataTable>
-        <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>
+        <Dialog header="Confirmação" visible={areYouSure} style={innerWidth > 600 ? { width: '50vw' } : { width: '95w' }} onHide={() => setAreYouSure(false)}>
           <p className="m-0">
             Tem certeza que deseja duplicar esse modelo?
           </p>
@@ -179,7 +180,7 @@ export default function QuizesList() {
             <Button label="Não" onClick={() => setAreYouSure(false)} />
           </div>
         </Dialog>
-        <Dialog header="Confirmação" visible={areYouSure2} style={{ width: '50vw' }} onHide={() => setAreYouSure2(false)}>
+        <Dialog header="Confirmação" visible={areYouSure2} style={innerWidth > 600 ? { width: '50vw' } : { width: '95w' }} onHide={() => setAreYouSure2(false)}>
           <p className="m-0">
             Tem certeza que deseja finalizar esse questionário?
           </p>

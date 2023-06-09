@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable linebreak-style */
 import React, {
   useEffect, useState, useRef,
@@ -118,13 +119,13 @@ export default function CreateQuiz() {
   };
   return (
     <div>
-      <div className="flex justify-content-center">
+      <div className="flex justify-content-center" style={innerWidth < 600 ? { fontSize: '0.8em' } : {}}>
         <h1>{location.pathname === '/app/quizes/new' ? 'Criar Modelo de Questionário' : 'Editar Modelo de Questionário'}</h1>
       </div>
 
-      <div style={{
+      <div style={innerWidth > 600 ? {
         justifyContent: 'center', marginLeft: '60px', marginRight: '60px',
-      }}
+      } : { margin: '20px' }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div className="p-inputgroup">

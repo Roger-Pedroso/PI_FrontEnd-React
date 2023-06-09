@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-return-assign */
 import React, {
   useEffect, useRef, useState,
@@ -184,13 +185,13 @@ export default function CreateQuestions() {
       </div>
 
       <div
-        style={{
+        style={innerWidth > 600 ? {
           justifyContent: 'center',
           marginTop: '150px',
           marginBottom: '10px',
           marginLeft: '60px',
           marginRight: '60px',
-        }}
+        } : { margin: '20px' }}
       >
         <div
           style={{
@@ -250,7 +251,7 @@ export default function CreateQuestions() {
                 justifyContent="center"
                 visible={alt}
                 maximizable
-                style={{ width: '50vw' }}
+                style={innerWidth > 600 ? { width: '50vw' } : { maxWidth: '98vw' }}
                 onHide={() => setAlt(false)}
               >
                 {alternativas.map((alternativa, index) => (
@@ -332,7 +333,7 @@ export default function CreateQuestions() {
                 justifyContent="center"
                 visible={mult}
                 maximizable
-                style={{ width: '50vw' }}
+                style={innerWidth > 600 ? { width: '50vw' } : { maxWidth: '98vw' }}
                 onHide={() => setMult(false)}
               >
                 {alternativas.map((alternativa, index) => (
