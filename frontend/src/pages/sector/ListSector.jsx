@@ -16,8 +16,6 @@ import api from '../../utils/Api';
 export default function ListSector() {
   const navigate = useNavigate();
   const [areas, setAreas] = useState([]);
-  const [deleteMessage, setDeleteMessage] = useState(false);
-  const [selectedArea, setSelectedArea] = useState([]);
   const [editMessage, setEditMessage] = useState(false);
   const [status, setStatus] = useState(null);
   const [editedArea, setEditedArea] = useState({
@@ -98,34 +96,15 @@ export default function ListSector() {
     }
   };
 
-  const showDeleteDialog = (e) => {
-    setSelectedArea(e);
-    setDeleteMessage(true);
-  };
-
   const showEditDialog = (e) => {
     setEditedArea(e);
     statusSwitch(e);
     setEditMessage(true);
   };
 
-  const deleteTemplate = (e) => (
-    <Button icon="pi pi-times" style={{ backgroundColor: 'white' }} onClick={() => showDeleteDialog(e)} />
-  );
-
   const editTemplate = (e) => (
     <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => showEditDialog(e)} />
   );
-
-  const deleteArea = async () => {
-    try {
-      await api.delete(`sector/${selectedArea.id}`, { ...editedArea });
-      window.location.reload();
-    } catch (err) {
-      showError('ocorreu um erro ao realizar uma tentativa de deletar.');
-      console.log(err);
-    }
-  };
 
   const editArea = async () => {
     const areaParsed = ({ ...editedArea, status: status ? 'Ativo' : 'Inativo' });
@@ -172,24 +151,9 @@ export default function ListSector() {
           <Column field="status" header="Status" sortable />
           <Column field="tipo" header="Tipo" />
           <Column body={editTemplate} />
-          <Column body={deleteTemplate} />
         </DataTable>
       </div>
       <div>
-        <div>
-          <Dialog header="Confirmação" visible={deleteMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setDeleteMessage(false)}>
-            <p className="m-0">
-              Tem certeza que deseja deletar o cadastro de
-              {' '}
-              {selectedArea.nome}
-              ?
-            </p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-              <Button label="Sim" onClick={() => deleteArea()} />
-              <Button label="Não" onClick={() => setDeleteMessage(false)} />
-            </div>
-          </Dialog>
-        </div>
         <div>
           <div>
             <Dialog header={`Editar ${editedArea.nome}`} visible={editMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setEditMessage(false)}>

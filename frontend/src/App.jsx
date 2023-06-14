@@ -20,9 +20,15 @@ function App() {
   }
   function whenNotKey() {
     return (
-      <div className="flex justify-content-between" style={innerWidth > 600 ? { height: '97vh', width: '98vw', gap: '15px' } : { flexDirection: 'column', height: '94vh', maxWidth: '98vw' }}>
+      <div
+        className="flex"
+        style={innerWidth > 600 ? { height: '97vh', width: '98vw', gap: '15px' } : {
+          flexDirection: 'column', height: '98vh', maxWidth: '98vw',
+        }}
+      >
         <div style={innerWidth < 600 ? {
           borderColor: 'black',
+          marginBottom: '10px',
         } : {
           width: '20%',
           backgroundColor: 'rgba(89,31,107,255)',
