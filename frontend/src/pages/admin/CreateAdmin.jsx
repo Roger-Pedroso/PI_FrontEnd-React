@@ -155,7 +155,7 @@ export default function Cadastro() {
                 marginTop: '50px',
               }}
             >
-              <Button label="Cancelar" />
+              <Button label="Cancelar" onClick={() => navigate('/app/admin')} />
               <Button label="Confirmar" type="button" onClick={onSubmit} />
             </div>
           </div>
