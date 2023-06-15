@@ -120,25 +120,29 @@ export default function CreateQuestions() {
             window.location.reload();
           }, 2000);
         }
-      } else if (type !== 'alternativa' && type !== 'multipla_escolha') {
-        const newQuestion = { ...question, tipo: type, obrigatorio };
-        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-        showSuccess();
-        setTimeout(() => {
-          navigate('/app/questions');
-        }, 2000);
-      } else {
-        const newQuestion = {
-          ...question,
-          tipo: type,
-          obrigatorio,
-          alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
-        };
-        await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
-        showSuccess();
-        setTimeout(() => {
-          navigate('/app/questions');
-        }, 2000);
+      } else if (location.pathname !== '/app/questions/new') {
+        if (type !== 'alternativa' && type !== 'multipla_escolha') {
+          const newQuestion = {
+            ...question, tipo: type, obrigatorio, alternativas: '',
+          };
+          await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            navigate('/app/questions');
+          }, 2000);
+        } else {
+          const newQuestion = {
+            ...question,
+            tipo: type,
+            obrigatorio,
+            alternativas: JSON.stringify(alternativas.map((alternativa) => alternativa.value)),
+          };
+          await api.put(`/question/${idEditedQuestion}`, { ...newQuestion });
+          showSuccess();
+          setTimeout(() => {
+            navigate('/app/questions');
+          }, 2000);
+        }
       }
     } catch (err) {
       showError2();
@@ -446,7 +450,7 @@ export default function CreateQuestions() {
           justifyContent: 'end',
         }}
       >
-        <Button label="Listar" onClick={() => navigate('/quizes/QuestionsList')} />
+        <Button label="Listar" onClick={() => navigate('/app/questions')} />
         <Button label="Salvar" onClick={() => handleEdit()} />
         <Toast ref={toast} />
         <Dialog header="Confirmação" visible={areYouSure} style={{ width: '50vw' }} onHide={() => setAreYouSure(false)}>

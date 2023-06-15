@@ -15,9 +15,7 @@ export default function ListSuperior() {
   const createSuperior = () => {
     navigate('/app/superior/new');
   };
-  const [deleteMessage, setDeleteMessage] = useState(false);
   const [superiores, setSuperiores] = useState([]);
-  const [selectedSuperior, setSelectedSuperior] = useState([]);
   const [editMessage, setEditMessage] = useState(false);
   const [editedSuperior, setEditedSuperior] = useState({
     nome: '',
@@ -84,33 +82,14 @@ export default function ListSuperior() {
     }
   }, [superiores]);
 
-  const showDeleteDialog = (e) => {
-    setSelectedSuperior(e);
-    setDeleteMessage(true);
-  };
-
   const showEditDialog = (e) => {
     setEditedSuperior(e);
     setEditMessage(true);
   };
 
-  const deleteTemplate = (e) => (
-    <Button icon="pi pi-times" style={{ backgroundColor: 'white' }} onClick={() => showDeleteDialog(e)} />
-  );
-
   const editTemplate = (e) => (
     <Button icon="pi pi-pencil" style={{ backgroundColor: 'white' }} onClick={() => showEditDialog(e)} />
   );
-
-  const deleteSuperior = async () => {
-    try {
-      await api.delete(`superior/${selectedSuperior.id}`, { ...editedSuperior });
-      window.location.reload();
-    } catch (err) {
-      showError('ocorreu um erro ao realizar uma tentativa de deletar.');
-      console.log(err);
-    }
-  };
 
   const onChange = (e) => {
     setEditedSuperior({ ...editedSuperior, [e.target.name]: e.target.value });
@@ -157,22 +136,7 @@ export default function ListSuperior() {
           <Column field="email" header="Email" />
           <Column field="sector.nome" header="Área" />
           <Column body={editTemplate} />
-          <Column body={deleteTemplate} />
         </DataTable>
-      </div>
-      <div>
-        <Dialog header="Confirmação" visible={deleteMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setDeleteMessage(false)}>
-          <p className="m-0">
-            Tem certeza que deseja deletar o cadastro de
-            {' '}
-            {selectedSuperior.nome}
-            ?
-          </p>
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-            <Button label="Sim" onClick={() => deleteSuperior()} />
-            <Button label="Não" onClick={() => setDeleteMessage(false)} />
-          </div>
-        </Dialog>
       </div>
       <div>
         <Dialog header={`Editar ${editedSuperior.nome}`} visible={editMessage} style={innerWidth > 600 ? { width: '50vw' } : {}} onHide={() => setEditMessage(false)}>

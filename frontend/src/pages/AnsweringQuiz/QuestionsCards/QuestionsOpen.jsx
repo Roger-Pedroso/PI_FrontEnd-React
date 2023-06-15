@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect, useContext } from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -48,7 +49,7 @@ export default function QuestionsOpen(item) {
           value={description}
           onChange={(e) => handleDescriptionChange(e)}
           rows={5}
-          cols={80}
+          cols={innerWidth > 600 ? 80 : 20}
           autoResize
         />
       </div>

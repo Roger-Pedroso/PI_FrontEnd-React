@@ -200,7 +200,7 @@ export default function Profile() {
             </div>
             <div>
               <h3>Crachá</h3>
-              <InputText name="cracha" onChange={(e) => onChange(e)} defaultValue={user?.cracha} />
+              <InputText disabled name="cracha" onChange={(e) => onChange(e)} defaultValue={user?.cracha} />
             </div>
           </div>
           <div className={innerWidth > 600 ? 'flex gap-5' : 'flex-column'}>
