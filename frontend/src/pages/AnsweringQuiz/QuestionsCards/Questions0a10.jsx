@@ -15,7 +15,7 @@ export default function Questions0a10(item) {
   const [value, setValue] = useState(null);
 
   const handleValueChange = (e) => {
-    setValue(e.value);
+    setValue(e.value - 1);
     const indice = answers.findIndex((answer) => answer.id_question === targetQuestion.id);
     if (indice !== -1) {
       const newAnswer = [...answers];
@@ -45,9 +45,9 @@ export default function Questions0a10(item) {
         <h2>{targetQuestion.nome_campo}</h2>
         <p><i>{targetQuestion.descricao}</i></p>
         <Rating
-          value={value}
+          value={value + 1}
           onChange={(e) => handleValueChange(e)}
-          stars={10}
+          stars={11}
           cancel={false}
         />
         <p>
