@@ -119,7 +119,7 @@ export default function AnsweringQuiz() {
             await api.post('/answer', { ...newAnswer });
           }
         } else if (answer.obrigatorio === false) {
-          if (answer.resposta.length > 0) {
+          if (answer.resposta.length > 0 || answer.resposta !== null) {
             if (answer.tipo === 'multipla_escolha') {
               newAnswer = {
                 idQuestion: answer.id_question,
