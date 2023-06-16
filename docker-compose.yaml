@@ -30,3 +30,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
+  web-server:
+    image: nginx:1.21.6-alpine
+    ports:
+      - 80:80
+      - 443:443
+  volumes:
+    - ./nginx/conf/:/etc/nginx/conf.d/:ro
