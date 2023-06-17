@@ -19,7 +19,7 @@ export default function Questions0a10(item) {
     const indice = answers.findIndex((answer) => answer.id_question === targetQuestion.id);
     if (indice !== -1) {
       const newAnswer = [...answers];
-      newAnswer[indice].resposta = e.value;
+      newAnswer[indice].resposta = e.value - 1;
       setAnswers(newAnswer);
     }
   };
@@ -45,7 +45,7 @@ export default function Questions0a10(item) {
         <h2>{targetQuestion.nome_campo}</h2>
         <p><i>{targetQuestion.descricao}</i></p>
         <Rating
-          value={value + 1}
+          value={value !== null ? (value + 1) : ''}
           onChange={(e) => handleValueChange(e)}
           stars={11}
           cancel={false}
