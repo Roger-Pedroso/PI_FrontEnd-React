@@ -249,7 +249,7 @@ export default function SideBar() {
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}
           >
-            <a href="/app">
+            <a href="/app/home">
               <img src={logo} alt="" style={{ height: '100px' }} />
             </a>
             <img src={sqhg} alt="" style={{ height: '70px' }} />
