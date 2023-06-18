@@ -56,7 +56,7 @@ export default function QuestionsME(item) {
       <div
         className="card flex"
         style={{
-          flexDirection: 'column', alignItems: 'center', border: '2px solid black', backgroundColor: 'white', boxShadow: '10px 10px 10px purple',
+          flexDirection: 'column', alignItems: 'center', backgroundColor: 'white', boxShadow: '10px 10px 10px purple',
         }}
       >
         <div style={{ width: '100%', margin: '-10px' }}>
