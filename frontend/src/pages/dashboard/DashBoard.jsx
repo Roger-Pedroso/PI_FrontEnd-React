@@ -57,9 +57,12 @@ export default function DashBoard() {
 
   const findQuiz = async () => {
     try {
-      await api.get('/quiz').then((response) => {
-        const { data } = response;
-        setQuiz(data);
+      await api.get('/key').then((response) => {
+        const filteredQuizzes = response.data.filter(
+          (item) => item.superior.id === selectedSuperior.id,
+        );
+        setQuiz(filteredQuizzes.map((item) => item.quiz));
+        console.log(filteredQuizzes);
       });
     } catch (err) {
       console.log(err);
@@ -68,25 +71,31 @@ export default function DashBoard() {
 
   const findQuestion = async () => {
     try {
-      await api.get('/question').then((response) => {
-        const { data } = response;
-        setQuestion(data);
-      });
+      const questionsMapped = quiz.map((item) => item.questions);
+      setQuestion(questionsMapped);
+      console.log(question);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
+    if (selectedQuiz) {
+      findQuestion();
+    }
+  }, [selectedQuiz]);
+
+  useEffect(() => {
+    if (selectedSuperior) {
+      findQuiz();
+    }
+  }, [selectedSuperior]);
+
+  useEffect(() => {
     if (superior.length === 0) {
       findSuperior();
     }
-    if (quiz.length === 0) {
-      findQuiz();
-    }
-    if (question.length === 0) {
-      findQuestion();
-    }
+
     const data = {
       labels: dataBanco.map((item) => item.nome),
       datasets: [
@@ -107,7 +116,7 @@ export default function DashBoard() {
 
     setChartData(data);
     setChartOptions(options);
-  }, [superior, quiz, question]);
+  }, [superior]);
 
   const superiorDropChange = (e) => {
     setSelectedSuperior(e.target.value);
@@ -123,7 +132,7 @@ export default function DashBoard() {
       <div className="card flex flex-wrap gap-3 justify-content-between flex-row-reverse">
         <div className="flex flex-column" style={{ textAlign: 'end', marginRight: '5px' }}>
           <h3>{selectedSuperior?.nome}</h3>
-          <h3>Nome do Questionário</h3>
+          <h3>{selectedQuiz?.nome}</h3>
         </div>
         <div className="flex gap-3 flex-wrap">
           <div className="flex flex-column gap-3">
