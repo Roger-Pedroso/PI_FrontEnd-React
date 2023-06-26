@@ -43,7 +43,7 @@ export default function Login() {
     }}
     >
       <div><Toast ref={toast} /></div>
-      <div className="flex flex-column gap-3 justify-content-center align-items-center">
+      <div className="flex flex-column gap-5 justify-content-center align-items-center">
 
         <div className="flex flex-column gap-6" style={{ width: '100%' }}>
           <img style={{ height: '200px' }} id="logo" src={sqhg} alt="" />
@@ -62,21 +62,17 @@ export default function Login() {
               <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => onChange(e)} name="senha" />
             </div>
             <div className="flex gap-3 justify-content-center" style={{ width: '100%' }}>
-              <Button style={{ backgroundColor: '#75298c', width: '70%' }} type="button" label="Entrar como usuário" onClick={() => navigate('/')} />
-              <Button style={{ backgroundColor: '#75298c', width: '30%' }} label="Entrar" onClick={handleLogin} />
+              <Button style={{ backgroundColor: '#75298c', width: '65%' }} type="button" label="Formulários" onClick={() => navigate('/')} />
+              <Button style={{ backgroundColor: '#75298c', width: '35%' }} label="Entrar" onClick={handleLogin} />
+            </div>
+            <div className="flex align-self-end">
+              <a style={{ color: 'white' }} href="/recovery">
+                Esqueceu sua senha?
+              </a>
             </div>
           </div>
-
-          <div>
-            <a style={{ color: 'white' }} href="/recovery">
-              Esqueceu sua senha?
-            </a>
-          </div>
         </div>
-
-        <div>
-          <img style={{ height: '150px' }} id="logo" src={logo} alt="" />
-        </div>
+        <img style={{ height: '150px' }} id="logo" src={logo} alt="" />
       </div>
     </div>
   );
