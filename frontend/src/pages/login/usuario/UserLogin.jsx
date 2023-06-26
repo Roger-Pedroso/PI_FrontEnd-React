@@ -60,7 +60,7 @@ export default function Login() {
     }}
     >
       <Toast ref={toast} />
-      <div className="flex flex-column justify-content-center gap-5">
+      <div className="flex flex-column justify-content-center gap-6">
         <img style={{ height: '200px' }} src={sqhg} alt="" />
         <div style={{
           display: 'flex', flexDirection: 'column', gap: '10px', width: '100%',
@@ -75,15 +75,12 @@ export default function Login() {
           </div>
 
           <div className="flex gap-3 justify-content-center" style={{ width: '100%' }}>
-            <Button style={{ backgroundColor: '#75298c', width: '75%' }} type="button" label="Entrar como Administrador" onClick={() => navigate('/login')} />
-            <Button style={{ backgroundColor: '#75298c', width: '25%' }} type="submit" label="Entrar" onClick={() => submit()} />
+            <Button style={{ backgroundColor: '#75298c', width: '65%' }} type="button" label="Administradores" onClick={() => navigate('/login')} />
+            <Button style={{ backgroundColor: '#75298c', width: '35%' }} type="submit" label="Entrar" onClick={() => submit()} />
           </div>
         </div>
       </div>
-
-      <div className="flex justify-self-end">
-        <img style={{ height: '150px' }} src={logo} alt="" />
-      </div>
+      <img style={{ height: '150px' }} src={logo} alt="" />
     </div>
 
   );
