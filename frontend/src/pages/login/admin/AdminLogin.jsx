@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
+import sqhg from '../../../img/sqhg.png';
 import { AuthContext } from '../../../context/Login/AuthContext';
 // import api from '../../../utils/Api';
 
@@ -42,37 +43,41 @@ export default function Login() {
     }}
     >
       <div><Toast ref={toast} /></div>
+      <div className="flex flex-column gap-3 justify-content-center align-items-center">
 
-      <div>
-        <img style={{ height: '200px' }} id="logo" src={logo} alt="" />
-      </div>
+        <div className="flex flex-column gap-6" style={{ width: '100%' }}>
+          <img style={{ height: '200px' }} id="logo" src={sqhg} alt="" />
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+          >
+            <div className="p-inputgroup">
+              <InputText id="email" placeholder="Email" onChange={(e) => onChange(e)} name="email" type="email" />
+            </div>
 
-      <div style={{
-        display: 'flex', gap: '10px', flexDirection: 'column',
-      }}
-      >
+            <div className="p-inputgroup">
+              <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => onChange(e)} name="senha" />
+            </div>
+            <div className="flex gap-3 justify-content-center" style={{ width: '100%' }}>
+              <Button style={{ backgroundColor: '#75298c', width: '70%' }} type="button" label="Entrar como usuário" onClick={() => navigate('/')} />
+              <Button style={{ backgroundColor: '#75298c', width: '30%' }} label="Entrar" onClick={handleLogin} />
+            </div>
+          </div>
 
-        <div className="p-inputgroup">
-          <InputText id="email" placeholder="Email" onChange={(e) => onChange(e)} name="email" type="email" />
+          <div>
+            <a style={{ color: 'white' }} href="/recovery">
+              Esqueceu sua senha?
+            </a>
+          </div>
         </div>
 
-        <div className="p-inputgroup">
-          <Password feedback={false} id="password" placeholder="Senha" toggleMask onChange={(e) => onChange(e)} name="senha" />
+        <div>
+          <img style={{ height: '150px' }} id="logo" src={logo} alt="" />
         </div>
       </div>
-
-      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-        <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como usuário" onClick={() => navigate('/')} />
-        <Button style={{ backgroundColor: '#75298c' }} label="Entrar" onClick={handleLogin} />
-      </div>
-
-      <div style={{ marginTop: '20px' }}>
-        <a style={{ color: 'white' }} href="/recovery">
-          Esqueceu sua senha?
-        </a>
-      </div>
-
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }} />
     </div>
   );
 }
