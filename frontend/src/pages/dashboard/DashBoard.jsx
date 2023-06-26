@@ -84,12 +84,10 @@ export default function DashBoard() {
 
   useEffect(() => {
     convertDashBoardData();
-    console.log(alternativas);
   }, [altData]);
 
   useEffect(() => {
     findQuiz();
-    console.log('aqui');
   }, [selectedSuperior]);
 
   useEffect(() => {
