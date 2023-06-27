@@ -11,6 +11,7 @@ export default function DashBoard() {
   const [quiz, setQuiz] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState([]);
   const [altData, setAltData] = useState([]);
+  const [quizData, setQuizData] = useState([]);
   const [alternativas, setAlternativas] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
 
@@ -49,6 +50,10 @@ export default function DashBoard() {
         const { data } = response;
         setAltData(data);
       });
+      await api.get(`relatorio-completo/${selectedQuiz.id}`).then((response) => {
+        const { data } = response;
+        setQuizData(data);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -82,9 +87,26 @@ export default function DashBoard() {
     setAlternativas(Object.values(grupos));
   };
 
+  const convertQuizData = () => {
+    if (quizData.length === 0) return;
+    const data = JSON.parse(quizData);
+    const parsedData = data.map((q) => {
+      const id = q.id.split(':');
+      return {
+        id: id[2],
+        resposta: q.resposta,
+        tipo: q.tipo,
+        questao: q.nome_campo,
+      };
+    });
+
+    console.log('AAAAAA', parsedData);
+  };
+
   useEffect(() => {
     convertDashBoardData();
-  }, [altData]);
+    convertQuizData();
+  }, [altData, quizData]);
 
   useEffect(() => {
     findQuiz();
