@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'primereact/chart';
 import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
 import api from '../../utils/Api';
 
 export default function DashBoard() {
@@ -14,6 +15,9 @@ export default function DashBoard() {
   const [quizData, setQuizData] = useState([]);
   const [alternativas, setAlternativas] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
+  const [allData, setAllData] = useState([]);
+  const [ratings, setRatings] = useState([]);
+  const [tipo, setTipo] = useState('');
 
   const findSuperior = async () => {
     try {
@@ -53,6 +57,7 @@ export default function DashBoard() {
       await api.get(`relatorio-completo/${selectedQuiz.id}`).then((response) => {
         const { data } = response;
         setQuizData(data);
+        console.log(data);
       });
     } catch (err) {
       console.log(err);
@@ -66,6 +71,7 @@ export default function DashBoard() {
       idQuestao,
       nome,
     }));
+
     const grupos = data.reduce((acumulator, resposta) => {
       const {
         nome, idQuestao, alternativa, valor,
@@ -83,12 +89,27 @@ export default function DashBoard() {
       }
       return acumulator;
     }, {});
-
     setAlternativas(Object.values(grupos));
   };
 
+  const getRatingAnswers = () => {
+    const grupos = allData.reduce((acumulator, resposta) => {
+      if (resposta.tipo === '0_a_10') {
+        if (acumulator[resposta.id]) {
+          acumulator[resposta.id].push(resposta.resposta);
+        } else {
+          acumulator[resposta.id] = [resposta.resposta];
+        }
+      }
+      return acumulator;
+    }, {});
+    setRatings(grupos);
+    console.log('Agrupado', grupos);
+    console.log(ratings);
+  };
+
   const convertQuizData = () => {
-    if (quizData.length === 0) return;
+    if (quizData[0] === null || quizData.length === 0) return;
     const data = JSON.parse(quizData);
     const parsedData = data.map((q) => {
       const id = q.id.split(':');
@@ -100,8 +121,13 @@ export default function DashBoard() {
       };
     });
 
-    console.log('AAAAAA', parsedData);
+    setAllData(parsedData);
+    console.log(allData);
   };
+
+  useEffect(() => {
+    getRatingAnswers();
+  }, [allData]);
 
   useEffect(() => {
     convertDashBoardData();
@@ -149,8 +175,8 @@ export default function DashBoard() {
             {selectedQuiz?.nome}
           </h3>
         </div>
-        <div className="flex gap-3 flex-wrap">
-          <div>
+        <div className="flex gap-5 flex-wrap flex-column">
+          <div className="flex gap-3">
             <Dropdown
               value={selectedSuperior}
               onChange={(e) => setSelectedSuperior(e.value)}
@@ -159,18 +185,18 @@ export default function DashBoard() {
               placeholder="Superior Imediato"
               className="w-full md:w-14rem"
             />
+            <Dropdown
+              value={selectedQuiz}
+              onChange={(e) => setSelectedQuiz(e.value)}
+              optionLabel="nome"
+              options={quiz}
+              placeholder="Questionário"
+              className="w-full md:w-14rem"
+            />
           </div>
-          <div className="flex flex-column gap-3">
-            <div>
-              <Dropdown
-                value={selectedQuiz}
-                onChange={(e) => setSelectedQuiz(e.value)}
-                optionLabel="nome"
-                options={quiz}
-                placeholder="Questionário"
-                className="w-full md:w-14rem"
-              />
-            </div>
+          <div className="flex gap-3">
+            <Button label="Alternativas" onClick={setTipo('pie')} />
+            <Button label="0 a 10" onClick={setTipo('bar')} />
           </div>
         </div>
       </div>
@@ -184,7 +210,7 @@ export default function DashBoard() {
                   {item.nome}
                 </h3>
                 <Chart
-                  type="pie"
+                  type={tipo}
                   data={{
                     labels: item.alternativas,
                     datasets: [
