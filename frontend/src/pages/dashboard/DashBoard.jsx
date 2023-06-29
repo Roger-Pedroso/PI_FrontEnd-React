@@ -266,6 +266,8 @@ export default function DashBoard() {
       scales: {
         y: {
           beginAtZero: true,
+          min: 0,
+          max: 10,
         },
       },
     };
@@ -285,6 +287,13 @@ export default function DashBoard() {
                   {
                     label: 'Média das Respostas',
                     data: ratings?.map((item) => item.media),
+                    backgroundColor: [
+                      'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                      'rgb(153, 102, 255)',
+                    ],
+                    borderWidth: 1,
                   },
                 ],
               }}
