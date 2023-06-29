@@ -126,6 +126,7 @@ export default function SideBar() {
         {
           label: 'Abrir Relatório',
           icon: 'pi pi-fw pi-plus',
+          url: '/app/relatorio',
         },
       ],
     },
@@ -229,6 +230,7 @@ export default function SideBar() {
         {
           label: 'Abrir Relatório',
           icon: 'pi pi-fw pi-plus',
+          url: '/app/relatorio',
         },
       ],
     },
@@ -249,9 +251,7 @@ export default function SideBar() {
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}
           >
-            <a href="/app">
-              <img src={logo} alt="" style={{ height: '100px' }} />
-            </a>
+            <img src={logo} alt="" style={{ height: '100px' }} />
             <img src={sqhg} alt="" style={{ height: '70px' }} />
           </div>
           <div>

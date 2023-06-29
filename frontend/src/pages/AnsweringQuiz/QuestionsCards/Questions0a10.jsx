@@ -15,11 +15,11 @@ export default function Questions0a10(item) {
   const [value, setValue] = useState(null);
 
   const handleValueChange = (e) => {
-    setValue(e.value);
+    setValue(e.value - 1);
     const indice = answers.findIndex((answer) => answer.id_question === targetQuestion.id);
     if (indice !== -1) {
       const newAnswer = [...answers];
-      newAnswer[indice].resposta = e.value;
+      newAnswer[indice].resposta = e.value - 1;
       setAnswers(newAnswer);
     }
   };
@@ -28,7 +28,7 @@ export default function Questions0a10(item) {
       <div
         className="card flex"
         style={{
-          flexDirection: 'column', alignItems: 'center', border: '2px solid black', backgroundColor: 'white', boxShadow: '10px 10px 10px purple',
+          flexDirection: 'column', alignItems: 'center', backgroundColor: 'white', boxShadow: '10px 10px 10px purple',
         }}
       >
         <div style={{ width: '100%', margin: '-10px' }}>
@@ -44,12 +44,15 @@ export default function Questions0a10(item) {
         </div>
         <h2>{targetQuestion.nome_campo}</h2>
         <p><i>{targetQuestion.descricao}</i></p>
-        <Rating
-          value={value}
-          onChange={(e) => handleValueChange(e)}
-          stars={10}
-          cancel={false}
-        />
+        <div className="flex justify-content-center">
+          <Rating
+            value={value !== null ? (value + 1) : ''}
+            onChange={(e) => handleValueChange(e)}
+            stars={11}
+            cancel={false}
+            style={{ width: '250px' }}
+          />
+        </div>
         <p>
           Nota:
           {' '}

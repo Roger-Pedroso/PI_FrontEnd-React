@@ -16,11 +16,13 @@ import Profile from '../pages/admin/Profile';
 import AnsweringQuiz from '../pages/AnsweringQuiz/AnsweringQuiz';
 import Keys from '../pages/quizes/Keys';
 import App from '../App';
+import DashBoard from '../pages/dashboard/DashBoard';
 
 export default function PrivateRoutes() {
   return (
     <Routes>
       <Route path="/app" element={<App />}>
+        <Route path="relatorio" element={<DashBoard />} />
         <Route path="admin/new" element={<CreateAdmin />} />
         <Route path="admin" element={<ListAdmin />} />
         <Route path="profile" element={<Profile />} />

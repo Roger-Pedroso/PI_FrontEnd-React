@@ -2,10 +2,13 @@ import React, { useContext, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../../img/logo.jpg';
+import sqhg from '../../../img/sqhg.png';
 import { KeyContext } from '../../../context/Login/KeyContext';
 
 export default function Login() {
+  const navigate = useNavigate();
   const { key, setKey, getQuiz } = useContext(KeyContext);
   const toast = useRef(null);
 
@@ -47,31 +50,37 @@ export default function Login() {
   return (
 
     <div style={{
-      display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '95vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '99vw',
+      height: '95vh',
+      gap: '50px',
     }}
     >
       <Toast ref={toast} />
-      <div>
-        <img style={{ height: '200px' }} src={logo} alt="" />
-      </div>
+      <div className="flex flex-column justify-content-center gap-6">
+        <img style={{ height: '200px' }} src={sqhg} alt="" />
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: '10px', width: '100%',
+        }}
+        >
+          <div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <div>
+            <div className="p-inputgroup">
+              <InputText onChange={(e) => setKey(e.target.value)} name="key" placeholder="Chave de acesso" />
+            </div>
 
-          <div className="p-inputgroup">
-            <InputText onChange={(e) => setKey(e.target.value)} name="key" placeholder="Chave de acesso" />
           </div>
 
-        </div>
-
-        <div className="flex gap-2" style={{ marginTop: '20px' }}>
-          <a href="/login">
-            <Button style={{ backgroundColor: '#75298c' }} type="button" label="Entrar como administrador" />
-          </a>
-          <Button style={{ backgroundColor: '#75298c' }} type="submit" label="Entrar" onClick={() => submit()} />
+          <div className="flex gap-3 justify-content-center" style={{ width: '100%' }}>
+            <Button style={{ backgroundColor: '#75298c', width: '65%' }} type="button" label="Administradores" onClick={() => navigate('/login')} />
+            <Button style={{ backgroundColor: '#75298c', width: '35%' }} type="submit" label="Entrar" onClick={() => submit()} />
+          </div>
         </div>
       </div>
-      <div style={{ textAlign: 'end', fontSize: '1.2em' }}><p style={{ color: 'red' }}>{}</p></div>
+      <img style={{ height: '150px' }} src={logo} alt="" />
     </div>
 
   );

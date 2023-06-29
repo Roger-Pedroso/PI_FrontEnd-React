@@ -106,33 +106,40 @@ export default function AnsweringQuiz() {
     try {
       answers.forEach(async (answer) => {
         let newAnswer;
-        if (answer.obrigatorio === true) {
-          if (answer.tipo === 'multipla_escolha') {
-            newAnswer = {
-              idQuestion: answer.id_question, idQuiz: id, resposta: JSON.stringify(answer.resposta),
-            };
-            await api.post('/answer', { ...newAnswer });
-          } else {
+        if (answer.tipo === '0_a_10') {
+          if (answer.resposta !== null) {
             newAnswer = {
               idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
             };
             await api.post('/answer', { ...newAnswer });
           }
-        } else if (answer.obrigatorio === false) {
+        }
+        if (answer.tipo === 'alternativa') {
+          if (answer.resposta.length > 0 || answer.resposta !== '') {
+            newAnswer = {
+              idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
+            };
+            await api.post('/answer', { ...newAnswer });
+          }
+        }
+        if (answer.tipo === 'multipla_escolha') {
           if (answer.resposta.length > 0) {
-            if (answer.tipo === 'multipla_escolha') {
+            answer.resposta.forEach(async (_resposta) => {
               newAnswer = {
                 idQuestion: answer.id_question,
                 idQuiz: id,
-                resposta: JSON.stringify(answer.resposta),
+                resposta: _resposta,
               };
               await api.post('/answer', { ...newAnswer });
-            } else {
-              newAnswer = {
-                idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
-              };
-              await api.post('/answer', { ...newAnswer });
-            }
+            });
+          }
+        }
+        if (answer.tipo === 'aberta') {
+          if (answer.resposta.length > 0 || answer.resposta !== '') {
+            newAnswer = {
+              idQuestion: answer.id_question, idQuiz: id, resposta: answer.resposta,
+            };
+            await api.post('/answer', { ...newAnswer });
           }
         }
       });
@@ -157,6 +164,7 @@ export default function AnsweringQuiz() {
       setEndQuiz(false);
       showWarn();
     } else {
+      setButtonVisible2(false);
       submit();
       killKey();
     }
@@ -164,7 +172,7 @@ export default function AnsweringQuiz() {
 
   const constructRespostas = (item) => {
     const novaResposta = {
-      id_question: item.id, resposta: '', obrigatorio: item.obrigatorio, tipo: item.tipo,
+      id_question: item.id, resposta: null, obrigatorio: item.obrigatorio, tipo: item.tipo,
     };
     setAnswers((prevRespostas) => [...prevRespostas, novaResposta]);
   };
@@ -207,7 +215,7 @@ export default function AnsweringQuiz() {
           </p>
           <br />
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-            <Button label="Sim" onClick={() => { setButtonVisible2(false); verifyAnswers(); }} />
+            <Button label="Sim" onClick={() => verifyAnswers()} />
             <Button label="Não" onClick={() => setEndQuiz(false)} />
           </div>
         </Dialog>
