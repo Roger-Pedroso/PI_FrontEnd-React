@@ -22,7 +22,7 @@ export default function PrivateRoutes() {
   return (
     <Routes>
       <Route path="/app" element={<App />}>
-        <Route path="home" element={<DashBoard />} />
+        <Route path="relatorio" element={<DashBoard />} />
         <Route path="admin/new" element={<CreateAdmin />} />
         <Route path="admin" element={<ListAdmin />} />
         <Route path="profile" element={<Profile />} />
