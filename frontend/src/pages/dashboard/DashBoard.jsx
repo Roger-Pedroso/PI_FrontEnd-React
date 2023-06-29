@@ -1,9 +1,12 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'primereact/chart';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
+import { InputTextarea } from 'primereact/inputtextarea';
 import api from '../../utils/Api';
 
 export default function DashBoard() {
@@ -11,12 +14,11 @@ export default function DashBoard() {
   const [selectedSuperior, setSelectedSuperior] = useState({});
   const [quiz, setQuiz] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState([]);
-  const [altData, setAltData] = useState([]);
   const [quizData, setQuizData] = useState([]);
-  const [alternativas, setAlternativas] = useState([]);
-  const [chartOptions, setChartOptions] = useState({});
+  const [alternativas, setAlternativas] = useState([{}]);
   const [allData, setAllData] = useState([]);
-  const [ratings, setRatings] = useState([]);
+  const [ratings, setRatings] = useState([{}]);
+  const [open, setOpen] = useState([{}]);
   const [tipo, setTipo] = useState('');
 
   const findSuperior = async () => {
@@ -50,10 +52,6 @@ export default function DashBoard() {
 
   const getDashBoardData = async () => {
     try {
-      await api.get(`relatorio-alternativas/${selectedQuiz.id}`).then((response) => {
-        const { data } = response;
-        setAltData(data);
-      });
       await api.get(`relatorio-completo/${selectedQuiz.id}`).then((response) => {
         const { data } = response;
         setQuizData(data);
@@ -64,48 +62,67 @@ export default function DashBoard() {
     }
   };
 
-  const convertDashBoardData = () => {
-    const data = altData.map(([alternativa, valor, idQuestao, nome]) => ({
-      alternativa,
-      valor: String(valor),
-      idQuestao,
-      nome,
-    }));
-
-    const grupos = data.reduce((acumulator, resposta) => {
-      const {
-        nome, idQuestao, alternativa, valor,
-      } = resposta;
-      if (acumulator[idQuestao]) {
-        acumulator[idQuestao].alternativas.push(alternativa);
-        acumulator[idQuestao].valores.push(valor);
-      } else {
-        acumulator[idQuestao] = {
-          nome,
-          idQuestao,
-          alternativas: [alternativa],
-          valores: [valor],
-        };
-      }
-      return acumulator;
-    }, {});
-    setAlternativas(Object.values(grupos));
-  };
-
-  const getRatingAnswers = () => {
-    const grupos = allData.reduce((acumulator, resposta) => {
+  const getAnswers = () => {
+    const rating = allData.reduce((acumulator, resposta) => {
       if (resposta.tipo === '0_a_10') {
         if (acumulator[resposta.id]) {
-          acumulator[resposta.id].push(resposta.resposta);
+          acumulator[resposta.id].resposta.push(resposta.resposta);
+          acumulator[resposta.id].qtd.push(resposta.qtd);
         } else {
-          acumulator[resposta.id] = [resposta.resposta];
+          acumulator[resposta.id] = {
+            questao: [resposta.questao],
+            resposta: [resposta.resposta],
+            qtd: [resposta.qtd],
+          };
         }
       }
       return acumulator;
     }, {});
-    setRatings(grupos);
-    console.log('Agrupado', grupos);
-    console.log(ratings);
+
+    const alternatives = allData.reduce((acumulator, resposta) => {
+      if (resposta.tipo === 'alternativa') {
+        if (acumulator[resposta.id]) {
+          acumulator[resposta.id].resposta.push(resposta.resposta);
+          acumulator[resposta.id].qtd.push(resposta.qtd);
+        } else {
+          acumulator[resposta.id] = {
+            questao: [resposta.questao],
+            resposta: [resposta.resposta],
+            qtd: [resposta.qtd],
+          };
+        }
+      }
+      return acumulator;
+    }, {});
+
+    const abertas = allData.reduce((acumulator, resposta) => {
+      if (resposta.tipo === 'aberta') {
+        if (acumulator[resposta.id]) {
+          acumulator[resposta.id].resposta.push(resposta.resposta);
+        } else {
+          acumulator[resposta.id] = {
+            questao: [resposta.questao],
+            resposta: [resposta.resposta],
+          };
+        }
+      }
+      return acumulator;
+    }, {});
+
+    const ratingsWithAverage = Object.values(rating).map((item) => {
+      const total = item.resposta.reduce((accumulator, value) => accumulator + parseInt(value, 10), 0);
+      const average = total / item.resposta.length;
+
+      return {
+        ...item,
+        media: [average.toFixed(2)],
+      };
+    });
+
+    setOpen(Object.values(abertas));
+    setAlternativas(Object.values(alternatives));
+    setRatings(Object.values(ratingsWithAverage));
+    console.log(abertas);
   };
 
   const convertQuizData = () => {
@@ -118,21 +135,19 @@ export default function DashBoard() {
         resposta: q.resposta,
         tipo: q.tipo,
         questao: q.nome_campo,
+        qtd: q.qtd,
       };
     });
-
     setAllData(parsedData);
-    console.log(allData);
   };
 
   useEffect(() => {
-    getRatingAnswers();
+    getAnswers();
   }, [allData]);
 
   useEffect(() => {
-    convertDashBoardData();
     convertQuizData();
-  }, [altData, quizData]);
+  }, [quizData]);
 
   useEffect(() => {
     findQuiz();
@@ -146,7 +161,7 @@ export default function DashBoard() {
     findSuperior();
   }, [selectedSuperior]);
 
-  useEffect(() => {
+  const graficoAlternativa = () => {
     const options = {
       plugins: {
         legend: {
@@ -156,9 +171,91 @@ export default function DashBoard() {
         },
       },
     };
+    return (
+      <div className="flex justify-content-center">
+        <div className={innerWidth > 600 ? 'flex justify-content-between flex-wrap' : 'flex justify-content-center flex-wrap'}>
+          {alternativas.map((item) => (
+            <div className="flex flex-column" key={item.id}>
+              <div style={{ textAlign: 'center' }}>
+                <h3>
+                  {item.questao}
+                </h3>
+                <Chart
+                  type="pie"
+                  data={{
+                    labels: item.resposta,
+                    datasets: [
+                      {
+                        data: item.qtd,
+                      },
+                    ],
+                  }}
+                  options={options}
+                  className="flex w-full md:w-20rem"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-    setChartOptions(options);
-  }, [alternativas]);
+    );
+  };
+
+  const graficoZeroADez = () => {
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    };
+    return (
+      <div>
+        <div className="flex justify-content-center">
+          <div className="flex flex-column" style={{ textAlign: 'center', width: '100%' }}>
+            <h3>
+              {ratings?.questao}
+            </h3>
+            <Chart
+              autoResize
+              type="bar"
+              data={{
+                labels: ratings?.map((item) => item.questao),
+                datasets: [
+                  {
+                    label: 'Média das Respostas',
+                    data: ratings?.map((item) => item.media),
+                  },
+                ],
+              }}
+              options={options}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const questoesAbertas = () => (
+    <div className="flex flex-column gap-5">
+      {open.map((item) => (
+        <div key={item.id} className="flex flex-column gap-5">
+          <h3>{item.questao}</h3>
+          {item.resposta.map((resp, index) => (
+            <InputTextarea
+              key={index}
+              value={resp}
+              rows={5}
+              cols={innerWidth > 600 ? 80 : 20}
+              autoResize
+              readOnly
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div style={innerWidth > 600 ? { margin: '50px' } : {}}>
@@ -176,7 +273,7 @@ export default function DashBoard() {
           </h3>
         </div>
         <div className="flex gap-5 flex-wrap flex-column">
-          <div className="flex gap-3">
+          <div className={innerWidth > 600 ? 'flex gap-3' : 'flex flex-column gap-3'}>
             <Dropdown
               value={selectedSuperior}
               onChange={(e) => setSelectedSuperior(e.value)}
@@ -194,40 +291,19 @@ export default function DashBoard() {
               className="w-full md:w-14rem"
             />
           </div>
-          <div className="flex gap-3">
-            <Button label="Alternativas" onClick={setTipo('pie')} />
-            <Button label="0 a 10" onClick={setTipo('bar')} />
+          <div className={innerWidth > 600 ? 'flex gap-3 flex-wrap' : 'flex flex-column gap-3'}>
+            <Button label="Alternativas" onClick={() => setTipo('alternativa')} />
+            <Button label="0 a 10" onClick={() => setTipo('0a10')} />
+            <Button label="Abertas" onClick={() => setTipo('aberta')} />
           </div>
         </div>
       </div>
-      <div className="card flex-column justify-content-center" style={{ textAlign: 'center' }}>
+      <div className="card justify-content-center" style={{ textAlign: 'center' }}>
         <h1>Questões</h1>
-        <div className={innerWidth > 600 ? 'flex flex-wrap justify-content-between' : 'card flex flex-wrap justify-content-center'}>
-          {alternativas.map((item) => (
-            <div className="flex justify-content-center p-5" key={item.idQuestao}>
-              <div className="flex flex-column" style={{ textAlign: 'center' }}>
-                <h3>
-                  {item.nome}
-                </h3>
-                <Chart
-                  type={tipo}
-                  data={{
-                    labels: item.alternativas,
-                    datasets: [
-                      {
-                        data: item.valores,
-                      },
-                    ],
-                  }}
-                  options={chartOptions}
-                  className="flex w-full md:w-20rem"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        {tipo === 'alternativa' ? graficoAlternativa() : null}
+        {tipo === '0a10' && ratings.length > 0 ? graficoZeroADez() : null}
+        {tipo === 'aberta' ? questoesAbertas() : null}
       </div>
-
     </div>
   );
 }
