@@ -11,12 +11,9 @@ export default function DashBoard() {
   const [selectedSuperior, setSelectedSuperior] = useState({});
   const [quiz, setQuiz] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState([]);
-  const [altData, setAltData] = useState([]);
-  const [quizData, setQuizData] = useState([]);
-  const [alternativas, setAlternativas] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
-  const [allData, setAllData] = useState([]);
-  const [ratings, setRatings] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [answers10, setAnswers10] = useState([]);
   const [tipo, setTipo] = useState('');
 
   const findSuperior = async () => {
@@ -50,101 +47,53 @@ export default function DashBoard() {
 
   const getDashBoardData = async () => {
     try {
-      await api.get(`relatorio-alternativas/${selectedQuiz.id}`).then((response) => {
-        const { data } = response;
-        setAltData(data);
-      });
       await api.get(`relatorio-completo/${selectedQuiz.id}`).then((response) => {
         const { data } = response;
-        setQuizData(data);
-        console.log(data);
+        if (data[0] === null || data.length === 0) return;
+        const dataAux = JSON.parse(data);
+        const parsedData = dataAux.map((q) => {
+          const id = q.id.split(':');
+          return {
+            id: id[2],
+            resposta: q.resposta,
+            tipo: q.tipo,
+            questao: q.nome_campo,
+          };
+        });
+        const alt10 = parsedData.reduce((acumulator, resposta) => {
+          if (resposta.tipo === '0_a_10') {
+            if (acumulator[resposta.id]) {
+              acumulator[resposta.id].push(resposta.resposta);
+            } else {
+              acumulator[resposta.id] = [resposta.resposta];
+            }
+          }
+          return acumulator;
+        }, {});
+        const alt = parsedData.reduce((acumulator, resposta) => {
+          if (resposta.tipo === 'alternativa') {
+            if (acumulator[resposta.id]) {
+              acumulator[resposta.id].push(resposta.resposta);
+            } else {
+              acumulator[resposta.id] = [resposta.resposta];
+            }
+          }
+          return acumulator;
+        }, {});
+        setAnswers(alt);
+        setAnswers10(alt10);
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const convertDashBoardData = () => {
-    const data = altData.map(([alternativa, valor, idQuestao, nome]) => ({
-      alternativa,
-      valor: String(valor),
-      idQuestao,
-      nome,
-    }));
-
-    const grupos = data.reduce((acumulator, resposta) => {
-      const {
-        nome, idQuestao, alternativa, valor,
-      } = resposta;
-      if (acumulator[idQuestao]) {
-        acumulator[idQuestao].alternativas.push(alternativa);
-        acumulator[idQuestao].valores.push(valor);
-      } else {
-        acumulator[idQuestao] = {
-          nome,
-          idQuestao,
-          alternativas: [alternativa],
-          valores: [valor],
-        };
-      }
-      return acumulator;
-    }, {});
-    setAlternativas(Object.values(grupos));
-  };
-
-  const getRatingAnswers = () => {
-    const grupos = allData.reduce((acumulator, resposta) => {
-      if (resposta.tipo === '0_a_10') {
-        if (acumulator[resposta.id]) {
-          acumulator[resposta.id].push(resposta.resposta);
-        } else {
-          acumulator[resposta.id] = [resposta.resposta];
-        }
-      }
-      return acumulator;
-    }, {});
-    setRatings(grupos);
-    console.log('Agrupado', grupos);
-    console.log(ratings);
-  };
-
-  const convertQuizData = () => {
-    if (quizData[0] === null || quizData.length === 0) return;
-    const data = JSON.parse(quizData);
-    const parsedData = data.map((q) => {
-      const id = q.id.split(':');
-      return {
-        id: id[2],
-        resposta: q.resposta,
-        tipo: q.tipo,
-        questao: q.nome_campo,
-      };
-    });
-
-    setAllData(parsedData);
-    console.log(allData);
-  };
-
-  useEffect(() => {
-    getRatingAnswers();
-  }, [allData]);
-
-  useEffect(() => {
-    convertDashBoardData();
-    convertQuizData();
-  }, [altData, quizData]);
-
-  useEffect(() => {
-    findQuiz();
-  }, [selectedSuperior]);
-
-  useEffect(() => {
-    getDashBoardData();
-  }, [selectedQuiz]);
-
   useEffect(() => {
     findSuperior();
-  }, [selectedSuperior]);
+    findQuiz();
+    getDashBoardData();
+    console.log(answers10);
+  }, []);
 
   useEffect(() => {
     const options = {
@@ -156,9 +105,8 @@ export default function DashBoard() {
         },
       },
     };
-
     setChartOptions(options);
-  }, [alternativas]);
+  }, []);
 
   return (
     <div style={innerWidth > 600 ? { margin: '50px' } : {}}>
@@ -203,16 +151,16 @@ export default function DashBoard() {
       <div className="card flex-column justify-content-center" style={{ textAlign: 'center' }}>
         <h1>Questões</h1>
         <div className={innerWidth > 600 ? 'flex flex-wrap justify-content-between' : 'card flex flex-wrap justify-content-center'}>
-          {alternativas.map((item) => (
-            <div className="flex justify-content-center p-5" key={item.idQuestao}>
+          {answers.map((item) => (
+            <div className="flex justify-content-center p-5" key={item.id}>
               <div className="flex flex-column" style={{ textAlign: 'center' }}>
                 <h3>
-                  {item.nome}
+                  {item.nome_campo}
                 </h3>
                 <Chart
                   type={tipo}
                   data={{
-                    labels: item.alternativas,
+                    labels: item.nome_campo,
                     datasets: [
                       {
                         data: item.valores,
