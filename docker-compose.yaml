@@ -11,7 +11,7 @@ services:
       - ../PI-BackEnd/data:/var/lib/mysql
 
   back-end:
-    build: ../PI-Backend/pesquisa
+    build: ../PI-BackEnd/pesquisa
     ports:
       - 8080:8080
     depends_on:
@@ -35,8 +35,8 @@ services:
     ports:
       - 80:80
       - 443:443
-  volumes:
-    - ./nginx/conf/:/etc/nginx/conf.d/:ro
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
 
 volumes:
   dbdata:
