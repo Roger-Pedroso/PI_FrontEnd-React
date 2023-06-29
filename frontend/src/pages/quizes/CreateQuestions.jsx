@@ -16,7 +16,7 @@ export default function CreateQuestions() {
   const [alt, setAlt] = useState(false);
   const [mult, setMult] = useState(false);
   const [type, setType] = useState(null);
-  const [obrigatorio, setObrigatorio] = useState(false);
+  const [obrigatorio, setObrigatorio] = useState(true);
   const [alternativas, setAlternativas] = useState([{ idd: 1, value: '' }]);
   const [areYouSure, setAreYouSure] = useState(false);
   const { id } = useParams();

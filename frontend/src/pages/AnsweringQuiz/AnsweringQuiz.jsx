@@ -124,12 +124,14 @@ export default function AnsweringQuiz() {
         }
         if (answer.tipo === 'multipla_escolha') {
           if (answer.resposta.length > 0) {
-            newAnswer = {
-              idQuestion: answer.id_question,
-              idQuiz: id,
-              resposta: JSON.stringify(answer.resposta),
-            };
-            await api.post('/answer', { ...newAnswer });
+            answer.resposta.forEach(async (_resposta) => {
+              newAnswer = {
+                idQuestion: answer.id_question,
+                idQuiz: id,
+                resposta: _resposta,
+              };
+              await api.post('/answer', { ...newAnswer });
+            });
           }
         }
         if (answer.tipo === 'aberta') {
