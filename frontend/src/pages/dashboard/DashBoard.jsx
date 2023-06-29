@@ -18,6 +18,7 @@ export default function DashBoard() {
   const [alternativas, setAlternativas] = useState([{}]);
   const [allData, setAllData] = useState([]);
   const [ratings, setRatings] = useState([{}]);
+  const [multiplaEscolha, setMultiplaEscolha] = useState([{}]);
   const [open, setOpen] = useState([{}]);
   const [tipo, setTipo] = useState('');
 
@@ -109,6 +110,22 @@ export default function DashBoard() {
       return acumulator;
     }, {});
 
+    const ME = allData.reduce((acumulator, resposta) => {
+      if (resposta.tipo === 'multipla_escolha') {
+        if (acumulator[resposta.id]) {
+          acumulator[resposta.id].resposta.push(resposta.resposta);
+          acumulator[resposta.id].qtd.push(resposta.qtd);
+        } else {
+          acumulator[resposta.id] = {
+            questao: [resposta.questao],
+            resposta: [resposta.resposta],
+            qtd: [resposta.qtd],
+          };
+        }
+      }
+      return acumulator;
+    }, {});
+
     const ratingsWithAverage = Object.values(rating).map((item) => {
       const total = item.resposta.reduce((accumulator, value) => accumulator + parseInt(value, 10), 0);
       const average = total / item.resposta.length;
@@ -119,6 +136,7 @@ export default function DashBoard() {
       };
     });
 
+    setMultiplaEscolha(Object.values(ME));
     setOpen(Object.values(abertas));
     setAlternativas(Object.values(alternatives));
     setRatings(Object.values(ratingsWithAverage));
@@ -175,6 +193,47 @@ export default function DashBoard() {
       <div className="flex justify-content-center">
         <div className={innerWidth > 600 ? 'flex justify-content-between flex-wrap' : 'flex justify-content-center flex-wrap'}>
           {alternativas.map((item) => (
+            <div className="flex flex-column" key={item.id}>
+              <div style={{ textAlign: 'center' }}>
+                <h3>
+                  {item.questao}
+                </h3>
+                <Chart
+                  type="pie"
+                  data={{
+                    labels: item.resposta,
+                    datasets: [
+                      {
+                        data: item.qtd,
+                      },
+                    ],
+                  }}
+                  options={options}
+                  className="flex w-full md:w-20rem"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    );
+  };
+
+  const graficoMultiplaEscolha = () => {
+    const options = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+        },
+      },
+    };
+    return (
+      <div className="flex justify-content-center">
+        <div className={innerWidth > 600 ? 'flex justify-content-between flex-wrap' : 'flex justify-content-center flex-wrap'}>
+          {multiplaEscolha.map((item) => (
             <div className="flex flex-column" key={item.id}>
               <div style={{ textAlign: 'center' }}>
                 <h3>
@@ -293,6 +352,7 @@ export default function DashBoard() {
           </div>
           <div className={innerWidth > 600 ? 'flex gap-3 flex-wrap' : 'flex flex-column gap-3'}>
             <Button label="Alternativas" onClick={() => setTipo('alternativa')} />
+            <Button label="Múltipla Escolha" onClick={() => setTipo('multipla_escolha')} />
             <Button label="0 a 10" onClick={() => setTipo('0a10')} />
             <Button label="Abertas" onClick={() => setTipo('aberta')} />
           </div>
@@ -303,6 +363,7 @@ export default function DashBoard() {
         {tipo === 'alternativa' ? graficoAlternativa() : null}
         {tipo === '0a10' && ratings.length > 0 ? graficoZeroADez() : null}
         {tipo === 'aberta' ? questoesAbertas() : null}
+        {tipo === 'multipla_escolha' ? graficoMultiplaEscolha() : null}
       </div>
     </div>
   );
